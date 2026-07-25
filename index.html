@@ -95,9 +95,11 @@ button{ font-family:inherit; cursor:pointer; }
   background:var(--bg-elev-2); border:1px solid var(--border);
   border-radius:var(--radius-sm); padding:12px;
 }
-.level-card .lv-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+.level-card .lv-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
 .level-card .lv-num{ font-family:var(--font-display); font-size:20px; color:var(--accent); }
 .level-card .lv-xp{ font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint); }
+.level-card .success-rate{ font-family:var(--font-display); font-size:18px; color:var(--accent); }
+.level-card .success-label{ font-family:var(--font-mono); font-size:10px; color:var(--text-faint); text-align:right; }
 .xpbar-track{ height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
 .xpbar-fill{ height:100%; background:linear-gradient(90deg,var(--accent),#f3d089); border-radius:4px; transition:width .5s cubic-bezier(.4,0,.2,1); }
 
@@ -339,10 +341,10 @@ button{ font-family:inherit; cursor:pointer; }
       </div>
       <div class="level-card">
         <div class="lv-row">
-          <span class="lv-num" id="sb-level">Lv.1</span>
-          <span class="lv-xp" id="sb-xptext">0 / 100 XP</span>
+          <span class="success-rate" id="sb-success">0%</span>
+          <span class="success-label" id="sb-successtext">Success Rate</span>
         </div>
-        <div class="xpbar-track"><div class="xpbar-fill" id="sb-xpfill" style="width:0%"></div></div>
+        <div class="xpbar-track"><div class="xpbar-fill" id="sb-successfill" style="width:0%"></div></div>
       </div>
       <button class="credit-line" style="background:none; border:none; cursor:pointer;" data-i18n="credit" onclick="openAboutPanel()">Built by Perth</button>
     </div>
@@ -619,7 +621,7 @@ const I18N = {
   th: {
     'nav.today':'วันนี้', 'nav.calendar':'ปฏิทิน', 'nav.tasks':'งาน', 'nav.analytics':'วิเคราะห์ข้อมูล',
     'credit':'สร้างโดย Perth',
-    'about.title':'เกี่ยวกับ', 'about.name':'เพิร์ธ - Pongsakorn Chotpunyavorakul', 'about.role':'ผู้สร้างและพัฒนา',
+    'about.title':'เกี่ยวกับ', 'about.name':'พงษ์กร โชติปัญญาวรกุล', 'about.role':'ผู้สร้างและพัฒนา',
     'about.description':'Project Ascension คือระบบปฏิบัติการเพื่อความสม่ำเสมอส่วนตัว รวมปฏิทิน ตัวติดตามนิสัย ระบบ XP และแดชบอร์ดวิเคราะห์ข้อมูลไว้ในที่เดียว สร้างขึ้นเพื่อให้การทำสิ่งต่าง ๆ อย่างสม่ำเสมอในทุกวันกลายเป็นความก้าวหน้าที่มองเห็นได้จริง',
     'gate.subtitle':'เข้าสู่ระบบเพื่อดำเนินการต่อ', 'gate.login':'เข้าสู่ระบบ', 'gate.register':'สมัครสมาชิก',
     'gate.username':'ชื่อผู้ใช้', 'gate.password':'รหัสผ่าน',
@@ -844,13 +846,20 @@ function closeSidebar(){
 }
 
 function renderSidebarXP(){
-  const xp = lifetimeXP();
-  const lvl = levelFromXP(xp);
-  const floor = xpForLevel(lvl), ceil = xpForLevel(lvl+1);
-  const pct = Math.min(100, Math.round(100*(xp-floor)/Math.max(1,(ceil-floor))));
-  document.getElementById('sb-level').textContent = 'Lv.'+lvl;
-  document.getElementById('sb-xptext').textContent = `${xp-floor} / ${ceil-floor} XP`;
-  document.getElementById('sb-xpfill').style.width = pct+'%';
+  let totalTasks = 0;
+  let completedTasks = 0;
+  
+  // Calculate overall completion rate across all days
+  Object.keys(state.logs).forEach(dateStr => {
+    const s = dayStats(dateStr);
+    totalTasks += s.total;
+    completedTasks += s.done;
+  });
+  
+  const successRate = totalTasks > 0 ? Math.round(100 * completedTasks / totalTasks) : 0;
+  document.getElementById('sb-success').textContent = successRate + '%';
+  document.getElementById('sb-successtext').textContent = 'Overall Success Rate';
+  document.getElementById('sb-successfill').style.width = successRate + '%';
 }
 
 /* ---------- Motivational accent color ----------
