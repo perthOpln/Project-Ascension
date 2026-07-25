@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Project Ascension</title>
+<!-- Add to Home Screen: standalone app feel on iOS/Android -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Project Ascension">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAWMUlEQVR4nO2deXxURbbHq+ouvaSXbCSEPSQkIQk7yCqyry4gICCMggoIMzgu+NEZP7M4oqOjIj42hce4vufIIAygsqug7DuBACYkLIYtCUl6vd33VtX746Zb0t1B3zhKunO+/6XTXbdu169OnXPq1G2EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4GcC3ugMNBowJwQghxjji/Fb3BmgwYIHc+CcRCMwaBJYDIYQJ4YxJZkN6v3yE0LldJ/1u5VZ3qkHQ2MWhKyN/bL9ec+5KbJOKMKosvnz0oy+PfvQFVSlGiDfiJaZRi4OIhGms8+SBw16Ypnp8qteHEBKNsinBcurTfevnLkaN2wUhP/yWGIWIAtNYsy6ZQ//yoLfKpfn8RBSIKFBVc5RV5ozs0e3BYYwyIjTir+hWd+DWgAlmGk1sm3bXgkdVt4IQwqT2q8AYC7LorqgZ8Mx9nScNZBolYiP9lhrjbWNCOONJGWn3/X1eXEq8pmqYhC2vGCtO77D50/Pu6cM0RkThVvT0FtPoxIExRohjgoe9MN3aLMnn9BIS4UvAGCOOfC7PHc9MTMpIYxrFkd4W2zSuG8YYI4wQwqNfm9W8a6a3yilI9ZoETDBTNYPVPH7lvKTMZpyxxqaPxnS3uHZBGfW3R/LG9FEc7pDFgjPOWZ3ABBOiehRrWsKoV2ZgghHnGDei+K4RiYMIAqO043135N97u7u8hgihypBMsmQ2cMbqfEoUlGp3Sm7r0a/Nqn2p0eijsYiDCIRpNG9Mn6HPP+CpdITYDKZRoz2uePuRvcs2xCXHM1Wr81lR8DndeWP6jH5tJsKo8QS3jeI+iSAwynLv7j3ylUdUjy8k88cZk4yy4nDv+NvHuxevK9lxzJxkZ5SFtOC6Vp0/7vbOkwcyjYZYnVgl9sVBBMIojW/ZZOjzD2geH2d1/AbOuCCJml9b/fCCmrJKTPCaWQtLvykwWEyM0hvbESTRXV496Ln788b0YbRRJD9i/A4xwYwye4vk8SufIoJANXpjSoNzjglGGH8yY8HlY2f1vVnNp2589r99To9kNPC69gNjrHr9o/42s0WP7MaQ/IhlcWCCEUeW1IQJf59nb5GsKf6QWJQzbk607l687tLRs0QUOGWccSwQ19XqNY++qflUwSDViV8w5pRrXt/wF6fbWySzulKLPWJWHPrawTkf+LtJiW3TFIcnpGiDU2ZOsu54/Z/7V3xORIFpNPg6IeTSkeJPZr7BKMUEoxv0gQWs+dT4Fk0mvDPPmpaIOIrh5EeM3hhGCCPO+PAXp7cf3ctT6RAk8cb/M40a4y3fLFyzZ/F6PZBBGGOBYIEgjBljRBQuHSnevWidOcnGUd3kh0AUhzspvdnA30/mnOvXikliUxxEEDjjw+dP7zx5kOd6hMDVlGS7sKdw96J1RCCccYQx4pxTxilDnOvbckQUDr6zecerqwxWc9Cu6AiS6K6syR7RY/j86ZwyIggxqY8YFIe+RuTf26/L1MHu8upQZVBqtMeVHTizbu5iTDBnHBGMOJfjzS1HdW05qqshPo4zjgnR9+v3LFlfuH6PJSWBhiU/vNedXaYMGvLHX8VqcBtrgicCYZS1G9btztdnaYoa4jAySg0WU0VR2T+mvOxzefVQhVOW2i+nw7y7DAkWhJBS4Tj70a5zq/ci3aXF2GAxjX3rt827Zio17tC8KmUGm3n9b5d8u/kQFkhIdBPtxJTlIKLAKMsY2OnuN+dQlYYnuwRZoird+ucPfC4vEQWEMKcstW92/hOjxTiDr8rlr3KLZkPu3BHZjwwWTLKeFFFq3GtmvnH15HmDJXR9QQT73cqdb8zOGt6dx1xlUOzcjO4oWFLiB/9hKtMo02h4sgsjtObRhZeOFBNJYBrljGXc36/Hy1NEk0y9KhEFLBKuUbXa027agB4vTRaMEtOoIIs+p3fb8x9QVRPrBrcYY84Y9WkjX37Y1jw5xirHYmRZwRhzhCxN4sevfDKxbZrfrdQZJM4RwkQS1j765vk9hYIsUr8mmuSc2cNaju6quX0Yh26nMY3KNlPNmcuFizdWnfxOkCXqV1v1zh279DHOGdJ92GDzlIlGuerc1dWPvO66Vo0xjo2y5FiQuT4YoiyOW/F4clYLv8sbMn0ZY+Zk2763Pj2/p1AwSNSvmVLt3eZPTh/XU3MpumMR0iYRBdWh2LLSerwyNbFTa+pXBVm6sKdw/WNLDBYz53XCWywQVfEnZzWfsPKpuCb22sRr9BML4kAYiQap/9MTUtq3VqpdYYErMyfadi9Zt2fZBkEWqU9N7NS63/JZiR1bKeUOXP8qgEWiuRQskB4vT2n3QH/qV4kolH5dsO/tT81Jdhaysy8Qb7UrJbf1gGcmigYpNkxy1IsDC4Qz3qp3bp85d/tcnpB8JVW1uCa2Q+9t2fnqP4kkUL/WfFjHbn+ZKBglzePDIZsjHIWcQsACYRrllGXPGJL9yCDOGMZ45+ur9y7bYLTHhTinRBA81a5OEwe06p3LGbuJ7KKFqL8BThnGuHTn8c+eXs5UJhqk4G47o8ycYL18tOSbhWsRQkylWQ8N6vKnCVgg1KeFZtMZRwRjSQwtBsMYce6rcmVM7d9z4TTRakQI7Xh1VdnBb82JVhrQB6NMNEhcYxufXVm68zjGOAbC2liwfijgdjTtkD5uxZNynFE/niSbDRVFZasfWeCpdMg2U95vR6UNzFNdCsahTganTDDJmsenORVz8wTVqYTPe65ROT6uqvDiidc+dZRcjWsSP2754yntWykOD0JIMhn8buWTGQuuFJTGjEMaI+JACAmiQDXaNL/NvW8/brTHMcp8Ds/7Y//srqixtknp8PRdiZ3a+CqdkUadyQlx7rLKw39c5b1SnTt3ZMvRXX3XXeEhDKdMNMuMsiN/WnVtX7E5yXbfu08ntE7FBCs17jWzFl45cU7vxi943z8jsSMOpPsflFmaxA9/aXrGwM6fzFhw9stjqb2zOv9hPBGJ5vHjsAodrjEp3nxt15nCpZs9Zdf1F/OfuLPl6C5UUTkLjTs4ZUQWOWXFH+ws+Xh38+7tpq76Y/G2w5ufe8dVXh1jSdKYEgcK6MNoj0tp3+rC3lPp43q1mz4AC4SpWujeOuecI0Oi5eLnh4+9tBYhhAnm+h4c482GdOj8u7FMo1RRQ70TzjHChiRLyUe7Ti7a2KJ7VkVRmVLjjjFloNgTBwroAyGUN3dk28l9fdddPOxIAWeciAKRSOHizefXH6g96hRwRfUWmvbLyZk9zJRqV11KaNEXR5wx2W7+btPRgoWfMUW9sSIkZog1cejjakiydnrmnuTubVWngknok1i4xgSjxBkreP3TS9sLavdmI7VjTLH3fHWqJT3Ff90dYUmizJBocRRf2TfvA92bAcvRcMEi4Rozpdq7vzjZnpXmq3JHdj8T45wl1w794R/ui5U3GdGgznJmDG4xsrO/2hOuM6ZRKc7ovVpTuHTztd1nYkwfsSMO3QA07d++w1N3CSaZhruf+loQby7bcvz029uUCscPjmUwKM1/YnTrsbepDm9EF1UwyRjjI/M/ubKjUHdcYuORHrEgjuB4ZE7tnzGlH8aY+kMPzuuDKtvN59bsP/HGpyggph/TuP7xZoPyOz5zD0IogovKOCZEMEoXNhw8+ebnP77xBk7UiyM4DB2euqvNuJ5KpRMFqouDcMYFg4g4KnhtQ9m245gQhEKPxf6Yq6T2zc5/8k7JaqJef+iCVRv7xJ1fd/DUks2axxcDS0x0i0MfAFOqvfNz98bntdRc9bifZllz+wpe23B11+mbzWn9g/X9U3dRk63dX7rfnpXmr/ZEdFElm9l1vvzAMx96r9ZEuz6iVhwYYYFwjVlaN+n2l4mW1sn+mtDDB0gPKBIs1ae/O/jcP/Q92MijhRHGRD9CjQnhPPJzwGpd1IS4ri9MSshtoTq94dv9XKOS1eQuu35y4WcVh0uxSDhl9QmugROd4sB6CRZvPqxj/hN3YoypL9QP0O28ZDFc2/3t8dc3+KvqTVIFbYlgkBBC1Kei+p0G/XVMcM6soRlTbvdXuTkKS6JQJhglIovH/rq2bMtxTHBI/Ue0EH3iCA5P9swhbcbexikPP3mmv0G0GEs+3n162RZ0Q9wR2ppAOGVEErKmD0wbkIcQuvJ14bm1B7xXqlE9Egk21e7BAW0n9UEIMX+EPV4sECKSc2v3n1m+Te9P1Lmo0ScOhBAmpNPvx7Qc1VWpcEbeHjPJVKXHXlpzddcZLBDEeLgygqOVkN8q77ER9uzmmseHEBJNst/hLX5/x7k1+/QxjmBvAstQcveMbvMnElHQ3L6IpsuYbL34+eFjL/0r5LEfUUE0iUOfsvastI7PjrG0So4wHghxjYpxRl+l8/ir6ysOlejPoA1rqHZoiSi0mz4gfUJvjJHm8QejViwKksVYfqD41NItzpKrCGN9wyW0GZFwjSV0aJX76xH27DR/jSf8aDWnTIwzuC5UHH/5XzXfXo6u3fzoK/bBAjEmWamiorA6Ta4xQ7Kt+nTZN7OWVxwqwUIEZWCB6NmwhPxWfZY+nPmr/synal5VPwipH4pEjPur3cld03u9OS19Qm/dv4mYbMUCqSq4sH/e+1UnLxqTrBFsDMFUUY1J1mgsDIsmy4ECa0F8Xsu+Sx9WHV6EcCD+5Ahj0SSXbSsoXLRRdSkRlgOMMcGcMsEgZT7Qv9ZguCPs4+twyoIm5PSyLY6zkU2IfiHRJGf+qn/GlH6qw6tfCyE9KuaSzbRrzsrqkxejzu2IMnGgwGC0Gd8rb+5I1eFFGOkLBDFIxR/sLHr3K4SQfva1zqcC60vagNy2E/vG57VQazycox8oE+eIMyZZjarLV/zhztJVe4IdqNun2su1mzZAN0W1j6bkSLKZTi7aeG713mjMeUSfOFBgpNPH98qZPVR1KJLVqHn8h/+0qvJIqV5vXEcZgeku283t5wxvPqwj16jmCUtxotqH4Ic/L5BTRkRBtBjKD5wtXLzJda48ggkJmKWkLuldn79PNMuqU5FsxtPLtpau3hvZ9WnwRKU4UMAZ7PjMPenje18vOH9iwWdVJy6Ez87gqDS9I7f97GHmpvH+Go8+kCEN6gEtFoUIqXGEEOecccli1Dy+ovd2lNaepCWcs5ADLJyyhPxW+U+OTuzQunT1nuOvrNO7+jN8Bz870SoOfYILJrndg3cUvfeVbgluVIZ+Bg5xbkiw5Mwa0mJ4J01RwxMSOlxjkt2sVDj8VW57TjN/jQdFWnGCXkjFgeKTugkJy4XUuiBmud2DA4re20G9fr0bP8d38HMTteKoS8QRQgilDcjLmTXUnBbvr/FEPNnGKcMCkaymyqOlhf+1yXW+vDa3xnk9JgRxxsQ4A1PphQ0Hi975SvP6a8OiwPWjzvGsjygXh56xuMG2Bw1GXKvk/MdGJnZO5xqNkFxH3+fXNa969n++Llm1hwfq/JK6pOfOHWnLSPE7vJFNCOOYYMlqdBRdKVyyufJIKQrRRFjHopEoF0ddggajzbieWdMGiGaDGumQNNK3PwwSFsn1Y+dPv7W1pugyCibmBaJvjmQ/NKj1TUxIIBXLETq3dn/RO1/qdR43mpBoJ0bEETQYltZNcn8zIqVnpt/hjfwoe871yMV7zfHtyi++23wUha9KgT+Tu7Vt/+vhtoymqiNy3MsZxxhJNrOj6HLhkk2VR86Ftxa9xII49LmOMW4zrmfmg3dIcUbV6a1vrhNZFI3SpS9Pnl6+zXulWn8cZYSUtv4UfcoEk5z10MA2Y27jnNPw47WBZgWTjDA+v2bft3//Qj9rGQMmJLrFEZyj1rYp7WcPb9IzU3UqXKMRUt2cI8Ylu1kpd5xZsb1syzEUMZ1VT/u6CbG3S/PXeMLLSJF+rAEj2WZ2FF0+uWjj9WPnf0z7DZyoFUdwZhukdtPuaDmii2Q3qw4vjvSTsLoPIRjlS9sLTr+11Xut5v9RBhy4kBhnaHV398z7bxfMcsSSM3RDsXHp6r1F735JfVpU1xtHpTiCEzqpc5v2vxlhz0rTnAqLaDAYRwjJ8eaaM5fOfvj15R2F6IbM2L9xRWt6Su7ckcnd0lWXL7KJYhwjJMWba85cLvl416VtBShqTUi0iQNj/TFcevorfVxPzhH1+iPPY40JZhljdP5fB4re36E6lZ80jwMmBCHUdmKfzKn9RbOs1vNgIN2ECJJwafuJwmWbfZWuaDQh0SSO4IxP6prefs5we1ZavalM3WDYzY7iK6eWbak4eBb9h6ZvcIytbVNyf/MDJgQhLllNSrnj9FtbL31xAv1bRusWEiXiCG6exce1ndSnzbieiKMIx5YQQhxxygSzjAk+t3Z/0btfaW5f+CbIT+1OID5Kn9gnc0o/0WxQ6/dCiCyKJqlsa8GpZVt816PJhESBOIKzrdmg/JxHhxqb2DSXEjnroO991CYuN1UeDktc/id7VTvGtsym7ecMS+6Wobq8evlP6Fv1zIrN7C2viS4T0rDFETAYxmRbzqwhzYd21Lz+m22e2Uyqw3Nx09Hi93ZoXv9/3GBE6KBuQgSSPqFX5pTbRYtRdXp1xyi0e7UmRC7bGjiM2eBNSMMWB0IIoeZDOmTPGGJKtd9s80wkktVUceDsqWVbHMVX0C+YpgyePLBlNs16aGCT2zK5xurdzdGTs1drzqzYVrat4Bfo3k+hoYoDY4yQsYkte8bgZkM70psYDMoki1Hz+ovf31G6ep/+GL9fPm4MarHZkI7ZMwabUu2qw3MTEyKY5Etbj59ZsV0pdzTYPf0GKQ6MEUKmVFuvN6b/8G67zVRx4Gzhkk3Okmv1lYn/MujPoeOMGVNsOTOHNhucT30au6kJ8Vyu3vvEO96rDv3FX77PN6dBlkRzjjFSyp0Vh0pqvbYQZXDOGZOsJoRQ4aJN+55631lyDQtE/9JvRY9rO6XbLeWa4+j8T46+uFatdst2s/4bLnXeqv+KFGMVh0qUcifGDVEZqIFaDlRbsitZjH2XzTCm2Jnv+4MIQbNctuXY2Q+/dl2ouLUGIwJBPzrFljNjSLMhHalSd1lknBgk5VrNrtkrVJcSXg7dQGio4gis4k1uy+zx8v2qy6f/WnjQoTu9fNul7Q06M/19BD64Q87MOg41Z1yyGA48+7/l+4sb8v5+wxUHCugj//HRrcfe5qt0CiZZMMmXthw/vXyrUuGsd7e94fB9KG7NmTm02bCO1OunXr8hyXp+7f4TCz9ryMpADV0cGCOMRbOhz9KHbRmprouVp9/edvnLqEki6Xx/ZGZgfs6sIZaWSY6zV3fPWal5fIhHOMQL/Fj0Uq7UvtndXpgk280IoYiRS0MncBhCtpu7vTAptW82Ctwa8NO4QQlR/TsmdTofxffR0MDRaTDC0U1I9N8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAlPN/cSbA5/mdnT4AAAAASUVORK5CYII=">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg: #000000;
+  --bg-elev: #0b0b0c;
+  --bg-elev-2: #161617;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #f0efec;
+  --text-dim: #8b8b8f;
+  --text-faint: #55555a;
+  --accent: #e0645a;
+  --accent-dim: rgba(224,101,90,0.14);
+  --danger: #e0645a;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background: radial-gradient(ellipse 900px 550px at 20% -10%, var(--accent-dim), transparent 60%);
+  transition: background .6s ease;
+  pointer-events:none; z-index:0;
+}
+#app{ display:flex; height:100vh; position:relative; z-index:1; }
+::-webkit-scrollbar{ width:8px; height:8px; }
+::-webkit-scrollbar-thumb{ background: var(--border-strong); border-radius:8px; }
+::-webkit-scrollbar-track{ background:transparent; }
+button{ font-family:inherit; cursor:pointer; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
+
+/* ---------- Sidebar ---------- */
+#sidebar{
+  width:230px; flex-shrink:0;
+  background: var(--bg-elev);
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  padding:20px 14px;
+}
+.brand{ display:flex; align-items:center; gap:10px; padding:4px 8px 10px; }
+.lang-toggle{ display:flex; gap:6px; padding:0 8px 16px; }
+.lang-btn{ flex:1; padding:6px 0; border-radius:7px; border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text-dim); font-size:11px; font-weight:700; letter-spacing:.4px; transition:.15s; }
+.lang-btn:hover{ color:var(--text); }
+.lang-btn.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
+.credit-line{ text-align:center; font-size:10.5px; color:var(--text-faint); margin-top:12px; }
+.brand-mark{ font-family:var(--font-display); font-size:17px; font-weight:700; color:var(--accent); letter-spacing:0.2px; line-height:1.25;}
+.brand-sub{ font-size:10px; color:var(--text-faint); text-transform:uppercase; letter-spacing:1.2px; margin-top:1px;}
+.navlist{ display:flex; flex-direction:column; gap:2px; }
+.navitem{
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:var(--radius-sm);
+  color:var(--text-dim); background:none; border:none; text-align:left;
+  font-size:13.5px; font-weight:500; width:100%;
+  transition: background .15s, color .15s;
+}
+.navitem:hover{ background:var(--bg-elev-2); color:var(--text); }
+.navitem.active{ background:var(--accent-dim); color:var(--accent); }
+.navitem .ic{ width:16px; text-align:center; font-size:14px; }
+.sidebar-foot{ margin-top:auto; padding:12px; }
+.level-card{
+  background:var(--bg-elev-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:12px;
+}
+.level-card .lv-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+.level-card .lv-num{ font-family:var(--font-display); font-size:20px; color:var(--accent); }
+.level-card .lv-xp{ font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint); }
+.xpbar-track{ height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.xpbar-fill{ height:100%; background:linear-gradient(90deg,var(--accent),#f3d089); border-radius:4px; transition:width .5s cubic-bezier(.4,0,.2,1); }
+
+/* ---------- Main ---------- */
+#main{ flex:1; overflow-y:auto; padding:28px 36px 60px; }
+.view{ display:none; max-width:1180px; margin:0 auto; animation: fadein .25s ease; }
+.view.active{ display:block; }
+@keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+.page-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
+.page-title{ font-family:var(--font-display); font-size:28px; font-weight:600; }
+.page-sub{ color:var(--text-dim); font-size:13px; margin-top:3px;}
+
+.btn{ padding:9px 16px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text); font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:.15s;}
+.btn:hover{ border-color:var(--accent); }
+.btn-primary{ background:var(--accent); color:#1a1300; border:none; }
+.btn-primary:hover{ filter:brightness(1.08); }
+.btn-ghost{ background:none; border:1px solid transparent; color:var(--text-dim); }
+.btn-ghost:hover{ color:var(--text); background:var(--bg-elev-2); }
+.btn-danger{ color:var(--danger); }
+
+/* stat cards */
+.stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:24px; }
+.stat-card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+.stat-card .sc-label{ font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.8px; margin-bottom:6px;}
+.stat-card .sc-val{ font-family:var(--font-mono); font-size:22px; font-weight:700; }
+.stat-card .sc-val.gold{ color:var(--accent); }
+.stat-card .sc-val.teal{ color:var(--accent); }
+
+/* checklist */
+.task-row{
+  display:flex; align-items:center; gap:12px;
+  background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:12px 14px; margin-bottom:8px; transition:.15s;
+}
+.task-row:hover{ border-color:var(--border-strong); }
+.task-row.done{ opacity:.55; }
+.chk{ width:22px; height:22px; border-radius:7px; border:2px solid var(--text-faint); flex-shrink:0; display:flex; align-items:center; justify-content:center; background:none; transition:.15s; font-size:13px; color:transparent;}
+.chk.checked{ background:var(--accent); border-color:var(--accent); color:#04211b; }
+.chk:hover{ border-color:var(--accent); }
+.task-color-dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.task-name{ flex:1; font-size:14px; font-weight:500; }
+.task-name.strike{ text-decoration:line-through; color:var(--text-faint); }
+.task-xp{ font-family:var(--font-mono); font-size:12px; color:var(--accent); font-weight:600;}
+.task-meta{ font-size:11px; color:var(--text-faint);}
+.task-actions{ display:flex; gap:4px; opacity:0; transition:.15s; }
+.task-row:hover .task-actions{ opacity:1; }
+.icon-btn{ background:none; border:none; color:var(--text-faint); padding:4px 6px; border-radius:6px; font-size:13px;}
+.icon-btn:hover{ color:var(--text); background:var(--bg-elev-2); }
+.xp-pop{ position:fixed; pointer-events:none; font-family:var(--font-mono); font-weight:700; color:var(--accent); font-size:15px; z-index:999; animation:xppop .8s ease-out forwards; }
+@keyframes xppop{ 0%{opacity:0; transform:translateY(0) scale(.8);} 15%{opacity:1; transform:translateY(-8px) scale(1.1);} 100%{opacity:0; transform:translateY(-46px) scale(1);} }
+.empty-note{ color:var(--text-faint); font-size:13px; padding:14px 2px; }
+
+/* calendar */
+.cal-toolbar{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+.cal-dow{ text-align:center; font-size:10.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.6px; padding-bottom:6px;}
+.cal-cell{
+  background:var(--bg-elev); border:1px solid var(--border); border-radius:10px;
+  min-height:82px; padding:8px; cursor:pointer; transition:.15s; position:relative;
+}
+.cal-cell:hover{ border-color:var(--accent); transform:translateY(-1px); }
+.cal-cell.out{ opacity:.32; }
+.cal-cell.today{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+.cal-daynum{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+.cal-cell.today .cal-daynum{ color:var(--accent); font-weight:700;}
+.cal-dots{ display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
+.cal-dot{ width:6px; height:6px; border-radius:50%; }
+.cal-pct{ position:absolute; bottom:6px; right:8px; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+.cal-pct.full{ color:var(--accent); }
+
+/* side panel */
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; display:none; backdrop-filter:blur(2px); }
+.overlay.show{ display:block; animation:fadein .2s ease; }
+.panel{
+  position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
+  background:var(--bg-elev); border-left:1px solid var(--border-strong);
+  z-index:51; transform:translateX(100%); transition:transform .25s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto; padding:24px;
+}
+.panel.show{ transform:translateX(0); }
+.panel-close{ position:absolute; top:18px; right:18px; background:none; border:none; color:var(--text-dim); font-size:18px; }
+.panel h2{ font-family:var(--font-display); font-size:20px; margin-bottom:2px; }
+.panel .panel-sub{ color:var(--text-dim); font-size:12px; margin-bottom:18px; }
+
+/* forms */
+.form-grid{ display:grid; gap:12px; }
+.field label{ display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; }
+.field input, .field select, .field textarea{
+  width:100%; background:var(--bg); border:1px solid var(--border-strong); border-radius:8px;
+  padding:9px 11px; color:var(--text); font-size:13.5px; font-family:inherit;
+}
+.field textarea{ resize:vertical; min-height:60px; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.color-swatches{ display:flex; gap:6px; flex-wrap:wrap; }
+.swatch{ width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; }
+.swatch.sel{ border-color:#fff; }
+
+/* heatmap */
+.heatmap-wrap{ overflow-x:auto; padding-bottom:8px; }
+.heatmap-grid{ display:grid; grid-auto-flow:column; grid-template-rows:repeat(7,12px); gap:3px; }
+.hcell{ width:12px; height:12px; border-radius:3px; background:var(--bg-elev-2); }
+.hcell[data-lvl="1"]{ background:rgba(70,180,120,0.3); }
+.hcell[data-lvl="2"]{ background:rgba(70,180,120,0.55); }
+.hcell[data-lvl="3"]{ background:rgba(70,180,120,0.8); }
+.hcell[data-lvl="4"]{ background:#46b478; }
+.hcell:hover{ outline:1px solid var(--text-dim); }
+
+.card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:20px; }
+.card h3{ font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-dim); margin-bottom:14px; }
+.chart-row{ display:grid; grid-template-columns:1.4fr 1fr; gap:20px; }
+.insight{ font-size:13px; color:var(--text); padding:10px 12px; background:var(--bg-elev-2); border-radius:8px; margin-bottom:8px; border-left:2px solid var(--accent); }
+
+.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60; }
+.modal.show{ display:flex; }
+.modal-box{ background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius); padding:22px; width:320px; max-width:90vw; display:flex; flex-direction:column; gap:8px; animation:fadein .18s ease; }
+.modal-box h3{ font-family:var(--font-display); font-size:17px; margin-bottom:2px; }
+.modal-sub{ color:var(--text-dim); font-size:12.5px; margin-bottom:8px; }
+.modal-opt{ justify-content:center; width:100%; }
+
+.sync-row{ display:flex; align-items:center; gap:8px; padding:8px 6px; margin-bottom:8px; cursor:pointer; font-size:12px; color:var(--text-dim); border-radius:8px; }
+.sync-row:hover{ color:var(--text); background:var(--bg-elev-2); }
+.sync-dot{ width:8px; height:8px; border-radius:50%; background:var(--text-faint); flex-shrink:0; }
+
+@media (max-width: 880px){
+  #sidebar{ position:fixed; z-index:40; height:100%; transform:translateX(-100%); transition:transform .25s cubic-bezier(.4,0,.2,1); box-shadow:0 0 40px rgba(0,0,0,0.6); }
+  #sidebar.open{ transform:translateX(0); }
+  #main{ padding:14px 14px 40px; padding-top:calc(14px + env(safe-area-inset-top)); }
+  .chart-row{ grid-template-columns:1fr; }
+  .mobile-menu-btn{ display:flex !important; }
+  .page-title{ font-size:22px; }
+  .page-head{ margin-bottom:16px; }
+  .stat-row{ grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:18px; }
+  .stat-card{ padding:12px; }
+  .stat-card .sc-val{ font-size:18px; }
+  .panel{ width:100%; max-width:100%; padding:20px; padding-top:calc(20px + env(safe-area-inset-top)); }
+  .cal-grid{ gap:4px; }
+  .cal-cell{ min-height:54px; padding:6px; border-radius:8px; }
+  .cal-daynum{ font-size:11px; }
+  .cal-pct{ font-size:9px; bottom:4px; right:5px; }
+  .cal-toolbar{ gap:6px; flex-wrap:wrap; }
+  .task-row{ padding:12px; gap:10px; }
+  .chk{ width:26px; height:26px; }
+  .btn{ padding:10px 14px; }
+}
+@media (hover: none){
+  .task-actions{ opacity:1; } /* no hover on touch devices, so keep edit/delete visible */
+  .icon-btn{ padding:8px 10px; }
+}
+.mobile-menu-btn{ display:none; background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px; padding:8px 10px; color:var(--text); margin-bottom:12px; align-items:center; gap:6px; }
+#sidebar-backdrop{ display:none; }
+@media (max-width: 880px){
+  #sidebar-backdrop{ display:block; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:39; opacity:0; pointer-events:none; transition:opacity .2s; }
+  #sidebar-backdrop.show{ opacity:1; pointer-events:auto; }
+}
+
+/* ---------- Login gate ----------
+   #app has no real task data rendered into it until authentication
+   succeeds — it stays display:none the whole time, independent of
+   whatever happens to #gate's own visibility. See the note in the
+   chat response about what this does and doesn't protect against. */
+#app{ display:none; }
+#app.unlocked{ display:flex; }
+#gate{
+  position:fixed; inset:0; z-index:100; background:#000;
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+#gate.hidden{ display:none; }
+.gate-card{
+  width:340px; max-width:100%;
+  background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius);
+  padding:30px 26px; animation:fadein .3s ease;
+}
+.gate-brand{ text-align:center; margin-bottom:26px; }
+.gate-brand .brand-mark{ font-size:30px; }
+.gate-step{ display:none; flex-direction:column; gap:12px; }
+.gate-step.active{ display:flex; }
+.gate-tab-row{ display:flex; gap:8px; margin-top:2px; }
+.gate-tab{ flex:1; text-align:center; padding:9px; border-radius:var(--radius-sm); background:var(--bg-elev-2); border:1px solid var(--border); color:var(--text-dim); font-size:13px; font-weight:600; }
+.gate-tab.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
+.gate-status{ font-size:12.5px; color:var(--text-dim); min-height:16px; text-align:center; }
+.gate-link{ background:none; border:none; color:var(--text-faint); font-size:12px; text-decoration:underline; text-align:center; }
+.gate-link:hover{ color:var(--text-dim); }
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-brand">
+      <div class="brand-mark" style="font-family:var(--font-display); color:var(--accent); font-size:30px;">Project Ascension</div>
+      <div style="font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:1.2px; margin-top:2px;" data-i18n="gate.subtitle">Sign in to continue</div>
+    </div>
+    <div class="lang-toggle" style="justify-content:center; margin-bottom:18px;">
+      <button class="lang-btn active" id="gate-lang-btn-en" onclick="setLanguage('en')">EN</button>
+      <button class="lang-btn" id="gate-lang-btn-th" onclick="setLanguage('th')">TH</button>
+    </div>
+
+    <!-- Login / register -->
+    <div class="gate-step active" id="gate-step-auth">
+      <div class="gate-tab-row">
+        <button class="gate-tab active" id="gate-tab-login" onclick="setGateMode('login')" data-i18n="gate.login">Log In</button>
+        <button class="gate-tab" id="gate-tab-register" onclick="setGateMode('register')" data-i18n="gate.register">Register</button>
+      </div>
+      <div class="field"><label data-i18n="gate.username">Username</label><input id="gate-username"></div>
+      <div class="field"><label data-i18n="gate.password">Password</label><input id="gate-password" type="password"></div>
+      <button class="btn btn-primary" id="gate-submit-btn" onclick="gateLogin()">Log In</button>
+      <div class="gate-status" id="gate-auth-status"></div>
+    </div>
+    <div class="credit-line" style="margin-top:18px;" data-i18n="credit">Built by Perth</div>
+  </div>
+</div>
+<div id="app">
+<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
+  <aside id="sidebar">
+    <div class="brand">
+      <div>
+        <div class="brand-mark">Project Ascension</div>
+      </div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="lang-btn-en" onclick="setLanguage('en')">EN</button>
+      <button class="lang-btn" id="lang-btn-th" onclick="setLanguage('th')">TH</button>
+    </div>
+    <nav class="navlist">
+      <button class="navitem active" data-view="today"><span class="ic">◈</span> <span data-i18n="nav.today">Today</span></button>
+      <button class="navitem" data-view="calendar"><span class="ic">▦</span> <span data-i18n="nav.calendar">Calendar</span></button>
+      <button class="navitem" data-view="tasks"><span class="ic">☰</span> <span data-i18n="nav.tasks">Tasks</span></button>
+      <button class="navitem" data-view="analytics"><span class="ic">◔</span> <span data-i18n="nav.analytics">Analytics</span></button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sync-row" id="sync-row" onclick="openSettingsPanel()">
+        <span id="sync-dot" class="sync-dot"></span>
+        <span id="sync-label" data-i18n="sync.local">Local only</span>
+      </div>
+      <div class="level-card">
+        <div class="lv-row">
+          <span class="lv-num" id="sb-level">Lv.1</span>
+          <span class="lv-xp" id="sb-xptext">0 / 100 XP</span>
+        </div>
+        <div class="xpbar-track"><div class="xpbar-fill" id="sb-xpfill" style="width:0%"></div></div>
+      </div>
+      <div class="credit-line" data-i18n="credit">Built by Perth</div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰ <span data-i18n="mobilemenu">Menu</span></button>
+
+    <!-- TODAY -->
+    <section class="view active" id="view-today">
+      <div class="page-head">
+        <div>
+          <div class="page-title" id="today-title" data-i18n="today.title">Today</div>
+          <div class="page-sub" id="today-sub"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openTaskPanel()" data-i18n="today.newtask">+ New Task</button>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-label" data-i18n="today.xp">Today's XP</div><div class="sc-val gold" id="stat-todayxp">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="stat-todaypct">0%</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="today.streak">Current Streak</div><div class="sc-val teal" id="stat-streak">0 days</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="today.longest">Longest Streak</div><div class="sc-val" id="stat-longest">0 days</div></div>
+      </div>
+      <div id="today-list"></div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="view-calendar">
+      <div class="page-head">
+        <div>
+          <div class="page-title" data-i18n="calendar.title">Calendar</div>
+          <div class="page-sub" data-i18n="calendar.sub">Click a day for details</div>
+        </div>
+      </div>
+      <div class="cal-toolbar">
+        <button class="btn btn-ghost" onclick="calShift(-1)" data-i18n="calendar.prev">← Prev</button>
+        <div class="page-title" style="font-size:17px; min-width:170px; text-align:center;" id="cal-monthlabel"></div>
+        <button class="btn btn-ghost" onclick="calShift(1)" data-i18n="calendar.next">Next →</button>
+        <button class="btn btn-ghost" onclick="calToday()" data-i18n="calendar.today">Today</button>
+      </div>
+      <div class="cal-grid" id="cal-dows"></div>
+      <div class="cal-grid" id="cal-grid" style="margin-top:6px;"></div>
+    </section>
+
+    <!-- TASKS -->
+    <section class="view" id="view-tasks">
+      <div class="page-head">
+        <div>
+          <div class="page-title" data-i18n="tasks.title">Tasks</div>
+          <div class="page-sub" id="tasks-count"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openTaskPanel()" data-i18n="tasks.newtask">+ New Task</button>
+      </div>
+      <div id="tasks-list"></div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="view" id="view-analytics">
+      <div class="page-head">
+        <div>
+          <div class="page-title" data-i18n="analytics.title">Analytics</div>
+          <div class="page-sub" data-i18n="analytics.sub">Your consistency, quantified</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.lifetime">Lifetime XP</div><div class="sc-val gold" id="an-lifetime">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgxp">Avg Daily XP (30d)</div><div class="sc-val" id="an-avgxp">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgpct">Avg Completion (30d)</div><div class="sc-val" id="an-avgpct">0%</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.bestday">Most Productive Day</div><div class="sc-val teal" id="an-bestday">—</div></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="analytics.heatmap">Contribution Heatmap — Last 12 Months</h3>
+        <div class="heatmap-wrap"><div class="heatmap-grid" id="heatmap"></div></div>
+      </div>
+      <div class="chart-row">
+        <div class="card"><h3 data-i18n="analytics.xpchart">XP Over Time (30 Days)</h3><canvas id="chart-xp" height="160"></canvas></div>
+        <div class="card"><h3 data-i18n="analytics.weekdaychart">Avg XP by Weekday</h3><canvas id="chart-cat" height="160"></canvas></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="analytics.insights">Insights</h3>
+        <div id="insights"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- Task create/edit panel -->
+<div class="panel" id="panel-task">
+  <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  <h2 id="task-panel-title" data-i18n="taskform.newtitle">New Task</h2>
+  <div class="panel-sub" data-i18n="taskform.sub">Define what it is and how often it repeats</div>
+  <div class="form-grid">
+    <div class="field"><label data-i18n="taskform.name">Name</label><input id="tf-name" placeholder="Morning Workout"></div>
+    <div class="field"><label data-i18n="taskform.xp">XP Reward</label><input id="tf-xp" type="number" value="30" min="1"></div>
+    <div class="field"><label data-i18n="taskform.color">Color</label>
+      <div class="color-swatches" id="tf-colors"></div>
+    </div>
+    <div class="field"><label data-i18n="taskform.repeat">Repeat</label>
+      <select id="tf-repeat" onchange="onRepeatChange()">
+        <option value="daily" data-i18n="repeat.daily">Every Day</option>
+        <option value="weekdays" data-i18n="repeat.weekdays">Weekdays</option>
+        <option value="weekends" data-i18n="repeat.weekends">Weekends</option>
+        <option value="weekly" data-i18n="repeat.weekly">Specific Weekdays</option>
+        <option value="everyx" data-i18n="repeat.everyxOption">Every X Days</option>
+        <option value="monthly" data-i18n="repeat.monthly">Monthly (same date)</option>
+        <option value="once" data-i18n="repeat.once">Only Today</option>
+      </select>
+    </div>
+    <div class="field" id="tf-weekly-wrap" style="display:none;">
+      <label data-i18n="taskform.whichdays">Which days</label>
+      <div class="color-swatches" id="tf-weekdays" style="gap:4px;"></div>
+    </div>
+    <div class="field" id="tf-everyx-wrap" style="display:none;">
+      <label data-i18n="taskform.everyn">Every N days</label><input id="tf-everyx" type="number" min="2" value="2">
+    </div>
+    <button class="btn btn-primary" style="margin-top:6px;" onclick="saveTask()" data-i18n="taskform.save">Save Task</button>
+    <button class="btn btn-danger btn-ghost" id="tf-delete" style="display:none;" onclick="deleteCurrentTask()" data-i18n="taskform.delete">Delete Task</button>
+  </div>
+</div>
+
+<!-- Day detail panel -->
+<div class="panel" id="panel-day">
+  <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  <h2 id="day-panel-title">Day</h2>
+  <div class="panel-sub" id="day-panel-sub"></div>
+  <div class="stat-row" style="grid-template-columns:1fr 1fr;">
+    <div class="stat-card"><div class="sc-label" data-i18n="daypanel.xp">XP Earned</div><div class="sc-val gold" id="day-xp">0</div></div>
+    <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="day-pct">0%</div></div>
+  </div>
+  <div id="day-tasklist"></div>
+  <div class="field" style="margin-top:14px;">
+    <label data-i18n="daypanel.notes">Notes</label>
+    <textarea id="day-notes" placeholder="How did today go?" onchange="saveDayNotes()" data-i18n-ph="daypanel.notesplaceholder"></textarea>
+  </div>
+</div>
+
+<!-- Apple-Calendar-style delete scope modal -->
+<div class="modal" id="modal-delete-scope">
+  <div class="modal-box">
+    <h3 id="dsm-title">Delete task</h3>
+    <div class="modal-sub" data-i18n="deletescope.subtitle">This task repeats. What would you like to delete?</div>
+    <button class="btn modal-opt" onclick="deleteOccurrence(dsmTaskId,dsmDateStr,'only')" data-i18n="deletescope.only">This event only</button>
+    <button class="btn modal-opt" onclick="deleteOccurrence(dsmTaskId,dsmDateStr,'future')" data-i18n="deletescope.future">This and following events</button>
+    <button class="btn modal-opt btn-danger" onclick="deleteOccurrence(dsmTaskId,dsmDateStr,'all')" data-i18n="deletescope.all">All events</button>
+    <button class="btn btn-ghost" onclick="closeDeleteScopeModal()" data-i18n="deletescope.cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Account panel (post-login management: shown once signed in) -->
+<div class="panel" id="panel-settings">
+  <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  <h2 data-i18n="account.title">Account</h2>
+  <div class="panel-sub" id="account-sub">Signed in</div>
+  <div class="form-grid">
+    <div id="account-status" style="font-size:12.5px; color:var(--text-dim);"></div>
+    <button class="btn btn-danger" onclick="doLogout()" data-i18n="account.logout">Log Out</button>
+  </div>
+  <div style="margin-top:26px; padding-top:18px; border-top:1px solid var(--border);">
+    <div style="font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.6px; margin-bottom:10px;" data-i18n="account.dangerzone">Danger Zone</div>
+    <button class="btn btn-danger btn-ghost" style="width:100%;" onclick="openDeleteAccountConfirm()" data-i18n="account.deleteaccount">Delete Account</button>
+  </div>
+</div>
+
+<!-- Delete account: re-enter credentials to confirm -->
+<div class="modal" id="modal-delete-account">
+  <div class="modal-box">
+    <h3 data-i18n="deleteaccount.title">Delete account</h3>
+    <div class="modal-sub" data-i18n="deleteaccount.sub">This permanently erases your tasks, logs, and notes. Re-enter your username and password to confirm.</div>
+    <div class="field"><label data-i18n="gate.username">Username</label><input id="da-username" autocomplete="username"></div>
+    <div class="field"><label data-i18n="gate.password">Password</label><input id="da-password" type="password" autocomplete="current-password"></div>
+    <div id="da-status" style="font-size:12.5px; color:var(--danger); min-height:16px;"></div>
+    <button class="btn btn-danger modal-opt" onclick="confirmDeleteAccount()" data-i18n="deleteaccount.confirm">Permanently Delete Account</button>
+    <button class="btn btn-ghost modal-opt" onclick="closeDeleteAccountConfirm()" data-i18n="deletescope.cancel">Cancel</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ASCEND — Personal Consistency OS (Phase 1: local-first core)
+   Storage: browser localStorage (see README notes at bottom of
+   the chat response for how to swap this for a real backend).
+   ============================================================ */
+
+const STORE_KEY = 'ascend_state_v1';
+const COLORS = ['#e8b84b','#4bc9b0','#e0645a','#7aa6e8','#c98be8','#e89b4b','#8be8a8'];
+const WEEKDAY_LABELS_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const WEEKDAY_LABELS_TH = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+const WEEKDAY_FULL_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const WEEKDAY_FULL_TH = ['วันอาทิตย์','วันจันทร์','วันอังคาร','วันพุธ','วันพฤหัสบดี','วันศุกร์','วันเสาร์'];
+let WEEKDAY_LABELS = WEEKDAY_LABELS_EN;
+
+/* ============================================================
+   i18n — EN/TH. "Project Ascension" itself is never translated.
+   ============================================================ */
+const I18N = {
+  en: {
+    'nav.today':'Today', 'nav.calendar':'Calendar', 'nav.tasks':'Tasks', 'nav.analytics':'Analytics',
+    'credit':'Built by Perth',
+    'gate.subtitle':'Sign in to continue', 'gate.login':'Log In', 'gate.register':'Register',
+    'gate.username':'Username', 'gate.password':'Password',
+    'gate.creating':'Creating account…', 'gate.signing':'Signing in…',
+    'gate.enterboth':'Enter your username and password.', 'gate.checking':'Checking session…',
+    'gate.expired':'Session expired — please log in again.', 'gate.createbtn':'Create Account',
+    'today.title':'Today', 'today.newtask':'+ New Task', 'today.xp':"Today's XP",
+    'today.completion':'Completion', 'today.streak':'Current Streak', 'today.longest':'Longest Streak',
+    'today.empty':'No tasks scheduled for today. Add one to get started.',
+    'calendar.title':'Calendar', 'calendar.sub':'Click a day for details',
+    'calendar.prev':'← Prev', 'calendar.next':'Next →', 'calendar.today':'Today',
+    'tasks.title':'Tasks', 'tasks.newtask':'+ New Task', 'tasks.empty':'No tasks yet.', 'tasks.count':' tasks',
+    'analytics.title':'Analytics', 'analytics.sub':'Your consistency, quantified',
+    'analytics.lifetime':'Lifetime XP', 'analytics.avgxp':'Avg Daily XP (30d)', 'analytics.avgpct':'Avg Completion (30d)',
+    'analytics.bestday':'Most Productive Day', 'analytics.heatmap':'Contribution Heatmap — Last 12 Months',
+    'analytics.xpchart':'XP Over Time (30 Days)', 'analytics.weekdaychart':'Avg XP by Weekday', 'analytics.insights':'Insights',
+    'taskform.newtitle':'New Task', 'taskform.edittitle':'Edit Task', 'taskform.sub':'Define what it is and how often it repeats',
+    'taskform.name':'Name', 'taskform.xp':'XP Reward', 'taskform.color':'Color', 'taskform.repeat':'Repeat',
+    'taskform.whichdays':'Which days', 'taskform.everyn':'Every N days', 'taskform.save':'Save Task', 'taskform.delete':'Delete Task',
+    'repeat.daily':'Every day', 'repeat.weekdays':'Weekdays', 'repeat.weekends':'Weekends', 'repeat.weekly':'Custom days',
+    'repeat.everyx':'Every {n} days', 'repeat.everyxOption':'Every X Days', 'repeat.monthly':'Monthly', 'repeat.once':'One time',
+    'daypanel.xp':'XP Earned', 'daypanel.notes':'Notes', 'daypanel.notesplaceholder':'How did today go?',
+    'daypanel.completed':'{done} of {total} tasks completed',
+    'deletescope.subtitle':'This task repeats. What would you like to delete?',
+    'deletescope.only':'This event only', 'deletescope.future':'This and following events',
+    'deletescope.all':'All events', 'deletescope.cancel':'Cancel',
+    'account.title':'Account', 'account.dangerzone':'Danger Zone', 'account.deleteaccount':'Delete Account',
+    'account.logout':'Log Out', 'account.signedinas':'Signed in as {u}', 'account.notsignedin':'Not signed in',
+    'deleteaccount.title':'Delete account',
+    'deleteaccount.sub':'This permanently erases your tasks, logs, and notes. Re-enter your username and password to confirm.',
+    'deleteaccount.confirm':'Permanently Delete Account',
+    'mobilemenu':'Menu',
+    'sync.local':'Local only', 'sync.syncing':'Syncing…', 'sync.error':'Sync failed', 'sync.as':'Synced as {u}',
+    'insight.streak':'Your current streak is {c} day{s}, longest ever is {l}.',
+    'insight.bestday':'{d}s are your most productive day on average ({xp} XP).',
+    'insight.avg':'Average completion rate over 30 days: {p}%.',
+  },
+  th: {
+    'nav.today':'วันนี้', 'nav.calendar':'ปฏิทิน', 'nav.tasks':'งาน', 'nav.analytics':'วิเคราะห์ข้อมูล',
+    'credit':'สร้างโดย Perth',
+    'gate.subtitle':'เข้าสู่ระบบเพื่อดำเนินการต่อ', 'gate.login':'เข้าสู่ระบบ', 'gate.register':'สมัครสมาชิก',
+    'gate.username':'ชื่อผู้ใช้', 'gate.password':'รหัสผ่าน',
+    'gate.creating':'กำลังสร้างบัญชี…', 'gate.signing':'กำลังเข้าสู่ระบบ…',
+    'gate.enterboth':'กรอกชื่อผู้ใช้และรหัสผ่าน', 'gate.checking':'กำลังตรวจสอบเซสชัน…',
+    'gate.expired':'เซสชันหมดอายุ — กรุณาเข้าสู่ระบบอีกครั้ง', 'gate.createbtn':'สร้างบัญชี',
+    'today.title':'วันนี้', 'today.newtask':'+ เพิ่มงาน', 'today.xp':'XP วันนี้',
+    'today.completion':'ความสำเร็จ', 'today.streak':'สถิติต่อเนื่องปัจจุบัน', 'today.longest':'สถิติต่อเนื่องสูงสุด',
+    'today.empty':'ไม่มีงานสำหรับวันนี้ เพิ่มงานเพื่อเริ่มต้น',
+    'calendar.title':'ปฏิทิน', 'calendar.sub':'คลิกวันที่เพื่อดูรายละเอียด',
+    'calendar.prev':'← ก่อนหน้า', 'calendar.next':'ถัดไป →', 'calendar.today':'วันนี้',
+    'tasks.title':'งาน', 'tasks.newtask':'+ เพิ่มงาน', 'tasks.empty':'ยังไม่มีงาน', 'tasks.count':' งาน',
+    'analytics.title':'วิเคราะห์ข้อมูล', 'analytics.sub':'ความสม่ำเสมอของคุณ วัดผลได้',
+    'analytics.lifetime':'XP สะสมทั้งหมด', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (30 วัน)', 'analytics.avgpct':'ความสำเร็จเฉลี่ย (30 วัน)',
+    'analytics.bestday':'วันที่ทำได้ดีที่สุด', 'analytics.heatmap':'แผนที่ความสำเร็จ — 12 เดือนล่าสุด',
+    'analytics.xpchart':'XP ตามช่วงเวลา (30 วัน)', 'analytics.weekdaychart':'XP เฉลี่ยตามวันในสัปดาห์', 'analytics.insights':'ข้อมูลเชิงลึก',
+    'taskform.newtitle':'เพิ่มงานใหม่', 'taskform.edittitle':'แก้ไขงาน', 'taskform.sub':'กำหนดรายละเอียดและความถี่ของงาน',
+    'taskform.name':'ชื่องาน', 'taskform.xp':'XP ที่ได้รับ', 'taskform.color':'สี', 'taskform.repeat':'ความถี่',
+    'taskform.whichdays':'เลือกวัน', 'taskform.everyn':'ทุก N วัน', 'taskform.save':'บันทึกงาน', 'taskform.delete':'ลบงาน',
+    'repeat.daily':'ทุกวัน', 'repeat.weekdays':'วันธรรมดา', 'repeat.weekends':'วันหยุดสุดสัปดาห์', 'repeat.weekly':'กำหนดวันเอง',
+    'repeat.everyx':'ทุก {n} วัน', 'repeat.everyxOption':'ทุก X วัน', 'repeat.monthly':'รายเดือน', 'repeat.once':'ครั้งเดียว',
+    'daypanel.xp':'XP ที่ได้รับ', 'daypanel.notes':'บันทึก', 'daypanel.notesplaceholder':'วันนี้เป็นอย่างไรบ้าง?',
+    'daypanel.completed':'ทำสำเร็จ {done} จาก {total} งาน',
+    'deletescope.subtitle':'งานนี้เกิดซ้ำ คุณต้องการลบแบบใด?',
+    'deletescope.only':'เฉพาะครั้งนี้', 'deletescope.future':'ครั้งนี้และครั้งถัดไปทั้งหมด',
+    'deletescope.all':'ทุกครั้ง', 'deletescope.cancel':'ยกเลิก',
+    'account.title':'บัญชี', 'account.dangerzone':'โซนอันตราย', 'account.deleteaccount':'ลบบัญชี',
+    'account.logout':'ออกจากระบบ', 'account.signedinas':'เข้าสู่ระบบในชื่อ {u}', 'account.notsignedin':'ยังไม่ได้เข้าสู่ระบบ',
+    'deleteaccount.title':'ลบบัญชี',
+    'deleteaccount.sub':'การดำเนินการนี้จะลบงาน บันทึก และข้อมูลทั้งหมดอย่างถาวร กรอกชื่อผู้ใช้และรหัสผ่านอีกครั้งเพื่อยืนยัน',
+    'deleteaccount.confirm':'ลบบัญชีอย่างถาวร',
+    'mobilemenu':'เมนู',
+    'sync.local':'ออฟไลน์', 'sync.syncing':'กำลังซิงค์…', 'sync.error':'ซิงค์ล้มเหลว', 'sync.as':'ซิงค์แล้วในชื่อ {u}',
+    'insight.streak':'สถิติต่อเนื่องปัจจุบันของคุณคือ {c} วัน สูงสุดที่เคยทำได้คือ {l} วัน',
+    'insight.bestday':'{d} คือวันที่คุณทำได้ดีที่สุดโดยเฉลี่ย ({xp} XP)',
+    'insight.avg':'อัตราความสำเร็จเฉลี่ยใน 30 วันที่ผ่านมา: {p}%',
+  }
+};
+let currentLang = localStorage.getItem('ascend_lang') || 'en';
+function i18nText(key, vars){
+  let s = (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+  if(vars) Object.keys(vars).forEach(k=> s = s.replace('{'+k+'}', vars[k]));
+  return s;
+}
+function setLanguage(lang){
+  currentLang = lang;
+  localStorage.setItem('ascend_lang', lang);
+  WEEKDAY_LABELS = lang==='th' ? WEEKDAY_LABELS_TH : WEEKDAY_LABELS_EN;
+  document.querySelectorAll('.lang-btn').forEach(b=> b.classList.toggle('active', b.id.endsWith('-'+lang)));
+  applyLanguage();
+}
+function applyLanguage(){
+  document.querySelectorAll('[data-i18n]').forEach(el=> el.textContent = i18nText(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=> el.placeholder = i18nText(el.dataset.i18nPh));
+  // refresh whatever's currently on screen so dynamically-generated strings pick up the new language too
+  setGateMode(gateMode);
+  if(document.getElementById('view-today').classList.contains('active')) renderToday();
+  if(document.getElementById('view-calendar').classList.contains('active')) renderCalendar();
+  if(document.getElementById('view-tasks').classList.contains('active')) renderTasksView();
+  if(document.getElementById('view-analytics').classList.contains('active')) renderAnalytics();
+  updateSyncIndicator();
+  const s = getSession();
+  if(document.getElementById('panel-settings').classList.contains('show') && s){
+    document.getElementById('account-sub').textContent = i18nText('account.signedinas', {u:s.username});
+  }
+}
+
+function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+function todayStr(){ return fmtDate(new Date()); }
+function fmtDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+
+/* ---------- State ---------- */
+let state = loadState();
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { tasks: [], logs: {}, notes: {}, createdAt: todayStr() };
+}
+function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); scheduleSync(); }
+
+function seedTasks(){
+  const now = new Date().toISOString();
+  const mk = (name,xp,color,repeat,extra={}) => ({
+    id: uid(), name, xp, color, repeat, active:true, deleted:false, createdAt: todayStr(), updatedAt: now, ...extra
+  });
+  return [
+    mk('Morning Workout',50,COLORS[0],'daily'),
+    mk('Meditate',30,COLORS[1],'daily'),
+    mk('Read 20 Pages',40,COLORS[3],'daily'),
+    mk('Deep Work Block',80,COLORS[6],'weekdays'),
+    mk('Weekly Review',60,COLORS[4],'weekly',{weekdays:[0]}),
+  ];
+}
+
+/* ---------- Recurrence logic ---------- */
+function taskAppliesOn(task, dateStr){
+  if(!task.active || task.deleted) return false;
+  if(task.exceptions && task.exceptions.includes(dateStr)) return false;
+  if(task.endDate && dateStr > task.endDate) return false;
+  const d = parseDate(dateStr);
+  const created = parseDate(task.createdAt);
+  if(d < new Date(created.getFullYear(),created.getMonth(),created.getDate())) return false;
+  const dow = d.getDay();
+  switch(task.repeat){
+    case 'daily': return true;
+    case 'weekdays': return dow>=1 && dow<=5;
+    case 'weekends': return dow===0 || dow===6;
+    case 'weekly': return (task.weekdays||[]).includes(dow);
+    case 'everyx': {
+      const n = task.everyx || 2;
+      const diffDays = Math.round((d - created)/86400000);
+      return diffDays>=0 && diffDays % n === 0;
+    }
+    case 'monthly': return d.getDate() === created.getDate();
+    case 'once': return task.createdAt === dateStr;
+    default: return false;
+  }
+}
+function tasksForDate(dateStr){ return state.tasks.filter(t=>taskAppliesOn(t,dateStr)); }
+// Log entries keep an explicit completed:true/false (never delete the key) so that
+// "I unchecked this" is a fact with its own timestamp, not silence — silence is
+// what would let a stale device resurrect it on the next merge.
+function isCompleted(dateStr, taskId){
+  const e = state.logs[dateStr] && state.logs[dateStr][taskId];
+  return !!(e && e.completed);
+}
+function setCompleted(dateStr, taskId, val, xp){
+  if(!state.logs[dateStr]) state.logs[dateStr] = {};
+  state.logs[dateStr][taskId] = { completed: !!val, completedAt: new Date().toISOString(), xp: val ? xp : 0 };
+  saveState();
+}
+function dayStats(dateStr){
+  const applicable = tasksForDate(dateStr);
+  const log = state.logs[dateStr] || {};
+  let xp = 0, done = 0;
+  applicable.forEach(t=>{ const e = log[t.id]; if(e && e.completed){ xp += e.xp; done++; } });
+  const pct = applicable.length ? Math.round(100*done/applicable.length) : 0;
+  return { applicable, done, xp, pct, total: applicable.length };
+}
+
+/* ---------- XP / Levels ---------- */
+function xpForLevel(level){ // progressive scaling, cumulative XP required to REACH this level
+  // level 1 = 0, then grows ~ 100 * level^1.6
+  if(level<=1) return 0;
+  return Math.round(100 * Math.pow(level-1, 1.6) + 100*(level-1));
+}
+function lifetimeXP(){
+  let total = 0;
+  Object.values(state.logs).forEach(day=>{ Object.values(day).forEach(e=> total += e.xp); });
+  return total;
+}
+function levelFromXP(xp){
+  let lvl = 1;
+  while(xpForLevel(lvl+1) <= xp && lvl < 200) lvl++;
+  return lvl;
+}
+
+/* ---------- Streaks ---------- */
+function computeStreaks(){
+  // A "perfect day" = every applicable task for that day was completed (and there was at least 1 task).
+  let current = 0, longest = 0, run = 0;
+  const d = new Date();
+  // current streak: walk backwards from today
+  for(let i=0;i<3650;i++){
+    const ds = fmtDate(d);
+    const s = dayStats(ds);
+    const perfect = s.total>0 && s.done===s.total;
+    if(i===0 && s.total===0){ /* no tasks today yet, don't break streak */ }
+    else if(perfect){ current++; }
+    else if(s.total>0){ break; }
+    d.setDate(d.getDate()-1);
+  }
+  // longest streak: scan from account creation to today
+  const start = parseDate(state.createdAt);
+  const end = new Date();
+  const cursor = new Date(start);
+  while(cursor <= end){
+    const ds = fmtDate(cursor);
+    const s = dayStats(ds);
+    if(s.total>0 && s.done===s.total){ run++; longest = Math.max(longest, run); }
+    else if(s.total>0){ run = 0; }
+    cursor.setDate(cursor.getDate()+1);
+  }
+  return { current, longest: Math.max(longest,current) };
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+let calCursor = new Date();
+let activeTaskId = null;
+let activeDayStr = null;
+
+function switchView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
+  closeSidebar();
+  if(name==='calendar') renderCalendar();
+  if(name==='tasks') renderTasksView();
+  if(name==='analytics') renderAnalytics();
+  if(name==='today') renderToday();
+}
+document.querySelectorAll('.navitem').forEach(btn=> btn.addEventListener('click', ()=>switchView(btn.dataset.view)));
+function toggleSidebar(){
+  const open = document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-backdrop').classList.toggle('show', open);
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('show');
+}
+
+function renderSidebarXP(){
+  const xp = lifetimeXP();
+  const lvl = levelFromXP(xp);
+  const floor = xpForLevel(lvl), ceil = xpForLevel(lvl+1);
+  const pct = Math.min(100, Math.round(100*(xp-floor)/Math.max(1,(ceil-floor))));
+  document.getElementById('sb-level').textContent = 'Lv.'+lvl;
+  document.getElementById('sb-xptext').textContent = `${xp-floor} / ${ceil-floor} XP`;
+  document.getElementById('sb-xpfill').style.width = pct+'%';
+}
+
+/* ---------- Motivational accent color ----------
+   The whole UI's accent hue shifts from red -> amber -> green as today's
+   completion % climbs toward 100, so getting everything done visibly
+   "unlocks" a better-feeling interface. */
+function computeAccentForPct(pct, dim){
+  const clamped = Math.max(0, Math.min(100, pct));
+  const hue = Math.round(4 + (clamped/100)*136); // 4=red, ~140=green
+  const sat = 72, light = clamped>=100 ? 58 : 55;
+  return dim ? `hsl(${hue} ${sat}% ${light}% / 0.16)` : `hsl(${hue} ${sat}% ${light}%)`;
+}
+function updateAccentColor(pct){
+  const root = document.documentElement.style;
+  root.setProperty('--accent', computeAccentForPct(pct, false));
+  root.setProperty('--accent-dim', computeAccentForPct(pct, true));
+}
+
+function renderToday(){
+  const ds = todayStr();
+  document.getElementById('today-title').textContent = 'Today';
+  document.getElementById('today-sub').textContent = new Date().toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
+  const s = dayStats(ds);
+  document.getElementById('stat-todayxp').textContent = s.xp;
+  document.getElementById('stat-todaypct').textContent = s.pct+'%';
+  const streaks = computeStreaks();
+  document.getElementById('stat-streak').textContent = streaks.current+' days';
+  document.getElementById('stat-longest').textContent = streaks.longest+' days';
+  updateAccentColor(s.pct);
+
+  const list = document.getElementById('today-list');
+  list.innerHTML = '';
+  const applicable = tasksForDate(ds);
+  if(applicable.length===0){
+    list.innerHTML = `<div class="empty-note">${i18nText('today.empty')}</div>`;
+    renderSidebarXP();
+    return;
+  }
+  applicable.forEach(t=>{
+    const done = isCompleted(ds, t.id);
+    const row = document.createElement('div');
+    row.className = 'task-row'+(done?' done':'');
+    row.innerHTML = `
+      <button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+      <span class="task-color-dot" style="background:${t.color}"></span>
+      <span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+      <span class="task-xp">+${t.xp} XP</span>
+      <div class="task-actions">
+        <button class="icon-btn" data-edit="${t.id}">✎</button>
+        <button class="icon-btn" data-del="${t.id}">🗑</button>
+      </div>`;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=>openDeleteScopeModal(b.dataset.del, ds)));
+  list.querySelectorAll('.chk').forEach(chk=>{
+    chk.addEventListener('click', (e)=>{
+      const tid = chk.dataset.tid;
+      const t = state.tasks.find(x=>x.id===tid);
+      const wasDone = isCompleted(ds, tid);
+      setCompleted(ds, tid, !wasDone, t.xp);
+      if(!wasDone) popXP(e.clientX, e.clientY, t.xp);
+      renderToday();
+    });
+  });
+  list.querySelectorAll('[data-edit]').forEach(b=> b.addEventListener('click', ()=>openTaskPanel(b.dataset.edit)));
+  renderSidebarXP();
+}
+
+function popXP(x,y,amount){
+  const el = document.createElement('div');
+  el.className = 'xp-pop';
+  el.textContent = '+'+amount+' XP';
+  el.style.left = (x-20)+'px'; el.style.top = (y-10)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 850);
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- Calendar ---------- */
+function renderCalendar(){
+  const y = calCursor.getFullYear(), m = calCursor.getMonth();
+  document.getElementById('cal-monthlabel').textContent = calCursor.toLocaleDateString(undefined,{month:'long', year:'numeric'});
+  const dowRow = document.getElementById('cal-dows');
+  dowRow.innerHTML = WEEKDAY_LABELS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  const first = new Date(y,m,1);
+  const startOffset = first.getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const totalCells = Math.ceil((startOffset+daysInMonth)/7)*7;
+  const cursor = new Date(y,m,1 - startOffset);
+  const todayDs = todayStr();
+
+  for(let i=0;i<totalCells;i++){
+    const ds = fmtDate(cursor);
+    const inMonth = cursor.getMonth()===m;
+    const s = dayStats(ds);
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell'+(inMonth?'':' out')+(ds===todayDs?' today':'');
+    let dotsHtml = '';
+    const cats = {};
+    s.applicable.forEach(t=>{ cats[t.color] = (cats[t.color]||0)+1; });
+    Object.keys(cats).slice(0,8).forEach(c=> dotsHtml += `<span class="cal-dot" style="background:${c}"></span>`);
+    cell.innerHTML = `<div class="cal-daynum">${cursor.getDate()}</div><div class="cal-dots">${dotsHtml}</div>${s.total?`<div class="cal-pct ${s.pct===100?'full':''}">${s.pct}%</div>`:''}`;
+    cell.addEventListener('click', ()=>openDayPanel(ds));
+    grid.appendChild(cell);
+    cursor.setDate(cursor.getDate()+1);
+  }
+}
+function calShift(dir){ calCursor.setMonth(calCursor.getMonth()+dir); renderCalendar(); }
+function calToday(){ calCursor = new Date(); renderCalendar(); }
+
+/* ---------- Day panel ---------- */
+function openDayPanel(ds){
+  activeDayStr = ds;
+  const s = dayStats(ds);
+  document.getElementById('day-panel-title').textContent = parseDate(ds).toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  document.getElementById('day-panel-sub').textContent = i18nText('daypanel.completed', {done:s.done, total:s.total});
+  document.getElementById('day-xp').textContent = s.xp;
+  document.getElementById('day-pct').textContent = s.pct+'%';
+  const list = document.getElementById('day-tasklist');
+  list.innerHTML = '';
+  s.applicable.forEach(t=>{
+    const done = isCompleted(ds, t.id);
+    const row = document.createElement('div');
+    row.className = 'task-row'+(done?' done':'');
+    row.innerHTML = `<button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+      <span class="task-color-dot" style="background:${t.color}"></span><span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+      <span class="task-xp">+${t.xp} XP</span>
+      <div class="task-actions" style="opacity:1;"><button class="icon-btn" data-del="${t.id}">🗑</button></div>`;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=>openDeleteScopeModal(b.dataset.del, ds)));
+  list.querySelectorAll('.chk').forEach(chk=>{
+    chk.addEventListener('click', ()=>{
+      const tid = chk.dataset.tid;
+      const t = state.tasks.find(x=>x.id===tid);
+      setCompleted(ds, tid, !isCompleted(ds,tid), t.xp);
+      openDayPanel(ds); renderCalendar(); renderToday();
+    });
+  });
+  document.getElementById('day-notes').value = normalizeNote(state.notes[ds]).text;
+  showPanel('panel-day');
+}
+// Legacy notes were stored as a plain string; new ones carry updatedAt so two
+// devices editing the same day's notes can be merged deterministically.
+function normalizeNote(n){
+  if(!n) return { text:'', updatedAt:'1970-01-01T00:00:00.000Z' };
+  if(typeof n === 'string') return { text:n, updatedAt:'1970-01-01T00:00:00.000Z' };
+  return n;
+}
+function saveDayNotes(){
+  if(!activeDayStr) return;
+  state.notes[activeDayStr] = { text: document.getElementById('day-notes').value, updatedAt: new Date().toISOString() };
+  saveState();
+}
+
+/* ---------- Task panel ---------- */
+function buildColorSwatches(){
+  const wrap = document.getElementById('tf-colors');
+  wrap.innerHTML = COLORS.map(c=>`<span class="swatch" data-color="${c}" style="background:${c}"></span>`).join('');
+  wrap.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));
+      sw.classList.add('sel');
+    });
+  });
+  const wdWrap = document.getElementById('tf-weekdays');
+  wdWrap.innerHTML = WEEKDAY_LABELS.map((d,i)=>`<span class="swatch" data-day="${i}" style="border-radius:6px; width:auto; padding:4px 7px; background:var(--bg-elev-2); font-size:11px; color:var(--text-dim);">${d}</span>`).join('');
+  wdWrap.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      sw.classList.toggle('sel');
+      sw.style.color = sw.classList.contains('sel') ? '#04211b' : 'var(--text-dim)';
+      sw.style.background = sw.classList.contains('sel') ? 'var(--accent)' : 'var(--bg-elev-2)';
+    });
+  });
+}
+function onRepeatChange(){
+  const r = document.getElementById('tf-repeat').value;
+  document.getElementById('tf-weekly-wrap').style.display = r==='weekly' ? 'block':'none';
+  document.getElementById('tf-everyx-wrap').style.display = r==='everyx' ? 'block':'none';
+}
+function openTaskPanel(taskId){
+  activeTaskId = taskId || null;
+  document.getElementById('task-panel-title').textContent = taskId ? i18nText('taskform.edittitle') : i18nText('taskform.newtitle');
+  document.getElementById('tf-delete').style.display = taskId ? 'block' : 'none';
+  const t = taskId ? state.tasks.find(x=>x.id===taskId) : null;
+  document.getElementById('tf-name').value = t ? t.name : '';
+  document.getElementById('tf-xp').value = t ? t.xp : 30;
+  document.getElementById('tf-repeat').value = t ? t.repeat : 'daily';
+  document.getElementById('tf-everyx').value = t && t.everyx ? t.everyx : 2;
+  onRepeatChange();
+  document.querySelectorAll('#tf-colors .swatch').forEach(s=> s.classList.toggle('sel', t ? s.dataset.color===t.color : s.dataset.color===COLORS[0]));
+  document.querySelectorAll('#tf-weekdays .swatch').forEach(s=>{
+    const sel = t && t.weekdays && t.weekdays.includes(Number(s.dataset.day));
+    s.classList.toggle('sel', !!sel);
+    s.style.color = sel ? '#04211b' : 'var(--text-dim)';
+    s.style.background = sel ? 'var(--accent)' : 'var(--bg-elev-2)';
+  });
+  showPanel('panel-task');
+}
+function saveTask(){
+  const name = document.getElementById('tf-name').value.trim();
+  if(!name){ document.getElementById('tf-name').focus(); return; }
+  const color = (document.querySelector('#tf-colors .swatch.sel')||{}).dataset?.color || COLORS[0];
+  const weekdays = Array.from(document.querySelectorAll('#tf-weekdays .swatch.sel')).map(s=>Number(s.dataset.day));
+  const data = {
+    name,
+    xp: Number(document.getElementById('tf-xp').value)||10,
+    color, repeat: document.getElementById('tf-repeat').value,
+    weekdays, everyx: Number(document.getElementById('tf-everyx').value)||2,
+    updatedAt: new Date().toISOString(),
+  };
+  if(activeTaskId){
+    Object.assign(state.tasks.find(t=>t.id===activeTaskId), data);
+  } else {
+    state.tasks.push({ id: uid(), active:true, deleted:false, createdAt: todayStr(), ...data });
+  }
+  saveState();
+  closeAllPanels();
+  renderToday(); renderTasksView(); renderCalendar();
+}
+function deleteCurrentTask(){
+  if(!activeTaskId) return;
+  const t = state.tasks.find(x=>x.id===activeTaskId);
+  if(t){ t.deleted = true; t.updatedAt = new Date().toISOString(); }
+  saveState();
+  closeAllPanels();
+  renderToday(); renderTasksView(); renderCalendar();
+}
+
+/* ---------- Apple-Calendar-style occurrence delete ---------- */
+let dsmTaskId=null, dsmDateStr=null;
+function openDeleteScopeModal(taskId, dateStr){
+  const t = state.tasks.find(x=>x.id===taskId);
+  if(!t) return;
+  if(t.repeat==='once'){ deleteOccurrence(taskId, dateStr, 'all'); return; }
+  dsmTaskId = taskId; dsmDateStr = dateStr;
+  document.getElementById('dsm-title').textContent = `Delete "${t.name}"`;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal-delete-scope').classList.add('show');
+}
+function closeDeleteScopeModal(){
+  document.getElementById('modal-delete-scope').classList.remove('show');
+  if(!document.querySelector('.panel.show')) document.getElementById('overlay').classList.remove('show');
+  dsmTaskId = null; dsmDateStr = null;
+}
+function deleteOccurrence(taskId, dateStr, scope){
+  const t = state.tasks.find(x=>x.id===taskId);
+  if(!t) return;
+  if(scope==='all'){
+    t.deleted = true;
+  } else if(scope==='future'){
+    const prevDay = parseDate(dateStr); prevDay.setDate(prevDay.getDate()-1);
+    t.endDate = fmtDate(prevDay);
+  } else { // 'only'
+    t.exceptions = t.exceptions || [];
+    if(!t.exceptions.includes(dateStr)) t.exceptions.push(dateStr);
+  }
+  t.updatedAt = new Date().toISOString();
+  saveState();
+  closeDeleteScopeModal();
+  renderToday(); renderCalendar(); renderTasksView();
+  if(activeDayStr) openDayPanel(activeDayStr);
+}
+
+/* ---------- Tasks list view ---------- */
+function renderTasksView(){
+  const list = document.getElementById('tasks-list');
+  const visible = state.tasks.filter(t=>!t.deleted);
+  document.getElementById('tasks-count').textContent = visible.length + i18nText('tasks.count');
+  list.innerHTML = '';
+  if(visible.length===0){ list.innerHTML = `<div class="empty-note">${i18nText('tasks.empty')}</div>`; return; }
+  visible.forEach(task=>{
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    const repeatMap = {daily:'repeat.daily', weekdays:'repeat.weekdays', weekends:'repeat.weekends', weekly:'repeat.weekly', monthly:'repeat.monthly', once:'repeat.once'};
+    const repeatLabel = task.repeat==='everyx' ? i18nText('repeat.everyx',{n:task.everyx||2}) : i18nText(repeatMap[task.repeat] || task.repeat);
+    row.innerHTML = `<span class="task-color-dot" style="background:${task.color}"></span>
+      <span class="task-name">${escapeHtml(task.name)}</span>
+      <span class="task-meta">${repeatLabel}</span>
+      <span class="task-xp">+${task.xp} XP</span>
+      <div class="task-actions">
+        <button class="icon-btn" data-edit="${task.id}">✎ Edit</button>
+      </div>`;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('[data-edit]').forEach(b=> b.addEventListener('click', ()=>openTaskPanel(b.dataset.edit)));
+}
+
+/* ---------- Analytics ---------- */
+let chartXP=null, chartCat=null;
+function renderAnalytics(){
+  const xp = lifetimeXP();
+  document.getElementById('an-lifetime').textContent = xp;
+
+  const days = [];
+  const d = new Date();
+  for(let i=29;i>=0;i--){
+    const dd = new Date(d); dd.setDate(d.getDate()-i);
+    days.push(fmtDate(dd));
+  }
+  const dayData = days.map(ds=>dayStats(ds));
+  const avgXP = Math.round(dayData.reduce((a,s)=>a+s.xp,0)/30);
+  const avgPct = Math.round(dayData.reduce((a,s)=>a+s.pct,0)/30);
+  document.getElementById('an-avgxp').textContent = avgXP;
+  document.getElementById('an-avgpct').textContent = avgPct+'%';
+
+  const byWeekday = [0,0,0,0,0,0,0], cnt=[0,0,0,0,0,0,0];
+  days.forEach((ds,idx)=>{ const dow = parseDate(ds).getDay(); byWeekday[dow]+=dayData[idx].xp; cnt[dow]++; });
+  let bestDow=0, bestAvg=-1;
+  byWeekday.forEach((v,i)=>{ const avg = v/(cnt[i]||1); if(avg>bestAvg){bestAvg=avg; bestDow=i;} });
+  document.getElementById('an-bestday').textContent = WEEKDAY_LABELS[bestDow];
+
+  // heatmap: last 12 months
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML = '';
+  const hmStart = new Date(); hmStart.setDate(hmStart.getDate()-370);
+  const startDow = hmStart.getDay();
+  for(let i=0;i<startDow;i++){ const c=document.createElement('div'); c.className='hcell'; c.style.visibility='hidden'; hm.appendChild(c); }
+  const cur = new Date(hmStart);
+  const today = new Date();
+  while(cur<=today){
+    const ds = fmtDate(cur);
+    const s = dayStats(ds);
+    let lvl=0;
+    if(s.xp>0){ lvl = s.xp<40?1: s.xp<90?2: s.xp<160?3:4; }
+    const c = document.createElement('div');
+    c.className='hcell'; c.dataset.lvl=lvl;
+    c.title = `${ds}: ${s.xp} XP, ${s.done}/${s.total} tasks`;
+    hm.appendChild(c);
+    cur.setDate(cur.getDate()+1);
+  }
+
+  // XP line chart
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e0645a';
+  const ctx = document.getElementById('chart-xp').getContext('2d');
+  if(chartXP) chartXP.destroy();
+  chartXP = new Chart(ctx, {
+    type:'line',
+    data:{ labels: days.map(ds=>parseDate(ds).toLocaleDateString(undefined,{month:'short',day:'numeric'})),
+      datasets:[{ label:'XP', data: dayData.map(s=>s.xp), borderColor:accentColor, backgroundColor:accentColor.replace(')', ' / 0.15)'), fill:true, tension:.35, pointRadius:0 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98', maxTicksLimit:6}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
+  });
+
+  // avg XP by weekday over the last 30 days (byWeekday/cnt already computed above)
+  const weekdayAvgs = byWeekday.map((v,i)=> Math.round(v/(cnt[i]||1)));
+  const ctx2 = document.getElementById('chart-cat').getContext('2d');
+  if(chartCat) chartCat.destroy();
+  chartCat = new Chart(ctx2, {
+    type:'bar',
+    data:{ labels: WEEKDAY_LABELS,
+      datasets:[{ data: weekdayAvgs, backgroundColor: WEEKDAY_LABELS.map((_,i)=> i===bestDow ? accentColor : 'rgba(255,255,255,0.12)'), borderRadius:5 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98'}, grid:{display:false} }, y:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
+  });
+
+  // insights
+  const streaks = computeStreaks();
+  const insightsList = [];
+  insightsList.push(i18nText('insight.streak', {c:streaks.current, s:streaks.current===1?'':'s', l:streaks.longest}));
+  if(bestAvg>0){
+    const fullDayName = (currentLang==='th' ? WEEKDAY_FULL_TH : WEEKDAY_FULL_EN)[bestDow];
+    insightsList.push(i18nText('insight.bestday', {d:fullDayName, xp:Math.round(bestAvg)}));
+  }
+  insightsList.push(i18nText('insight.avg', {p:avgPct}));
+  document.getElementById('insights').innerHTML = insightsList.map(i=>`<div class="insight">${i}</div>`).join('');
+}
+
+/* ---------- Panels ---------- */
+function showPanel(id){
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById(id).classList.add('show');
+}
+function closeAllPanels(){
+  document.getElementById('overlay').classList.remove('show');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('modal-delete-scope').classList.remove('show');
+  activeTaskId = null; activeDayStr = null;
+}
+
+/* ============================================================
+   CLOUD SYNC + LOGIN GATE
+   Project Ascension only works when signed in. #app stays display:none and
+   no render*() function ever runs until a session token has been
+   validated against the backend — so there is no real task data
+   sitting in the page for something like Safari's "Hide Distracting
+   Items" to reveal by just hiding the gate overlay. See the chat
+   response for the honest limits of what this does and doesn't stop.
+   ============================================================ */
+const LS_API = 'ascend_api_url';
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxi-oV4OHjvTnv8_m1UZy6Mvy9rsmwaowU-iHhYUfDeztlc4Qfglz96nyRp4Am1MfrT/exec';
+const LS_SESSION = 'ascend_session';
+let gateMode = 'login';
+
+function getApiUrl(){ return localStorage.getItem(LS_API) || DEFAULT_API_URL; }
+function getSession(){ try{ return JSON.parse(localStorage.getItem(LS_SESSION)||'null'); }catch(e){ return null; } }
+function setSession(s){ if(s) localStorage.setItem(LS_SESSION, JSON.stringify(s)); else localStorage.removeItem(LS_SESSION); updateSyncIndicator(); }
+
+async function apiCall(action, payload){
+  const url = getApiUrl();
+  if(!url) throw new Error('No backend URL configured yet');
+  let res;
+  try{
+    // text/plain avoids a CORS preflight against Apps Script web apps
+    res = await fetch(url, {
+      method:'POST',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(Object.assign({action}, payload))
+    });
+  }catch(networkErr){
+    if(location.protocol === 'file:'){
+      throw new Error('Could not reach the backend. This page is open as a local file (file://) — most browsers, especially Safari, block requests to remote servers from local files. Host this file on a real web server (even a simple one) and open it via http:// or https:// instead.');
+    }
+    throw new Error('Could not reach the backend — check your internet connection, and make sure no ad-blocker or privacy extension is blocking script.google.com.');
+  }
+  const raw = await res.text();
+  let data;
+  try{
+    data = JSON.parse(raw);
+  }catch(e){
+    // Apps Script returns an HTML page (not JSON) when the deployment isn't
+    // publicly accessible yet — almost always "Who has access" isn't set to
+    // "Anyone", or it's a stale /dev URL instead of a redeployed /exec one.
+    throw new Error('Backend returned a login/error page instead of data. In Apps Script: Deploy → Manage deployments → edit → "Who has access" must be "Anyone", then redeploy (new version) and make sure the URL ends in /exec.');
+  }
+  if(!data.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+/* ---------- Gate UI ---------- */
+function setGateMode(mode){
+  gateMode = mode;
+  document.getElementById('gate-tab-login').classList.toggle('active', mode==='login');
+  document.getElementById('gate-tab-register').classList.toggle('active', mode==='register');
+  document.getElementById('gate-submit-btn').textContent = mode==='login' ? i18nText('gate.login') : i18nText('gate.createbtn');
+  document.getElementById('gate-submit-btn').onclick = mode==='login' ? gateLogin : gateRegister;
+  document.getElementById('gate-auth-status').textContent = '';
+}
+async function gateLogin(){
+  const status = document.getElementById('gate-auth-status');
+  const username = document.getElementById('gate-username').value.trim();
+  const password = document.getElementById('gate-password').value;
+  if(!username || !password){ status.textContent = i18nText('gate.enterboth'); return; }
+  status.textContent = i18nText('gate.signing');
+  try{
+    const data = await apiCall('login', {username, password});
+    setSession({ token:data.token, userId:data.userId, username });
+    await fetchStateSilently();
+    unlockApp();
+  }catch(e){ status.textContent = 'Error: '+e.message; }
+}
+async function gateRegister(){
+  const status = document.getElementById('gate-auth-status');
+  const username = document.getElementById('gate-username').value.trim();
+  const password = document.getElementById('gate-password').value;
+  if(!username || !password){ status.textContent = i18nText('gate.enterboth'); return; }
+  status.textContent = i18nText('gate.creating');
+  try{
+    const data = await apiCall('register', {username, password});
+    setSession({ token:data.token, userId:data.userId, username });
+    state = { tasks: seedTasks(), logs:{}, notes:{}, createdAt: todayStr() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    await pushStateToBackend();
+    unlockApp();
+  }catch(e){ status.textContent = 'Error: '+e.message; }
+}
+function lockApp(){
+  setSession(null);
+  stopPolling();
+  localStorage.removeItem(STORE_KEY);
+  state = { tasks:[], logs:{}, notes:{}, createdAt: todayStr() };
+  closeAllPanels();
+  document.getElementById('app').classList.remove('unlocked');
+  document.getElementById('gate').classList.remove('hidden');
+  document.getElementById('gate-username').value = '';
+  document.getElementById('gate-password').value = '';
+  setGateMode('login');
+}
+function unlockApp(){
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('app').classList.add('unlocked');
+  buildColorSwatches();
+  renderToday();
+  updateSyncIndicator('synced');
+  startPolling();
+}
+function doLogout(){
+  const s = getSession();
+  if(s){ apiCall('logout', {token:s.token}).catch(()=>{}); }
+  lockApp();
+}
+
+/* fetch + set `state` without touching the DOM — used only during boot,
+   before #app is ever unlocked, so no data gets rendered pre-auth */
+async function fetchStateSilently(){
+  const s = getSession(); if(!s) throw new Error('No session');
+  const data = await apiCall('getState', {token:s.token});
+  state = data.state || { tasks:[], logs:{}, notes:{}, createdAt: todayStr() };
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+async function pullStateFromBackend(){
+  await fetchStateSilently();
+  renderToday(); renderCalendar(); renderTasksView(); renderAnalytics();
+}
+async function pushStateToBackend(){
+  const s = getSession(); if(!s) return;
+  await apiCall('saveState', {token:s.token, state});
+}
+
+/* ============================================================
+   MULTI-DEVICE MERGE — field-level, timestamp-based.
+   Google Sheets/Apps Script can't push updates to open browsers,
+   so two devices open at once each poll for the other's changes.
+   A naive "whichever device saves last wins" would silently drop
+   the other device's edits, so instead of overwriting the whole
+   blob we merge entity-by-entity using updatedAt / completedAt,
+   with tombstones (deleted:true) so deletions survive the merge
+   instead of being resurrected by a device that hasn't seen them.
+   ============================================================ */
+function mergeState(local, remote){
+  if(!remote) return local;
+  // Tasks: union by id, newer updatedAt wins (including deletions, since a
+  // delete just sets deleted:true with a fresh updatedAt).
+  const taskMap = {};
+  (remote.tasks||[]).forEach(t=> taskMap[t.id] = t);
+  (local.tasks||[]).forEach(t=>{
+    const r = taskMap[t.id];
+    if(!r || (t.updatedAt||'') > (r.updatedAt||'')) taskMap[t.id] = t;
+  });
+  const mergedTasks = Object.values(taskMap);
+
+  // Logs: merge per day, per task — newer completedAt wins for each entry.
+  const mergedLogs = {};
+  new Set([...Object.keys(local.logs||{}), ...Object.keys(remote.logs||{})]).forEach(ds=>{
+    const l = (local.logs||{})[ds] || {}, r = (remote.logs||{})[ds] || {};
+    const merged = {};
+    new Set([...Object.keys(l), ...Object.keys(r)]).forEach(tid=>{
+      const le = l[tid], re = r[tid];
+      merged[tid] = (le && re) ? ((le.completedAt||'') >= (re.completedAt||'') ? le : re) : (le || re);
+    });
+    if(Object.keys(merged).length) mergedLogs[ds] = merged;
+  });
+
+  // Notes: per day, newer updatedAt wins (legacy string notes normalize to epoch 0).
+  const mergedNotes = {};
+  new Set([...Object.keys(local.notes||{}), ...Object.keys(remote.notes||{})]).forEach(ds=>{
+    const l = normalizeNote(local.notes?.[ds]), r = normalizeNote(remote.notes?.[ds]);
+    mergedNotes[ds] = (l.updatedAt||'') >= (r.updatedAt||'') ? l : r;
+  });
+
+  return { tasks: mergedTasks, logs: mergedLogs, notes: mergedNotes, createdAt: local.createdAt || remote.createdAt };
+}
+
+let pollTimer = null;
+const POLL_INTERVAL_MS = 10000;
+function startPolling(){
+  stopPolling();
+  pollTimer = setInterval(pollForRemoteChanges, POLL_INTERVAL_MS);
+  document.addEventListener('visibilitychange', pollOnVisible);
+}
+function stopPolling(){
+  if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+  document.removeEventListener('visibilitychange', pollOnVisible);
+}
+function pollOnVisible(){ if(!document.hidden) pollForRemoteChanges(); }
+async function pollForRemoteChanges(){
+  const s = getSession();
+  if(!s || document.hidden || !document.getElementById('app').classList.contains('unlocked')) return;
+  try{
+    const data = await apiCall('getState', {token:s.token});
+    const remote = data.state;
+    if(!remote) return;
+    const before = JSON.stringify(state);
+    const merged = mergeState(state, remote);
+    const after = JSON.stringify(merged);
+    if(after === before) return; // nothing changed on either side, skip a wasted re-render
+    state = merged;
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    // don't clobber the notes textarea while someone's actively typing in it
+    const notesFocused = document.activeElement && document.activeElement.id === 'day-notes';
+    if(document.getElementById('view-today').classList.contains('active')) renderToday();
+    if(document.getElementById('view-calendar').classList.contains('active')) renderCalendar();
+    if(document.getElementById('view-tasks').classList.contains('active')) renderTasksView();
+    if(document.getElementById('view-analytics').classList.contains('active')) renderAnalytics();
+    if(activeDayStr && !notesFocused) openDayPanel(activeDayStr);
+    // reconcile: push the merged result back so the OTHER device picks up
+    // anything it was missing too, next time it polls.
+    if(after !== JSON.stringify(remote)) await pushStateToBackend();
+    updateSyncIndicator('synced');
+  }catch(e){
+    // silent — a transient network hiccup shouldn't interrupt the user;
+    // the debounced save-on-edit path will still report real errors
+  }
+}
+
+/* ---------- Account panel (post-login: log out / delete account) ---------- */
+function openSettingsPanel(){
+  const s = getSession();
+  document.getElementById('account-sub').textContent = s ? i18nText('account.signedinas', {u:s.username}) : i18nText('account.notsignedin');
+  document.getElementById('account-status').textContent = '';
+  showPanel('panel-settings');
+}
+
+/* ---------- Delete account (requires re-entering username + password) ---------- */
+function openDeleteAccountConfirm(){
+  document.getElementById('da-username').value = '';
+  document.getElementById('da-password').value = '';
+  document.getElementById('da-status').textContent = '';
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal-delete-account').classList.add('show');
+}
+function closeDeleteAccountConfirm(){
+  document.getElementById('modal-delete-account').classList.remove('show');
+  if(!document.querySelector('.panel.show')) document.getElementById('overlay').classList.remove('show');
+}
+async function confirmDeleteAccount(){
+  const status = document.getElementById('da-status');
+  const username = document.getElementById('da-username').value.trim();
+  const password = document.getElementById('da-password').value;
+  const s = getSession();
+  if(!s){ status.textContent = 'You need to be signed in.'; return; }
+  if(!username || !password){ status.textContent = 'Enter your username and password to confirm.'; return; }
+  if(username.toLowerCase() !== s.username.toLowerCase()){ status.textContent = 'That username doesn\'t match the signed-in account.'; return; }
+  status.style.color = 'var(--text-dim)';
+  status.textContent = 'Deleting…';
+  try{
+    // Re-verify the password server-side before allowing deletion, then
+    // permanently remove the account and all of its data.
+    await apiCall('login', {username, password});
+    await apiCall('deleteAccount', {token:s.token});
+    closeDeleteAccountConfirm();
+    lockApp();
+  }catch(e){
+    status.style.color = 'var(--danger)';
+    status.textContent = 'Error: '+e.message;
+  }
+}
+
+let syncTimer=null;
+function scheduleSync(){
+  const s = getSession();
+  if(!s || !getApiUrl()){ updateSyncIndicator(); return; }
+  updateSyncIndicator('syncing');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(async ()=>{
+    try{ await pushStateToBackend(); updateSyncIndicator('synced'); }
+    catch(e){ updateSyncIndicator('error'); }
+  }, 900);
+}
+function updateSyncIndicator(status){
+  const s = getSession();
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  if(!dot || !label) return;
+  if(!s){ dot.style.background='var(--danger)'; label.textContent=i18nText('sync.local'); return; }
+  if(status==='syncing'){ dot.style.background='var(--accent)'; label.textContent=i18nText('sync.syncing'); }
+  else if(status==='error'){ dot.style.background='var(--danger)'; label.textContent=i18nText('sync.error'); }
+  else{ dot.style.background='var(--accent)'; label.textContent=i18nText('sync.as', {u:s.username}); }
+}
+
+/* ---------- Boot: gate first, always ---------- */
+(async function boot(){
+  document.querySelectorAll('.lang-btn').forEach(b=> b.classList.toggle('active', b.id.endsWith('-'+currentLang)));
+  WEEKDAY_LABELS = currentLang==='th' ? WEEKDAY_LABELS_TH : WEEKDAY_LABELS_EN;
+  applyLanguage();
+  setGateMode('login');
+  const s = getSession();
+  if(!s) return;
+  document.getElementById('gate-auth-status').textContent = i18nText('gate.checking');
+  try{
+    await fetchStateSilently();
+    unlockApp();
+  }catch(e){
+    // stale/invalid token — fall back to a clean login prompt, never to local data
+    setSession(null);
+    document.getElementById('gate-auth-status').textContent = i18nText('gate.expired');
+  }
+})();
+</script>
+</body>
+</html>
