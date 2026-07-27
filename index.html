@@ -25,6 +25,7 @@
   --text-dim: #8b8b8f;
   --text-faint: #55555a;
   --accent: #e0645a;
+  --accent-rgb: 224, 100, 90;
   --accent-dim: rgba(224,101,90,0.14);
   --danger: #e0645a;
   --radius: 14px;
@@ -253,6 +254,7 @@ button{ font-family:inherit; cursor:pointer; }
   .stat-card{ padding:12px; }
   .stat-card .sc-val{ font-size:18px; }
   .panel{ width:100%; max-width:100%; padding:20px; padding-top:calc(20px + env(safe-area-inset-top)); }
+  .panel-close{ top:calc(18px + env(safe-area-inset-top)); right:calc(18px + env(safe-area-inset-right)); }
   .cal-grid{ gap:4px; }
   .cal-cell{ min-height:54px; padding:6px; border-radius:8px; }
   .cal-daynum{ font-size:11px; }
@@ -861,8 +863,30 @@ function computeAccentForPct(pct, dim){
 }
 function updateAccentColor(pct){
   const root = document.documentElement.style;
-  root.setProperty('--accent', computeAccentForPct(pct, false));
+  const accentColor = computeAccentForPct(pct, false);
+  root.setProperty('--accent', accentColor);
   root.setProperty('--accent-dim', computeAccentForPct(pct, true));
+  
+  // Extract RGB from HSL for the heatmap
+  const hue = Math.round(4 + (Math.min(Math.max(pct,0),100)/100)*136);
+  const sat = 72, light = Math.min(Math.max(pct,0),100)>=100 ? 58 : 55;
+  
+  // Convert HSL to RGB
+  const h = hue/360, s = sat/100, l = light/100;
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const r = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+  const g = Math.round(hue2rgb(p, q, h) * 255);
+  const b = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+  root.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
 }
 
 function renderToday(){
@@ -1292,7 +1316,6 @@ function renderAnalytics(){
       
       const cell = document.createElement('div');
       cell.className = 'month-cell';
-      cell.style.background = 'var(--bg-elev)';
       cell.style.border = '1px solid var(--border)';
       cell.style.borderRadius = '10px';
       cell.style.padding = '12px 8px';
@@ -1305,13 +1328,39 @@ function renderAnalytics(){
       cell.style.transition = 'transform 0.2s, border-color 0.2s';
       cell.style.cursor = 'default';
       
+      // Apply background color based on completion percentage (brighter green)
+      if (monthPct === 100) {
+        cell.style.backgroundColor = 'rgba(70,180,120,0.6)';
+        cell.style.borderColor = 'rgba(70,180,120,0.9)';
+      } else if (monthPct >= 75) {
+        cell.style.backgroundColor = 'rgba(70,180,120,0.5)';
+        cell.style.borderColor = 'rgba(70,180,120,0.8)';
+      } else if (monthPct >= 50) {
+        cell.style.backgroundColor = 'rgba(70,180,120,0.4)';
+        cell.style.borderColor = 'rgba(70,180,120,0.7)';
+      } else if (monthPct >= 25) {
+        cell.style.backgroundColor = 'rgba(70,180,120,0.25)';
+        cell.style.borderColor = 'rgba(70,180,120,0.5)';
+      } else if (monthPct > 0) {
+        cell.style.backgroundColor = 'rgba(70,180,120,0.15)';
+        cell.style.borderColor = 'rgba(70,180,120,0.4)';
+      } else {
+        cell.style.backgroundColor = 'var(--bg-elev)';
+        cell.style.borderColor = 'var(--border)';
+      }
+      
       const monthName = monthStart.toLocaleDateString(currentLang==='th'?'th-TH':undefined,{month:'short'});
       
+      // Use same text colors as calendar
+      const textColor = monthPct > 0 ? 'var(--text)' : 'var(--text-faint)';
+      const xpColor = monthPct > 0 ? 'var(--accent)' : 'var(--accent)';
+      const dimColor = monthPct > 0 ? 'var(--accent)' : 'var(--text-dim)';
+      
       cell.innerHTML = `
-        <div style="font-size:12px; color:var(--text-faint); font-weight:600; margin-bottom:4px;">${monthName}</div>
-        <div style="font-size:16px; font-weight:bold; color:var(--accent); margin-bottom:2px;">${monthXP}</div>
-        <div style="font-size:10px; color:var(--text-dim); margin-bottom:6px;">XP</div>
-        <div style="font-size:14px; font-weight:bold; color:var(--text-dim);">${monthPct}%</div>
+        <div style="font-size:12px; color:${textColor}; font-weight:600; margin-bottom:4px;">${monthName}</div>
+        <div style="font-size:16px; font-weight:bold; color:${xpColor}; margin-bottom:2px;">${monthXP}</div>
+        <div style="font-size:10px; color:${dimColor}; margin-bottom:6px;">XP</div>
+        <div style="font-size:14px; font-weight:bold; color:${dimColor};">${monthPct}%</div>
       `;
       
       monthGrid.appendChild(cell);
