@@ -170,11 +170,20 @@ button{ font-family:inherit; cursor:pointer; }
 .cal-cell:hover{ border-color:var(--accent); transform:translateY(-1px); }
 .cal-cell.out{ opacity:.32; }
 .cal-cell.today{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+.cal-cell[data-xp="1"]{ background:rgba(70,180,120,0.08); border-color:rgba(70,180,120,0.3); }
+.cal-cell[data-xp="1"] .cal-daynum, .cal-cell[data-xp="1"] .cal-xp, .cal-cell[data-xp="1"] .cal-pct{ color:var(--text); }
+.cal-cell[data-xp="2"]{ background:rgba(70,180,120,0.15); border-color:rgba(70,180,120,0.4); }
+.cal-cell[data-xp="2"] .cal-daynum, .cal-cell[data-xp="2"] .cal-xp, .cal-cell[data-xp="2"] .cal-pct{ color:var(--text); }
+.cal-cell[data-xp="3"]{ background:rgba(70,180,120,0.25); border-color:rgba(70,180,120,0.5); }
+.cal-cell[data-xp="3"] .cal-daynum, .cal-cell[data-xp="3"] .cal-xp, .cal-cell[data-xp="3"] .cal-pct{ color:var(--text); }
+.cal-cell[data-xp="4"]{ background:rgba(70,180,120,0.35); border-color:rgba(70,180,120,0.6); }
+.cal-cell[data-xp="4"] .cal-daynum, .cal-cell[data-xp="4"] .cal-xp, .cal-cell[data-xp="4"] .cal-pct{ color:var(--text); }
 .cal-daynum{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
 .cal-cell.today .cal-daynum{ color:var(--accent); font-weight:700;}
 .cal-dots{ display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .cal-dot{ width:6px; height:6px; border-radius:50%; }
-.cal-pct{ position:absolute; bottom:6px; right:8px; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+.cal-xp{ position:absolute; bottom:6px; right:8px; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); font-weight:600; }
+.cal-pct{ position:absolute; bottom:6px; left:8px; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
 .cal-pct.full{ color:var(--accent); }
 
 /* side panel */
@@ -213,6 +222,8 @@ button{ font-family:inherit; cursor:pointer; }
 .hcell[data-lvl="3"]{ background:rgba(70,180,120,0.8); }
 .hcell[data-lvl="4"]{ background:#46b478; }
 .hcell:hover{ outline:1px solid var(--text-dim); }
+.month-cell{ font-family:var(--font-mono); }
+.month-cell:hover{ border-color:var(--accent); }
 
 .card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:20px; }
 .card h3{ font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-dim); margin-bottom:14px; }
@@ -399,49 +410,31 @@ button{ font-family:inherit; cursor:pointer; }
       </div>
 
       <div class="stat-row">
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.lifetime">Lifetime XP</div><div class="sc-val gold" id="an-lifetime">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.level">Level</div><div class="sc-val gold" id="an-level">1</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="today.streak">Current Streak</div><div class="sc-val teal" id="an-streak">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="today.longest">Longest Streak</div><div class="sc-val" id="an-longest">0</div></div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.week">This Week XP</div><div class="sc-val" id="an-weekxp">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.month">This Month XP</div><div class="sc-val" id="an-monthxp">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.year">This Year XP</div><div class="sc-val" id="an-yearxp">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.consistency">Consistency Score (90d)</div><div class="sc-val teal" id="an-consistency">0%</div></div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgxp">Avg Daily XP (30d)</div><div class="sc-val" id="an-avgxp">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgpct">Avg Completion (30d)</div><div class="sc-val" id="an-avgpct">0%</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.bestday">Most Productive Day</div><div class="sc-val teal" id="an-bestday">—</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.worstday">Least Productive Day</div><div class="sc-val" id="an-worstday">—</div></div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.perfectdays">Perfect Days</div><div class="sc-val gold" id="an-perfectdays">0</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.totalcompleted">Tasks Completed (All-Time)</div><div class="sc-val" id="an-totalcompleted">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.totalcompleted">Tasks Completed (All-Time)</div><div class="sc-val gold" id="an-totalcompleted">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.activetasks">Active Tasks</div><div class="sc-val" id="an-activetasks">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.daystracked">Days Tracked</div><div class="sc-val" id="an-daystracked">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.overallsuccess">Overall Success Rate</div><div class="sc-val teal" id="an-overallsuccess">0%</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.todaystasks">Today's Tasks</div><div class="sc-val" id="an-todaystasks">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.todaycompleted">Today's Completed</div><div class="sc-val" id="an-todaycompleted">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.todayrate">Today's Success Rate</div><div class="sc-val" id="an-todayrate">0%</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgpct">Avg Completion (All-Time)</div><div class="sc-val" id="an-avgpct">0%</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgxp">Avg Daily XP (All-Time)</div><div class="sc-val" id="an-avgxp">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.perfectdays">Perfect Days</div><div class="sc-val gold" id="an-perfectdays">0</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.bestday">Most Productive Day</div><div class="sc-val teal" id="an-bestday">—</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.consistency">Consistency Score (90d)</div><div class="sc-val teal" id="an-consistency">0%</div></div>
       </div>
 
       <div class="card">
-        <h3 data-i18n="analytics.heatmap">Contribution Heatmap — Last 12 Months</h3>
-        <div class="heatmap-wrap"><div class="heatmap-grid" id="heatmap"></div></div>
-      </div>
-      <div class="chart-row">
-        <div class="card"><h3 data-i18n="analytics.xpchart">XP Over Time (30 Days)</h3><canvas id="chart-xp" height="160"></canvas></div>
-        <div class="card"><h3 data-i18n="analytics.completionchart">Completion % Trend (30 Days)</h3><canvas id="chart-completion" height="160"></canvas></div>
-      </div>
-      <div class="chart-row">
-        <div class="card"><h3 data-i18n="analytics.weekdaychart">Avg XP by Weekday</h3><canvas id="chart-cat" height="160"></canvas></div>
-        <div class="card"><h3 data-i18n="analytics.monthlychart">Monthly XP (Last 12 Months)</h3><canvas id="chart-monthly" height="160"></canvas></div>
+        <h3 data-i18n="analytics.monthlyheatmap">Monthly Heatmap</h3>
+        <div class="heatmap-wrap"><div class="heatmap-grid" id="monthly-heatmap"></div></div>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.taskbreakdown">XP by Task (All-Time)</h3>
-        <canvas id="chart-tasks" height="220"></canvas>
-      </div>
-      <div class="card">
-        <h3 data-i18n="analytics.insights">Insights</h3>
-        <div id="insights"></div>
+        <h3 data-i18n="analytics.currentmonth">Current Month Daily Completion</h3>
+        <div id="current-month-bars"></div>
       </div>
     </section>
   </main>
@@ -585,15 +578,12 @@ const I18N = {
     'calendar.title':'Calendar', 'calendar.sub':'Click a day for details',
     'calendar.prev':'← Prev', 'calendar.next':'Next →', 'calendar.today':'Today',
     'analytics.title':'Analytics', 'analytics.sub':'Your consistency, quantified',
-    'analytics.lifetime':'Lifetime XP', 'analytics.avgxp':'Avg Daily XP (30d)', 'analytics.avgpct':'Avg Completion (30d)',
-    'analytics.bestday':'Most Productive Day', 'analytics.worstday':'Least Productive Day',
-    'analytics.heatmap':'Contribution Heatmap — Last 12 Months',
-    'analytics.xpchart':'XP Over Time (30 Days)', 'analytics.weekdaychart':'Avg XP by Weekday', 'analytics.insights':'Insights',
-    'analytics.level':'Level', 'analytics.week':'This Week XP', 'analytics.month':'This Month XP', 'analytics.year':'This Year XP',
+    'analytics.overallsuccess':'Overall Success Rate', 'analytics.todaystasks':"Today's Tasks", 'analytics.todaycompleted':"Today's Completed", 'analytics.todayrate':"Today's Success Rate",
+    'analytics.avgpct':'Avg Completion (All-Time)', 'analytics.avgxp':'Avg Daily XP (All-Time)',
+    'analytics.bestday':'Most Productive Day',
+    'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'Current Month Daily Completion',
     'analytics.consistency':'Consistency Score (90d)', 'analytics.perfectdays':'Perfect Days',
     'analytics.totalcompleted':'Tasks Completed (All-Time)', 'analytics.activetasks':'Active Tasks', 'analytics.daystracked':'Days Tracked',
-    'analytics.completionchart':'Completion % Trend (30 Days)', 'analytics.monthlychart':'Monthly XP (Last 12 Months)',
-    'analytics.taskbreakdown':'XP by Task (All-Time)',
     'taskform.newtitle':'New Task', 'taskform.edittitle':'Edit Task', 'taskform.sub':'Define what it is and how often it repeats',
     'taskform.name':'Name', 'taskform.xp':'XP Reward', 'taskform.color':'Color', 'taskform.repeat':'Repeat',
     'taskform.whichdays':'Which days', 'taskform.everyn':'Every N days', 'taskform.save':'Save Task', 'taskform.delete':'Delete Task',
@@ -621,7 +611,7 @@ const I18N = {
   th: {
     'nav.today':'วันนี้', 'nav.calendar':'ปฏิทิน', 'nav.tasks':'งาน', 'nav.analytics':'วิเคราะห์ข้อมูล',
     'credit':'สร้างโดย Perth',
-    'about.title':'เกี่ยวกับ', 'about.name':'เพิร์ธ - พงษ์กร โชติปัญญาวรกุล', 'about.role':'ผู้สร้างและพัฒนา',
+    'about.title':'เกี่ยวกับ', 'about.name':'พงษ์กร โชติปัญญาวรกุล', 'about.role':'ผู้สร้างและพัฒนา',
     'about.description':'Project Ascension คือระบบปฏิบัติการเพื่อความสม่ำเสมอส่วนตัว รวมปฏิทิน ตัวติดตามนิสัย ระบบ XP และแดชบอร์ดวิเคราะห์ข้อมูลไว้ในที่เดียว สร้างขึ้นเพื่อให้การทำสิ่งต่าง ๆ อย่างสม่ำเสมอในทุกวันกลายเป็นความก้าวหน้าที่มองเห็นได้จริง',
     'gate.subtitle':'เข้าสู่ระบบเพื่อดำเนินการต่อ', 'gate.login':'เข้าสู่ระบบ', 'gate.register':'สมัครสมาชิก',
     'gate.username':'ชื่อผู้ใช้', 'gate.password':'รหัสผ่าน',
@@ -634,15 +624,12 @@ const I18N = {
     'calendar.title':'ปฏิทิน', 'calendar.sub':'คลิกวันที่เพื่อดูรายละเอียด',
     'calendar.prev':'← ก่อนหน้า', 'calendar.next':'ถัดไป →', 'calendar.today':'วันนี้',
     'analytics.title':'วิเคราะห์ข้อมูล', 'analytics.sub':'ความสม่ำเสมอของคุณ วัดผลได้',
-    'analytics.lifetime':'XP สะสมทั้งหมด', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (30 วัน)', 'analytics.avgpct':'ความสำเร็จเฉลี่ย (30 วัน)',
-    'analytics.bestday':'วันที่ทำได้ดีที่สุด', 'analytics.worstday':'วันที่ทำได้น้อยที่สุด',
-    'analytics.heatmap':'แผนที่ความสำเร็จ — 12 เดือนล่าสุด',
-    'analytics.xpchart':'XP ตามช่วงเวลา (30 วัน)', 'analytics.weekdaychart':'XP เฉลี่ยตามวันในสัปดาห์', 'analytics.insights':'ข้อมูลเชิงลึก',
-    'analytics.level':'เลเวล', 'analytics.week':'XP สัปดาห์นี้', 'analytics.month':'XP เดือนนี้', 'analytics.year':'XP ปีนี้',
+    'analytics.overallsuccess':'อัตราความสำเร็จโดยรวม', 'analytics.todaystasks':'งานวันนี้', 'analytics.todaycompleted':'งานที่ทำสำเร็จวันนี้', 'analytics.todayrate':'อัตราความสำเร็จวันนี้',
+    'analytics.avgpct':'ความสำเร็จเฉลี่ย (ทั้งหมด)', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (ทั้งหมด)',
+    'analytics.bestday':'วันที่ทำได้ดีที่สุด',
+    'analytics.monthlyheatmap':'แผนที่ความสำเร็จรายเดือน', 'analytics.currentmonth':'ความสำเร็จรายวันของเดือนปัจจุบัน',
     'analytics.consistency':'คะแนนความสม่ำเสมอ (90 วัน)', 'analytics.perfectdays':'วันที่สมบูรณ์แบบ',
     'analytics.totalcompleted':'งานที่ทำสำเร็จ (ทั้งหมด)', 'analytics.activetasks':'งานที่ใช้งานอยู่', 'analytics.daystracked':'จำนวนวันที่ติดตาม',
-    'analytics.completionchart':'แนวโน้มความสำเร็จ % (30 วัน)', 'analytics.monthlychart':'XP รายเดือน (12 เดือนล่าสุด)',
-    'analytics.taskbreakdown':'XP แยกตามงาน (ทั้งหมด)',
     'taskform.newtitle':'เพิ่มงานใหม่', 'taskform.edittitle':'แก้ไขงาน', 'taskform.sub':'กำหนดรายละเอียดและความถี่ของงาน',
     'taskform.name':'ชื่องาน', 'taskform.xp':'XP ที่ได้รับ', 'taskform.color':'สี', 'taskform.repeat':'ความถี่',
     'taskform.whichdays':'เลือกวัน', 'taskform.everyn':'ทุก N วัน', 'taskform.save':'บันทึกงาน', 'taskform.delete':'ลบงาน',
@@ -963,6 +950,16 @@ function popXP(x,y,amount){
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 /* ---------- Calendar ---------- */
+function xpToLevel(xp, totalXP){
+  if(xp<=0) return 0;
+  if(totalXP<=0) return 0;
+  const percentage = xp / totalXP;
+  if(percentage<0.1) return 1;
+  if(percentage<0.25) return 2;
+  if(percentage<0.5) return 3;
+  return 4;
+}
+
 function renderCalendar(){
   const y = calCursor.getFullYear(), m = calCursor.getMonth();
   document.getElementById('cal-monthlabel').textContent = calCursor.toLocaleDateString(undefined,{month:'long', year:'numeric'});
@@ -977,18 +974,23 @@ function renderCalendar(){
   const totalCells = Math.ceil((startOffset+daysInMonth)/7)*7;
   const cursor = new Date(y,m,1 - startOffset);
   const todayDs = todayStr();
+  const totalXP = lifetimeXP();
 
   for(let i=0;i<totalCells;i++){
     const ds = fmtDate(cursor);
     const inMonth = cursor.getMonth()===m;
     const s = dayStats(ds);
     const cell = document.createElement('div');
+    const xpLevel = xpToLevel(s.xp, totalXP);
     cell.className = 'cal-cell'+(inMonth?'':' out')+(ds===todayDs?' today':'');
+    cell.dataset.xp = xpLevel;
+    
     let dotsHtml = '';
     const cats = {};
     s.applicable.forEach(t=>{ cats[t.color] = (cats[t.color]||0)+1; });
     Object.keys(cats).slice(0,8).forEach(c=> dotsHtml += `<span class="cal-dot" style="background:${c}"></span>`);
-    cell.innerHTML = `<div class="cal-daynum">${cursor.getDate()}</div><div class="cal-dots">${dotsHtml}</div>${s.total?`<div class="cal-pct ${s.pct===100?'full':''}">${s.pct}%</div>`:''}`;
+    
+    cell.innerHTML = `<div class="cal-daynum">${cursor.getDate()}</div><div class="cal-dots">${dotsHtml}</div>${s.total?`<div class="cal-pct ${s.pct===100?'full':''}">${s.pct}%</div>`:''}${s.xp>0?`<div class="cal-xp">${s.xp} XP</div>`:''}`;
     cell.addEventListener('click', ()=>openDayPanel(ds));
     grid.appendChild(cell);
     cursor.setDate(cursor.getDate()+1);
@@ -1153,54 +1155,55 @@ function deleteOccurrence(taskId, dateStr, scope){
 }
 
 /* ---------- Analytics ---------- */
-let chartXP=null, chartCat=null, chartCompletion=null, chartMonthly=null, chartTasks=null;
+let currentMonthChart = null;
 function renderAnalytics(){
-  const xp = lifetimeXP();
-  document.getElementById('an-lifetime').textContent = xp;
-  document.getElementById('an-level').textContent = levelFromXP(xp);
-
-  const streaks = computeStreaks();
-  document.getElementById('an-streak').textContent = streaks.current;
-  document.getElementById('an-longest').textContent = streaks.longest;
-
   const today = new Date();
-  const days = [];
-  for(let i=29;i>=0;i--){
-    const dd = new Date(today); dd.setDate(today.getDate()-i);
-    days.push(fmtDate(dd));
+  const todayDs = todayStr();
+  const todayStats = dayStats(todayDs);
+  
+  // Overall success rate calculation
+  let totalTasks = 0;
+  let completedTasks = 0;
+  Object.keys(state.logs).forEach(dateStr => {
+    const s = dayStats(dateStr);
+    totalTasks += s.total;
+    completedTasks += s.done;
+  });
+  const overallSuccessRate = totalTasks > 0 ? Math.round(100 * completedTasks / totalTasks) : 0;
+  
+  // Update basic stats
+  document.getElementById('an-totalcompleted').textContent = completedTasks;
+  document.getElementById('an-activetasks').textContent = state.tasks.filter(t=>!t.deleted).length;
+  document.getElementById('an-overallsuccess').textContent = overallSuccessRate + '%';
+  
+  // Today's metrics
+  document.getElementById('an-todaystasks').textContent = todayStats.total;
+  document.getElementById('an-todaycompleted').textContent = todayStats.done;
+  document.getElementById('an-todayrate').textContent = todayStats.pct + '%';
+  
+  // All days from first tracked day to current
+  const created = parseDate(state.createdAt || todayStr());
+  const allDays = [];
+  for(const c = new Date(created); c <= today; c.setDate(c.getDate() + 1)){
+    allDays.push(fmtDate(c));
   }
-  const dayData = days.map(ds=>dayStats(ds));
-  const avgXP = Math.round(dayData.reduce((a,s)=>a+s.xp,0)/30);
-  const avgPct = Math.round(dayData.reduce((a,s)=>a+s.pct,0)/30);
-  document.getElementById('an-avgxp').textContent = avgXP;
+  const allDayData = allDays.map(ds=>dayStats(ds));
+  const avgPct = Math.round(allDayData.reduce((a,s)=>a+s.pct,0)/allDays.length);
+  const avgXP = Math.round(allDayData.reduce((a,s)=>a+s.xp,0)/allDays.length);
   document.getElementById('an-avgpct').textContent = avgPct+'%';
+  document.getElementById('an-avgxp').textContent = avgXP;
 
+  // Best day by completion rate
   const byWeekday = [0,0,0,0,0,0,0], cnt=[0,0,0,0,0,0,0];
-  days.forEach((ds,idx)=>{ const dow = parseDate(ds).getDay(); byWeekday[dow]+=dayData[idx].xp; cnt[dow]++; });
-  let bestDow=0, bestAvg=-1, worstDow=0, worstAvg=Infinity;
+  allDays.forEach((ds,idx)=>{ const dow = parseDate(ds).getDay(); byWeekday[dow]+=allDayData[idx].pct; cnt[dow]++; });
+  let bestDow=0, bestAvg=-1;
   byWeekday.forEach((v,i)=>{
     const avg = v/(cnt[i]||1);
     if(avg>bestAvg){bestAvg=avg; bestDow=i;}
-    if(avg<worstAvg){worstAvg=avg; worstDow=i;}
   });
   document.getElementById('an-bestday').textContent = WEEKDAY_LABELS[bestDow];
-  document.getElementById('an-worstday').textContent = WEEKDAY_LABELS[worstDow];
 
-  // rolling/calendar-window totals: this week (7d), this month (MTD), this year (YTD)
-  let weekXP = 0;
-  for(let i=0;i<7;i++){ const dd=new Date(today); dd.setDate(today.getDate()-i); weekXP += dayStats(fmtDate(dd)).xp; }
-  let monthXP = 0;
-  { const start = new Date(today.getFullYear(), today.getMonth(), 1);
-    for(const c=new Date(start); c<=today; c.setDate(c.getDate()+1)) monthXP += dayStats(fmtDate(c)).xp; }
-  let yearXP = 0;
-  { const start = new Date(today.getFullYear(), 0, 1);
-    for(const c=new Date(start); c<=today; c.setDate(c.getDate()+1)) yearXP += dayStats(fmtDate(c)).xp; }
-  document.getElementById('an-weekxp').textContent = weekXP;
-  document.getElementById('an-monthxp').textContent = monthXP;
-  document.getElementById('an-yearxp').textContent = yearXP;
-
-  // all-time walk from account creation: consistency score, perfect days, days tracked
-  const created = parseDate(state.createdAt || todayStr());
+  // All-time walk from account creation: consistency score, perfect days, days tracked
   const daysTracked = Math.max(1, Math.round((today - created)/86400000) + 1);
   document.getElementById('an-daystracked').textContent = daysTracked;
 
@@ -1214,124 +1217,210 @@ function renderAnalytics(){
   document.getElementById('an-perfectdays').textContent = perfectDays;
   document.getElementById('an-consistency').textContent = Math.round(consistencySum/(consistencyDays||1))+'%';
 
-  let totalCompleted = 0;
-  Object.values(state.logs).forEach(day=> Object.values(day).forEach(e=>{ if(e.completed) totalCompleted++; }));
-  document.getElementById('an-totalcompleted').textContent = totalCompleted;
-  document.getElementById('an-activetasks').textContent = state.tasks.filter(t=>!t.deleted).length;
-
-  // heatmap: last 12 months
-  const hm = document.getElementById('heatmap');
+  // Monthly heatmap
+  const hm = document.getElementById('monthly-heatmap');
   hm.innerHTML = '';
-  const hmStart = new Date(); hmStart.setDate(hmStart.getDate()-370);
-  const startDow = hmStart.getDay();
-  for(let i=0;i<startDow;i++){ const c=document.createElement('div'); c.className='hcell'; c.style.visibility='hidden'; hm.appendChild(c); }
-  const cur = new Date(hmStart);
-  while(cur<=today){
-    const ds = fmtDate(cur);
-    const s = dayStats(ds);
-    let lvl=0;
-    if(s.xp>0){ lvl = s.xp<40?1: s.xp<90?2: s.xp<160?3:4; }
-    const c = document.createElement('div');
-    c.className='hcell'; c.dataset.lvl=lvl;
-    c.title = `${ds}: ${s.xp} XP, ${s.done}/${s.total} tasks`;
-    hm.appendChild(c);
-    cur.setDate(cur.getDate()+1);
-  }
-
-  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e0645a';
-  const dayLabels = days.map(ds=>parseDate(ds).toLocaleDateString(currentLang==='th'?'th-TH':undefined,{month:'short',day:'numeric'}));
-
-  // XP line chart
-  const ctx = document.getElementById('chart-xp').getContext('2d');
-  if(chartXP) chartXP.destroy();
-  chartXP = new Chart(ctx, {
-    type:'line',
-    data:{ labels: dayLabels,
-      datasets:[{ label:'XP', data: dayData.map(s=>s.xp), borderColor:accentColor, backgroundColor:accentColor.replace(')', ' / 0.15)'), fill:true, tension:.35, pointRadius:0 }] },
-    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98', maxTicksLimit:6}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
+  hm.style.display = 'flex';
+  hm.style.flexDirection = 'column';
+  hm.style.gap = '20px';
+  
+  // Get all years from data
+  const years = new Set();
+  Object.keys(state.logs).forEach(dateStr => {
+    const year = parseDate(dateStr).getFullYear();
+    years.add(year);
   });
-
-  // Completion % trend chart
-  const ctxC = document.getElementById('chart-completion').getContext('2d');
-  if(chartCompletion) chartCompletion.destroy();
-  chartCompletion = new Chart(ctxC, {
-    type:'line',
-    data:{ labels: dayLabels,
-      datasets:[{ label:'%', data: dayData.map(s=>s.pct), borderColor:'#46b478', backgroundColor:'rgba(70,180,120,0.15)', fill:true, tension:.35, pointRadius:0 }] },
-    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98', maxTicksLimit:6}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ min:0, max:100, ticks:{color:'#8b8f98', callback:v=>v+'%'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
+  const sortedYears = Array.from(years).sort();
+  
+  // Add current year if not present
+  const currentYear = today.getFullYear();
+  if(!sortedYears.includes(currentYear)) sortedYears.push(currentYear);
+  
+  // Year totals for summary row
+  const yearTotals = {};
+  sortedYears.forEach(year => {
+    yearTotals[year] = { xp: 0, pct: 0, count: 0 };
   });
-
-  // avg XP by weekday over the last 30 days
-  const weekdayAvgs = byWeekday.map((v,i)=> Math.round(v/(cnt[i]||1)));
-  const ctx2 = document.getElementById('chart-cat').getContext('2d');
-  if(chartCat) chartCat.destroy();
-  chartCat = new Chart(ctx2, {
-    type:'bar',
-    data:{ labels: WEEKDAY_LABELS,
-      datasets:[{ data: weekdayAvgs, backgroundColor: WEEKDAY_LABELS.map((_,i)=> i===bestDow ? accentColor : 'rgba(255,255,255,0.12)'), borderRadius:5 }] },
-    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98'}, grid:{display:false} }, y:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
-  });
-
-  // Monthly XP, last 12 calendar months
-  const monthLabels = [], monthTotals = [];
-  for(let i=11;i>=0;i--){
-    const m = new Date(today.getFullYear(), today.getMonth()-i, 1);
-    const monthEnd = new Date(m.getFullYear(), m.getMonth()+1, 0);
-    const clampEnd = monthEnd > today ? today : monthEnd;
-    let total = 0;
-    for(const c=new Date(m); c<=clampEnd; c.setDate(c.getDate()+1)) total += dayStats(fmtDate(c)).xp;
-    monthLabels.push(m.toLocaleDateString(currentLang==='th'?'th-TH':undefined,{month:'short'}));
-    monthTotals.push(total);
-  }
-  const ctxM = document.getElementById('chart-monthly').getContext('2d');
-  if(chartMonthly) chartMonthly.destroy();
-  chartMonthly = new Chart(ctxM, {
-    type:'bar',
-    data:{ labels: monthLabels, datasets:[{ data: monthTotals, backgroundColor:'rgba(122,166,232,0.55)', borderRadius:5 }] },
-    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98'}, grid:{display:false} }, y:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} } } }
-  });
-
-  // XP by task, all-time (top 10)
-  const taskTotals = {};
-  Object.values(state.logs).forEach(day=>{
-    Object.keys(day).forEach(tid=>{
-      const e = day[tid]; if(!e.completed) return;
-      taskTotals[tid] = (taskTotals[tid]||0) + e.xp;
-    });
-  });
-  const taskEntries = Object.keys(taskTotals).map(tid=>{
-    const t = state.tasks.find(x=>x.id===tid);
-    return { name: t ? t.name : tid, xp: taskTotals[tid], color: t ? t.color : '#7aa6e8' };
-  }).sort((a,b)=>b.xp-a.xp).slice(0,10);
-  const ctxT = document.getElementById('chart-tasks').getContext('2d');
-  if(chartTasks) chartTasks.destroy();
-  chartTasks = new Chart(ctxT, {
-    type:'bar',
-    data:{ labels: taskEntries.map(t=>t.name), datasets:[{ data: taskEntries.map(t=>t.xp), backgroundColor: taskEntries.map(t=>t.color), borderRadius:5 }] },
-    options:{ indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{ ticks:{color:'#8b8f98'}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#8b8f98'}, grid:{display:false} } } }
-  });
-
-  // insights
-  const insightsList = [];
-  insightsList.push(i18nText('insight.streak', {c:streaks.current, s:streaks.current===1?'':'s', l:streaks.longest}));
-  if(bestAvg>0){
-    const fullDayName = (currentLang==='th' ? WEEKDAY_FULL_TH : WEEKDAY_FULL_EN)[bestDow];
-    insightsList.push(i18nText('insight.bestday', {d:fullDayName, xp:Math.round(bestAvg)}));
-  }
-  insightsList.push(i18nText('insight.avg', {p:avgPct}));
-  if(daysTracked>=14){
-    const prevStart = new Date(today); prevStart.setDate(today.getDate()-59);
-    const prevEnd = new Date(today); prevEnd.setDate(today.getDate()-30);
-    let prevSum=0, prevCnt=0;
-    for(const c=new Date(prevStart); c<prevEnd; c.setDate(c.getDate()+1)){ prevSum += dayStats(fmtDate(c)).pct; prevCnt++; }
-    const prevAvg = prevCnt ? prevSum/prevCnt : null;
-    if(prevAvg!==null && prevCnt>=7){
-      const diff = Math.round(avgPct - prevAvg);
-      if(Math.abs(diff)>=3) insightsList.push(i18nText(diff>0?'insight.improving':'insight.declining', {p:Math.abs(diff)}));
+  
+  // Create month cells for each year
+  sortedYears.forEach(year => {
+    // Year container
+    const yearContainer = document.createElement('div');
+    yearContainer.style.marginBottom = '24px';
+    
+    // Year header
+    const yearHeader = document.createElement('div');
+    yearHeader.className = 'month-cell year-header';
+    yearHeader.textContent = year;
+    yearHeader.style.padding = '12px 16px';
+    yearHeader.style.fontWeight = 'bold';
+    yearHeader.style.background = 'var(--bg-elev-2)';
+    yearHeader.style.borderRadius = '10px';
+    yearHeader.style.marginBottom = '12px';
+    yearHeader.style.fontSize = '18px';
+    yearHeader.style.color = 'var(--text)';
+    yearContainer.appendChild(yearHeader);
+    
+    // Month grid for this year - responsive layout
+    const monthGrid = document.createElement('div');
+    monthGrid.style.display = 'grid';
+    monthGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(70px, 1fr))';
+    monthGrid.style.gap = '10px';
+    
+    for(let month = 0; month < 12; month++){
+      const monthStart = new Date(year, month, 1);
+      const monthEnd = new Date(year, month + 1, 0);
+      const clampEnd = monthEnd > today ? today : monthEnd;
+      
+      let monthXP = 0;
+      let monthTotal = 0;
+      let monthDone = 0;
+      
+      for(const c = new Date(monthStart); c <= clampEnd; c.setDate(c.getDate() + 1)){
+        const s = dayStats(fmtDate(c));
+        monthXP += s.xp;
+        monthTotal += s.total;
+        monthDone += s.done;
+      }
+      
+      const monthPct = monthTotal > 0 ? Math.round(100 * monthDone / monthTotal) : 0;
+      
+      // Add to year totals
+      yearTotals[year].xp += monthXP;
+      yearTotals[year].pct += monthPct;
+      yearTotals[year].count++;
+      
+      const cell = document.createElement('div');
+      cell.className = 'month-cell';
+      cell.style.background = 'var(--bg-elev)';
+      cell.style.border = '1px solid var(--border)';
+      cell.style.borderRadius = '10px';
+      cell.style.padding = '12px 8px';
+      cell.style.minHeight = '80px';
+      cell.style.display = 'flex';
+      cell.style.flexDirection = 'column';
+      cell.style.justifyContent = 'center';
+      cell.style.alignItems = 'center';
+      cell.style.textAlign = 'center';
+      cell.style.transition = 'transform 0.2s, border-color 0.2s';
+      cell.style.cursor = 'default';
+      
+      const monthName = monthStart.toLocaleDateString(currentLang==='th'?'th-TH':undefined,{month:'short'});
+      
+      cell.innerHTML = `
+        <div style="font-size:12px; color:var(--text-faint); font-weight:600; margin-bottom:4px;">${monthName}</div>
+        <div style="font-size:16px; font-weight:bold; color:var(--accent); margin-bottom:2px;">${monthXP}</div>
+        <div style="font-size:10px; color:var(--text-dim); margin-bottom:6px;">XP</div>
+        <div style="font-size:14px; font-weight:bold; color:var(--text-dim);">${monthPct}%</div>
+      `;
+      
+      monthGrid.appendChild(cell);
     }
+    
+    yearContainer.appendChild(monthGrid);
+    
+    // Year summary row
+    const yearSummary = document.createElement('div');
+    yearSummary.className = 'month-cell year-summary';
+    yearSummary.style.padding = '14px 16px';
+    yearSummary.style.background = 'var(--bg-elev-2)';
+    yearSummary.style.borderRadius = '10px';
+    yearSummary.style.border = '1px solid var(--border)';
+    yearSummary.style.display = 'flex';
+    yearSummary.style.justifyContent = 'space-between';
+    yearSummary.style.alignItems = 'center';
+    yearSummary.style.flexWrap = 'wrap';
+    yearSummary.style.gap = '12px';
+    
+    const avgYearPct = yearTotals[year].count > 0 ? Math.round(yearTotals[year].pct / yearTotals[year].count) : 0;
+    
+    yearSummary.innerHTML = `
+      <div style="font-weight:bold; color:var(--text); font-size:16px;">${year} Total</div>
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:var(--accent); font-weight:bold; font-size:18px;">${yearTotals[year].xp}</span>
+          <span style="color:var(--text-faint); font-size:13px;">XP</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="color:var(--text-dim); font-weight:bold; font-size:18px;">${avgYearPct}%</span>
+          <span style="color:var(--text-faint); font-size:13px;">avg</span>
+        </div>
+      </div>
+    `;
+    
+    yearContainer.appendChild(yearSummary);
+    hm.appendChild(yearContainer);
+  });
+
+  // Current month daily completion
+  const barsContainer = document.getElementById('current-month-bars');
+  if(!barsContainer) return;
+  
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  
+  // Start from first tracked day or current month start, whichever is later
+  const startDate = created > currentMonthStart ? created : currentMonthStart;
+  
+  barsContainer.innerHTML = '';
+  
+  const chartWrapper = document.createElement('div');
+  chartWrapper.style.display = 'flex';
+  chartWrapper.style.alignItems = 'flex-end';
+  chartWrapper.style.gap = '8px';
+  chartWrapper.style.height = '300px';
+  chartWrapper.style.padding = '20px 0 0 0';
+  
+  for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+    if(c > today) break;
+    const ds = fmtDate(c);
+    const s = dayStats(ds);
+    
+    const dayColumn = document.createElement('div');
+    dayColumn.style.display = 'flex';
+    dayColumn.style.flexDirection = 'column';
+    dayColumn.style.alignItems = 'center';
+    dayColumn.style.flex = '1';
+    dayColumn.style.minWidth = '10px';
+    dayColumn.style.gap = '3px';
+    
+    const bar = document.createElement('div');
+    bar.style.width = '100%';
+    bar.style.height = (s.pct / 100 * 280) + 'px';
+    bar.style.minHeight = '4px';
+    bar.style.borderRadius = '3px';
+    bar.style.transition = 'height 0.2s';
+    bar.style.position = 'relative';
+    bar.style.display = 'flex';
+    bar.style.alignItems = 'flex-start';
+    bar.style.justifyContent = 'center';
+    bar.style.paddingTop = '4px';
+    
+    if(s.pct === 100) bar.style.background = '#46b478';
+    else if(s.pct >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
+    else if(s.pct >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
+    else if(s.pct >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
+    else bar.style.background = 'rgba(70,180,120,0.2)';
+    
+    const pct = document.createElement('div');
+    pct.textContent = s.pct + '%';
+    pct.style.fontSize = '10px';
+    pct.style.color = 'var(--text)';
+    pct.style.fontWeight = '600';
+    pct.style.zIndex = '1';
+    
+    const day = document.createElement('div');
+    day.textContent = c.getDate();
+    day.style.fontSize = '9px';
+    day.style.color = 'var(--text-faint)';
+    
+    bar.appendChild(pct);
+    dayColumn.appendChild(bar);
+    dayColumn.appendChild(day);
+    chartWrapper.appendChild(dayColumn);
   }
-  if(perfectDays>0) insightsList.push(i18nText('insight.perfectdays', {n:perfectDays, s:perfectDays===1?'':'s'}));
-  document.getElementById('insights').innerHTML = insightsList.map(i=>`<div class="insight">${i}</div>`).join('');
+  
+  barsContainer.appendChild(chartWrapper);
 }
 
 /* ---------- Panels ---------- */
@@ -1636,13 +1725,19 @@ function updateSyncIndicator(status){
   setGateMode('login');
   const s = getSession();
   if(!s) return;
+  
+  // Auto-login: hide login form, show loading message only
+  document.getElementById('gate-step-auth').style.display = 'none';
   document.getElementById('gate-auth-status').textContent = i18nText('gate.checking');
+  document.getElementById('gate-auth-status').style.display = 'block';
+  
   try{
     await fetchStateSilently();
     unlockApp();
   }catch(e){
     // stale/invalid token — fall back to a clean login prompt, never to local data
     setSession(null);
+    document.getElementById('gate-step-auth').style.display = 'flex';
     document.getElementById('gate-auth-status').textContent = i18nText('gate.expired');
   }
 })();
