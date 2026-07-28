@@ -128,6 +128,7 @@ button{ font-family:inherit; cursor:pointer; }
 .stat-card .sc-val{ font-family:var(--font-mono); font-size:22px; font-weight:700; }
 .stat-card .sc-val.gold{ color:var(--accent); }
 .stat-card .sc-val.teal{ color:var(--accent); }
+.stat-card .sc-sub{ font-size:10px; color:var(--text-dim); margin-top:4px; }
 
 /* checklist */
 .task-row{
@@ -378,8 +379,8 @@ button{ font-family:inherit; cursor:pointer; }
       <div class="stat-row">
         <div class="stat-card"><div class="sc-label" data-i18n="today.xp">Today's XP</div><div class="sc-val gold" id="stat-todayxp">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="stat-todaypct">0%</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="today.streak">Current Streak</div><div class="sc-val teal" id="stat-streak">0 days</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="today.longest">Longest Streak</div><div class="sc-val" id="stat-longest">0 days</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="today.bestpct">Highest % Complete</div><div class="sc-val teal" id="stat-bestpct">0%</div><div class="sc-sub" id="stat-bestpct-date"></div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="today.bestxp">Highest XP</div><div class="sc-val" id="stat-bestxp">0</div><div class="sc-sub" id="stat-bestxp-date"></div></div>
       </div>
       <div id="today-list"></div>
     </section>
@@ -435,8 +436,16 @@ button{ font-family:inherit; cursor:pointer; }
         <div class="heatmap-wrap"><div class="heatmap-grid" id="monthly-heatmap"></div></div>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.currentmonth">Current Month Daily Completion</h3>
+        <h3 data-i18n="analytics.currentmonth">Current Month Daily % Complete</h3>
         <div id="current-month-bars"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="analytics.currentmonthxp">Current Month Daily XP</h3>
+        <div id="current-month-xp-bars"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="analytics.scatterplot">XP vs % Complete Scatter Plot</h3>
+        <div id="scatter-plot"></div>
       </div>
     </section>
   </main>
@@ -473,6 +482,13 @@ button{ font-family:inherit; cursor:pointer; }
     <div class="field" id="tf-everyx-wrap" style="display:none;">
       <label data-i18n="taskform.everyn">Every N days</label><input id="tf-everyx" type="number" min="2" value="2">
     </div>
+    <div class="field" id="tf-dates-wrap" style="display:none;">
+      <label data-i18n="taskform.daterange">Date Range</label>
+      <div style="display:flex; gap:8px;">
+        <input id="tf-startdate" type="date" style="flex:1;">
+        <input id="tf-enddate" type="date" style="flex:1;">
+      </div>
+    </div>
     <button class="btn btn-primary" style="margin-top:6px;" onclick="saveTask()" data-i18n="taskform.save">Save Task</button>
     <button class="btn btn-danger btn-ghost" id="tf-delete" style="display:none;" onclick="deleteCurrentTask()" data-i18n="taskform.delete">Delete Task</button>
   </div>
@@ -487,6 +503,7 @@ button{ font-family:inherit; cursor:pointer; }
     <div class="stat-card"><div class="sc-label" data-i18n="daypanel.xp">XP Earned</div><div class="sc-val gold" id="day-xp">0</div></div>
     <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="day-pct">0%</div></div>
   </div>
+  <button class="btn btn-primary" style="margin-bottom:12px;" id="day-panel-add-task" data-i18n="today.newtask">+ New Task</button>
   <div id="day-tasklist"></div>
   <div class="field" style="margin-top:14px;">
     <label data-i18n="daypanel.notes">Notes</label>
@@ -575,7 +592,7 @@ const I18N = {
     'gate.enterboth':'Enter your username and password.', 'gate.checking':'Checking session…',
     'gate.expired':'Session expired — please log in again.', 'gate.createbtn':'Create Account',
     'today.title':'Today', 'today.newtask':'+ New Task', 'today.xp':"Today's XP",
-    'today.completion':'Completion', 'today.streak':'Current Streak', 'today.longest':'Longest Streak',
+    'today.completion':'Completion', 'today.bestpct':'Highest % Complete', 'today.bestxp':'Highest XP',
     'today.empty':'No tasks scheduled for today. Add one to get started.',
     'calendar.title':'Calendar', 'calendar.sub':'Click a day for details',
     'calendar.prev':'← Prev', 'calendar.next':'Next →', 'calendar.today':'Today',
@@ -583,12 +600,15 @@ const I18N = {
     'analytics.overallsuccess':'Overall Success Rate', 'analytics.todaystasks':"Today's Tasks", 'analytics.todaycompleted':"Today's Completed", 'analytics.todayrate':"Today's Success Rate",
     'analytics.avgpct':'Avg Completion (All-Time)', 'analytics.avgxp':'Avg Daily XP (All-Time)',
     'analytics.bestday':'Most Productive Day',
-    'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'Current Month Daily Completion',
+    'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'Current Month Daily % Complete',
+    'analytics.currentmonthxp':'Current Month Daily XP',
+    'analytics.scatterplot':'XP vs % Complete Scatter Plot',
     'analytics.consistency':'Consistency Score (90d)', 'analytics.perfectdays':'Perfect Days',
     'analytics.totalcompleted':'Tasks Completed (All-Time)', 'analytics.activetasks':'Active Tasks', 'analytics.daystracked':'Days Tracked',
     'taskform.newtitle':'New Task', 'taskform.edittitle':'Edit Task', 'taskform.sub':'Define what it is and how often it repeats',
     'taskform.name':'Name', 'taskform.xp':'XP Reward', 'taskform.color':'Color', 'taskform.repeat':'Repeat',
-    'taskform.whichdays':'Which days', 'taskform.everyn':'Every N days', 'taskform.save':'Save Task', 'taskform.delete':'Delete Task',
+    'taskform.whichdays':'Which days', 'taskform.everyn':'Every N days', 'taskform.daterange':'Date Range',
+    'taskform.save':'Save Task', 'taskform.delete':'Delete Task',
     'repeat.daily':'Every day', 'repeat.weekdays':'Weekdays', 'repeat.weekends':'Weekends', 'repeat.weekly':'Custom days',
     'repeat.everyx':'Every {n} days', 'repeat.everyxOption':'Every X Days', 'repeat.monthly':'Monthly', 'repeat.once':'One time',
     'daypanel.xp':'XP Earned', 'daypanel.notes':'Notes', 'daypanel.notesplaceholder':'How did today go?',
@@ -621,7 +641,7 @@ const I18N = {
     'gate.enterboth':'กรอกชื่อผู้ใช้และรหัสผ่าน', 'gate.checking':'กำลังตรวจสอบเซสชัน…',
     'gate.expired':'เซสชันหมดอายุ — กรุณาเข้าสู่ระบบอีกครั้ง', 'gate.createbtn':'สร้างบัญชี',
     'today.title':'วันนี้', 'today.newtask':'+ เพิ่มงาน', 'today.xp':'XP วันนี้',
-    'today.completion':'ความสำเร็จ', 'today.streak':'สถิติต่อเนื่องปัจจุบัน', 'today.longest':'สถิติต่อเนื่องสูงสุด',
+    'today.completion':'ความสำเร็จ', 'today.bestpct':'ความสำเร็จสูงสุด', 'today.bestxp':'XP สูงสุด',
     'today.empty':'ไม่มีงานสำหรับวันนี้ เพิ่มงานเพื่อเริ่มต้น',
     'calendar.title':'ปฏิทิน', 'calendar.sub':'คลิกวันที่เพื่อดูรายละเอียด',
     'calendar.prev':'← ก่อนหน้า', 'calendar.next':'ถัดไป →', 'calendar.today':'วันนี้',
@@ -630,11 +650,14 @@ const I18N = {
     'analytics.avgpct':'ความสำเร็จเฉลี่ย (ทั้งหมด)', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (ทั้งหมด)',
     'analytics.bestday':'วันที่ทำได้ดีที่สุด',
     'analytics.monthlyheatmap':'แผนที่ความสำเร็จรายเดือน', 'analytics.currentmonth':'ความสำเร็จรายวันของเดือนปัจจุบัน',
+    'analytics.currentmonthxp':'XP รายวันของเดือนปัจจุบัน',
+    'analytics.scatterplot':'กราฟกระจาย XP กับความสำเร็จ',
     'analytics.consistency':'คะแนนความสม่ำเสมอ (90 วัน)', 'analytics.perfectdays':'วันที่สมบูรณ์แบบ',
     'analytics.totalcompleted':'งานที่ทำสำเร็จ (ทั้งหมด)', 'analytics.activetasks':'งานที่ใช้งานอยู่', 'analytics.daystracked':'จำนวนวันที่ติดตาม',
     'taskform.newtitle':'เพิ่มงานใหม่', 'taskform.edittitle':'แก้ไขงาน', 'taskform.sub':'กำหนดรายละเอียดและความถี่ของงาน',
     'taskform.name':'ชื่องาน', 'taskform.xp':'XP ที่ได้รับ', 'taskform.color':'สี', 'taskform.repeat':'ความถี่',
-    'taskform.whichdays':'เลือกวัน', 'taskform.everyn':'ทุก N วัน', 'taskform.save':'บันทึกงาน', 'taskform.delete':'ลบงาน',
+    'taskform.whichdays':'เลือกวัน', 'taskform.everyn':'ทุก N วัน', 'taskform.daterange':'ช่วงวันที่',
+    'taskform.save':'บันทึกงาน', 'taskform.delete':'ลบงาน',
     'repeat.daily':'ทุกวัน', 'repeat.weekdays':'วันธรรมดา', 'repeat.weekends':'วันหยุดสุดสัปดาห์', 'repeat.weekly':'กำหนดวันเอง',
     'repeat.everyx':'ทุก {n} วัน', 'repeat.everyxOption':'ทุก X วัน', 'repeat.monthly':'รายเดือน', 'repeat.once':'ครั้งเดียว',
     'daypanel.xp':'XP ที่ได้รับ', 'daypanel.notes':'บันทึก', 'daypanel.notesplaceholder':'วันนี้เป็นอย่างไรบ้าง?',
@@ -808,6 +831,30 @@ function computeStreaks(){
   return { current, longest: Math.max(longest,current) };
 }
 
+/* ---------- Best Day Records ---------- */
+function computeBestRecords(){
+  let bestPct = { pct: 0, date: null };
+  let bestXP = { xp: 0, date: null };
+  
+  const created = parseDate(state.createdAt || todayStr());
+  const today = new Date();
+  
+  for(const c = new Date(created); c <= today; c.setDate(c.getDate() + 1)){
+    const ds = fmtDate(c);
+    const s = dayStats(ds);
+    
+    if(s.pct > bestPct.pct && s.total > 0){
+      bestPct = { pct: s.pct, date: ds };
+    }
+    
+    if(s.xp > bestXP.xp && s.total > 0){
+      bestXP = { xp: s.xp, date: ds };
+    }
+  }
+  
+  return { bestPct, bestXP };
+}
+
 /* ============================================================
    RENDERING
    ============================================================ */
@@ -896,9 +943,25 @@ function renderToday(){
   const s = dayStats(ds);
   document.getElementById('stat-todayxp').textContent = s.xp;
   document.getElementById('stat-todaypct').textContent = s.pct+'%';
-  const streaks = computeStreaks();
-  document.getElementById('stat-streak').textContent = streaks.current+' days';
-  document.getElementById('stat-longest').textContent = streaks.longest+' days';
+  const records = computeBestRecords();
+  document.getElementById('stat-bestpct').textContent = records.bestPct.pct + '%';
+  document.getElementById('stat-bestxp').textContent = records.bestXP.xp;
+  
+  // Format dates for display
+  if(records.bestPct.date){
+    const bestPctDate = parseDate(records.bestPct.date);
+    document.getElementById('stat-bestpct-date').textContent = bestPctDate.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+  } else {
+    document.getElementById('stat-bestpct-date').textContent = '';
+  }
+  
+  if(records.bestXP.date){
+    const bestXPDate = parseDate(records.bestXP.date);
+    document.getElementById('stat-bestxp-date').textContent = bestXPDate.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+  } else {
+    document.getElementById('stat-bestxp-date').textContent = '';
+  }
+  
   updateAccentColor(s.pct);
 
   const list = document.getElementById('today-list');
@@ -1040,10 +1103,17 @@ function openDayPanel(ds){
     row.innerHTML = `<button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
       <span class="task-color-dot" style="background:${t.color}"></span><span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
       <span class="task-xp">+${t.xp} XP</span>
-      <div class="task-actions" style="opacity:1;"><button class="icon-btn" data-del="${t.id}">🗑</button></div>`;
+      <div class="task-actions" style="opacity:1;">
+        <button class="icon-btn" data-edit="${t.id}">✏️</button>
+        <button class="icon-btn" data-del="${t.id}">🗑</button>
+      </div>`;
     list.appendChild(row);
   });
   list.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=>openDeleteScopeModal(b.dataset.del, ds)));
+  list.querySelectorAll('[data-edit]').forEach(b=> b.addEventListener('click', ()=>{
+    closeAllPanels();
+    openTaskPanel(b.dataset.edit);
+  }));
   list.querySelectorAll('.chk').forEach(chk=>{
     chk.addEventListener('click', ()=>{
       const tid = chk.dataset.tid;
@@ -1053,6 +1123,13 @@ function openDayPanel(ds){
     });
   });
   document.getElementById('day-notes').value = normalizeNote(state.notes[ds]).text;
+  
+  // Add event listener to the "New Task" button
+  const addTaskBtn = document.getElementById('day-panel-add-task');
+  addTaskBtn.onclick = function() {
+    openTaskPanelForDay();
+  };
+  
   showPanel('panel-day');
 }
 // Legacy notes were stored as a plain string; new ones carry updatedAt so two
@@ -1066,6 +1143,31 @@ function saveDayNotes(){
   if(!activeDayStr) return;
   state.notes[activeDayStr] = { text: document.getElementById('day-notes').value, updatedAt: new Date().toISOString() };
   saveState();
+}
+
+function openTaskPanelForDay(){
+  activeTaskId = null;
+  document.getElementById('task-panel-title').textContent = i18nText('taskform.newtitle');
+  document.getElementById('tf-delete').style.display = 'none';
+  document.getElementById('tf-name').value = '';
+  document.getElementById('tf-xp').value = 30;
+  document.getElementById('tf-repeat').value = 'once'; // Default to 'once' for day-specific tasks
+  document.getElementById('tf-everyx').value = 2;
+  document.getElementById('tf-startdate').value = activeDayStr || '';
+  document.getElementById('tf-enddate').value = activeDayStr || '';
+  onRepeatChange();
+  
+  // Build color swatches after onRepeatChange to ensure they exist
+  setTimeout(() => {
+    buildColorSwatches();
+    document.querySelectorAll('#tf-colors .swatch').forEach(s=> s.classList.toggle('sel', s.dataset.color===COLORS[0]));
+    document.querySelectorAll('#tf-weekdays .swatch').forEach(s=>{
+      s.classList.remove('sel');
+      s.style.color = 'var(--text-dim)';
+      s.style.background = 'var(--bg-elev-2)';
+    });
+    showPanel('panel-task');
+  }, 50);
 }
 
 /* ---------- Task panel ---------- */
@@ -1092,6 +1194,13 @@ function onRepeatChange(){
   const r = document.getElementById('tf-repeat').value;
   document.getElementById('tf-weekly-wrap').style.display = r==='weekly' ? 'block':'none';
   document.getElementById('tf-everyx-wrap').style.display = r==='everyx' ? 'block':'none';
+  document.getElementById('tf-dates-wrap').style.display = r==='once' ? 'block':'none';
+  
+  // If 'once' is selected and we have an active day, pre-fill the dates
+  if(r === 'once' && activeDayStr){
+    document.getElementById('tf-startdate').value = activeDayStr;
+    document.getElementById('tf-enddate').value = activeDayStr;
+  }
 }
 function openTaskPanel(taskId){
   activeTaskId = taskId || null;
@@ -1102,7 +1211,10 @@ function openTaskPanel(taskId){
   document.getElementById('tf-xp').value = t ? t.xp : 30;
   document.getElementById('tf-repeat').value = t ? t.repeat : 'daily';
   document.getElementById('tf-everyx').value = t && t.everyx ? t.everyx : 2;
+  document.getElementById('tf-startdate').value = t && t.startDate ? t.startDate : '';
+  document.getElementById('tf-enddate').value = t && t.endDate ? t.endDate : '';
   onRepeatChange();
+  buildColorSwatches(); // Make sure color swatches are built
   document.querySelectorAll('#tf-colors .swatch').forEach(s=> s.classList.toggle('sel', t ? s.dataset.color===t.color : s.dataset.color===COLORS[0]));
   document.querySelectorAll('#tf-weekdays .swatch').forEach(s=>{
     const sel = t && t.weekdays && t.weekdays.includes(Number(s.dataset.day));
@@ -1117,13 +1229,28 @@ function saveTask(){
   if(!name){ document.getElementById('tf-name').focus(); return; }
   const color = (document.querySelector('#tf-colors .swatch.sel')||{}).dataset?.color || COLORS[0];
   const weekdays = Array.from(document.querySelectorAll('#tf-weekdays .swatch.sel')).map(s=>Number(s.dataset.day));
+  const repeat = document.getElementById('tf-repeat').value;
   const data = {
     name,
     xp: Number(document.getElementById('tf-xp').value)||10,
-    color, repeat: document.getElementById('tf-repeat').value,
+    color, repeat: repeat,
     weekdays, everyx: Number(document.getElementById('tf-everyx').value)||2,
     updatedAt: new Date().toISOString(),
   };
+  
+  // Handle date range for 'once' tasks
+  if(repeat === 'once'){
+    const startDate = document.getElementById('tf-startdate').value;
+    const endDate = document.getElementById('tf-enddate').value;
+    if(startDate) data.startDate = startDate;
+    if(endDate) data.endDate = endDate;
+    // If no dates specified but coming from day panel, use that day
+    if(!startDate && !endDate && activeDayStr){
+      data.startDate = activeDayStr;
+      data.endDate = activeDayStr;
+    }
+  }
+  
   if(activeTaskId){
     Object.assign(state.tasks.find(t=>t.id===activeTaskId), data);
   } else {
@@ -1133,6 +1260,7 @@ function saveTask(){
   saveState();
   closeAllPanels();
   renderToday(); renderCalendar();
+  if(activeDayStr) openDayPanel(activeDayStr);
 }
 function deleteCurrentTask(){
   if(!activeTaskId) return;
@@ -1179,7 +1307,8 @@ function deleteOccurrence(taskId, dateStr, scope){
 }
 
 /* ---------- Analytics ---------- */
-let currentMonthChart = null;
+let currentMonthChartPct = null;
+let currentMonthChartXP = null;
 function renderAnalytics(){
   const today = new Date();
   const todayDs = todayStr();
@@ -1401,75 +1530,370 @@ function renderAnalytics(){
     hm.appendChild(yearContainer);
   });
 
-  // Current month daily completion
+  // Current month daily completion % chart
   const barsContainer = document.getElementById('current-month-bars');
-  if(!barsContainer) return;
-  
-  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-  const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  
-  // Start from first tracked day or current month start, whichever is later
-  const startDate = created > currentMonthStart ? created : currentMonthStart;
-  
-  barsContainer.innerHTML = '';
-  
-  const chartWrapper = document.createElement('div');
-  chartWrapper.style.display = 'flex';
-  chartWrapper.style.alignItems = 'flex-end';
-  chartWrapper.style.gap = '8px';
-  chartWrapper.style.height = '300px';
-  chartWrapper.style.padding = '20px 0 0 0';
-  
-  for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
-    if(c > today) break;
-    const ds = fmtDate(c);
-    const s = dayStats(ds);
+  if(barsContainer){
+    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     
-    const dayColumn = document.createElement('div');
-    dayColumn.style.display = 'flex';
-    dayColumn.style.flexDirection = 'column';
-    dayColumn.style.alignItems = 'center';
-    dayColumn.style.flex = '1';
-    dayColumn.style.minWidth = '10px';
-    dayColumn.style.gap = '3px';
+    // Start from first tracked day or current month start, whichever is later
+    const startDate = created > currentMonthStart ? created : currentMonthStart;
     
-    const bar = document.createElement('div');
-    bar.style.width = '100%';
-    bar.style.height = (s.pct / 100 * 280) + 'px';
-    bar.style.minHeight = '4px';
-    bar.style.borderRadius = '3px';
-    bar.style.transition = 'height 0.2s';
-    bar.style.position = 'relative';
-    bar.style.display = 'flex';
-    bar.style.alignItems = 'flex-start';
-    bar.style.justifyContent = 'center';
-    bar.style.paddingTop = '4px';
+    barsContainer.innerHTML = '';
     
-    if(s.pct === 100) bar.style.background = '#46b478';
-    else if(s.pct >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
-    else if(s.pct >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
-    else if(s.pct >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
-    else bar.style.background = 'rgba(70,180,120,0.2)';
+    const chartWrapper = document.createElement('div');
+    chartWrapper.style.display = 'flex';
+    chartWrapper.style.alignItems = 'flex-end';
+    chartWrapper.style.gap = '8px';
+    chartWrapper.style.height = '300px';
+    chartWrapper.style.padding = '20px 0 0 0';
     
-    const pct = document.createElement('div');
-    pct.textContent = s.pct + '%';
-    pct.style.fontSize = '10px';
-    pct.style.color = 'var(--text)';
-    pct.style.fontWeight = '600';
-    pct.style.zIndex = '1';
+    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+      if(c > today) break;
+      const ds = fmtDate(c);
+      const s = dayStats(ds);
+      
+      const dayColumn = document.createElement('div');
+      dayColumn.style.display = 'flex';
+      dayColumn.style.flexDirection = 'column';
+      dayColumn.style.alignItems = 'center';
+      dayColumn.style.flex = '1';
+      dayColumn.style.minWidth = '10px';
+      dayColumn.style.gap = '3px';
+      
+      const bar = document.createElement('div');
+      bar.style.width = '100%';
+      bar.style.height = (s.pct / 100 * 280) + 'px';
+      bar.style.minHeight = '4px';
+      bar.style.borderRadius = '3px';
+      bar.style.transition = 'height 0.2s';
+      bar.style.position = 'relative';
+      bar.style.display = 'flex';
+      bar.style.alignItems = 'flex-start';
+      bar.style.justifyContent = 'center';
+      bar.style.paddingTop = '4px';
+      
+      if(s.pct === 100) bar.style.background = '#46b478';
+      else if(s.pct >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
+      else if(s.pct >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
+      else if(s.pct >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
+      else bar.style.background = 'rgba(70,180,120,0.2)';
+      
+      const pct = document.createElement('div');
+      pct.textContent = s.pct + '%';
+      pct.style.fontSize = '10px';
+      pct.style.color = 'var(--text)';
+      pct.style.fontWeight = '600';
+      pct.style.zIndex = '1';
+      
+      const day = document.createElement('div');
+      day.textContent = c.getDate();
+      day.style.fontSize = '9px';
+      day.style.color = 'var(--text-faint)';
+      
+      bar.appendChild(pct);
+      dayColumn.appendChild(bar);
+      dayColumn.appendChild(day);
+      chartWrapper.appendChild(dayColumn);
+    }
     
-    const day = document.createElement('div');
-    day.textContent = c.getDate();
-    day.style.fontSize = '9px';
-    day.style.color = 'var(--text-faint)';
-    
-    bar.appendChild(pct);
-    dayColumn.appendChild(bar);
-    dayColumn.appendChild(day);
-    chartWrapper.appendChild(dayColumn);
+    barsContainer.appendChild(chartWrapper);
   }
-  
-  barsContainer.appendChild(chartWrapper);
+
+  // Current month daily XP chart
+  const xpBarsContainer = document.getElementById('current-month-xp-bars');
+  if(xpBarsContainer){
+    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    
+    // Start from first tracked day or current month start, whichever is later
+    const startDate = created > currentMonthStart ? created : currentMonthStart;
+    
+    // Find max XP for scaling
+    let maxXP = 0;
+    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+      if(c > today) break;
+      const ds = fmtDate(c);
+      const s = dayStats(ds);
+      if(s.xp > maxXP) maxXP = s.xp;
+    }
+    
+    xpBarsContainer.innerHTML = '';
+    
+    const xpChartWrapper = document.createElement('div');
+    xpChartWrapper.style.display = 'flex';
+    xpChartWrapper.style.alignItems = 'flex-end';
+    xpChartWrapper.style.gap = '8px';
+    xpChartWrapper.style.height = '300px';
+    xpChartWrapper.style.padding = '20px 0 0 0';
+    
+    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+      if(c > today) break;
+      const ds = fmtDate(c);
+      const s = dayStats(ds);
+      
+      const dayColumn = document.createElement('div');
+      dayColumn.style.display = 'flex';
+      dayColumn.style.flexDirection = 'column';
+      dayColumn.style.alignItems = 'center';
+      dayColumn.style.flex = '1';
+      dayColumn.style.minWidth = '10px';
+      dayColumn.style.gap = '3px';
+      
+      const bar = document.createElement('div');
+      bar.style.width = '100%';
+      const barHeight = maxXP > 0 ? (s.xp / maxXP * 280) : 0;
+      bar.style.height = Math.max(barHeight, 4) + 'px';
+      bar.style.borderRadius = '3px';
+      bar.style.transition = 'height 0.2s';
+      bar.style.position = 'relative';
+      bar.style.display = 'flex';
+      bar.style.alignItems = 'flex-start';
+      bar.style.justifyContent = 'center';
+      bar.style.paddingTop = '4px';
+      
+      // Use green color for XP
+      if(s.xp > 0 && s.xp === maxXP) bar.style.background = '#46b478';
+      else if(s.xp >= maxXP * 0.75) bar.style.background = 'rgba(70,180,120,0.8)';
+      else if(s.xp >= maxXP * 0.5) bar.style.background = 'rgba(70,180,120,0.6)';
+      else if(s.xp >= maxXP * 0.25) bar.style.background = 'rgba(70,180,120,0.4)';
+      else bar.style.background = 'rgba(70,180,120,0.2)';
+      
+      const xp = document.createElement('div');
+      xp.textContent = s.xp;
+      xp.style.fontSize = '10px';
+      xp.style.color = 'var(--text)';
+      xp.style.fontWeight = '600';
+      xp.style.zIndex = '1';
+      
+      const day = document.createElement('div');
+      day.textContent = c.getDate();
+      day.style.fontSize = '9px';
+      day.style.color = 'var(--text-faint)';
+      
+      bar.appendChild(xp);
+      dayColumn.appendChild(bar);
+      dayColumn.appendChild(day);
+      xpChartWrapper.appendChild(dayColumn);
+    }
+    
+    xpBarsContainer.appendChild(xpChartWrapper);
+  }
+
+  // Scatter plot: XP vs % Complete
+  const scatterContainer = document.getElementById('scatter-plot');
+  if(scatterContainer){
+    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const startDate = created > currentMonthStart ? created : currentMonthStart;
+    
+    // Collect data points
+    const dataPoints = [];
+    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+      if(c > today) break;
+      const ds = fmtDate(c);
+      const s = dayStats(ds);
+      if(s.total > 0){ // Only include days with tasks
+        dataPoints.push({
+          date: ds,
+          xp: s.xp,
+          pct: s.pct,
+          day: c.getDate()
+        });
+      }
+    }
+    
+    scatterContainer.innerHTML = '';
+    
+    const scatterWrapper = document.createElement('div');
+    scatterWrapper.style.position = 'relative';
+    scatterWrapper.style.width = '100%';
+    scatterWrapper.style.height = '350px';
+    scatterWrapper.style.padding = '30px';
+    scatterWrapper.style.border = '1px solid var(--border)';
+    scatterWrapper.style.borderRadius = '10px';
+    scatterWrapper.style.background = 'var(--bg-elev)';
+    scatterWrapper.style.boxSizing = 'border-box';
+    
+    // Create SVG for scatter plot
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.overflow = 'visible';
+    svg.style.display = 'block';
+    
+    // Wait for layout to settle before calculating dimensions
+    setTimeout(() => {
+      const width = scatterWrapper.clientWidth - 60;
+      const height = scatterWrapper.clientHeight - 60;
+      const padding = 30;
+      
+      // Clear and recreate SVG content
+      while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
+      }
+      
+      // Add axes
+      const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      xAxis.setAttribute('x1', padding);
+      xAxis.setAttribute('y1', height - padding);
+      xAxis.setAttribute('x2', width - padding);
+      xAxis.setAttribute('y2', height - padding);
+      xAxis.setAttribute('stroke', 'var(--border)');
+      xAxis.setAttribute('stroke-width', '1');
+      svg.appendChild(xAxis);
+      
+      const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      yAxis.setAttribute('x1', padding);
+      yAxis.setAttribute('y1', padding);
+      yAxis.setAttribute('x2', padding);
+      yAxis.setAttribute('y2', height - padding);
+      yAxis.setAttribute('stroke', 'var(--border)');
+      yAxis.setAttribute('stroke-width', '1');
+      svg.appendChild(yAxis);
+      
+      // Add axis labels
+      const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      xLabel.setAttribute('x', width / 2);
+      xLabel.setAttribute('y', height - 5);
+      xLabel.setAttribute('text-anchor', 'middle');
+      xLabel.setAttribute('fill', 'var(--text-faint)');
+      xLabel.setAttribute('font-size', '12');
+      xLabel.textContent = '% Complete';
+      svg.appendChild(xLabel);
+      
+      const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      yLabel.setAttribute('x', 10);
+      yLabel.setAttribute('y', height / 2);
+      yLabel.setAttribute('text-anchor', 'middle');
+      yLabel.setAttribute('fill', 'var(--text-faint)');
+      yLabel.setAttribute('font-size', '12');
+      yLabel.setAttribute('transform', `rotate(-90, 10, ${height / 2})`);
+      yLabel.textContent = 'XP';
+      svg.appendChild(yLabel);
+      
+      // Group data points by same XP and completion percentage
+      const groupedPoints = {};
+      dataPoints.forEach(point => {
+        const key = `${point.xp}-${point.pct}`;
+        if(!groupedPoints[key]) {
+          groupedPoints[key] = [];
+        }
+        groupedPoints[key].push(point);
+      });
+      
+      // Plot data points (one circle per unique XP/percentage combination)
+      Object.keys(groupedPoints).forEach(key => {
+        const points = groupedPoints[key];
+        const representativePoint = points[0]; // Use first point for positioning
+        
+        const x = padding + (representativePoint.pct / 100) * (width - 2 * padding);
+        const maxXP = Math.max(...dataPoints.map(p => p.xp), 1);
+        const y = (height - padding) - (representativePoint.xp / maxXP) * (height - 2 * padding);
+        
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        
+        // Make circle slightly larger if it represents multiple days
+        const baseRadius = points.length > 1 ? 8 : 6;
+        circle.setAttribute('r', baseRadius);
+        
+        // Use green color based on completion percentage
+        let fillColor;
+        if(representativePoint.pct === 100) fillColor = '#46b478';
+        else if(representativePoint.pct >= 75) fillColor = 'rgba(70,180,120,0.8)';
+        else if(representativePoint.pct >= 50) fillColor = 'rgba(70,180,120,0.6)';
+        else if(representativePoint.pct >= 25) fillColor = 'rgba(70,180,120,0.4)';
+        else fillColor = 'rgba(70,180,120,0.2)';
+        
+        circle.setAttribute('fill', fillColor);
+        circle.setAttribute('stroke', 'var(--bg-elev)');
+        circle.setAttribute('stroke-width', '2');
+        circle.style.cursor = 'pointer';
+        circle.style.transition = 'r 0.2s, fill 0.2s';
+        
+        // Store the original fill color and radius for hover restoration
+        circle.dataset.originalFill = fillColor;
+        circle.dataset.originalRadius = baseRadius;
+        circle.dataset.xp = representativePoint.xp;
+        circle.dataset.pct = representativePoint.pct;
+        circle.dataset.pointCount = points.length;
+        
+        // Create tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'scatter-tooltip';
+        tooltip.style.position = 'absolute';
+        tooltip.style.background = 'var(--bg-elev-2)';
+        tooltip.style.border = '1px solid var(--border)';
+        tooltip.style.borderRadius = '8px';
+        tooltip.style.padding = '12px';
+        tooltip.style.fontSize = '12px';
+        tooltip.style.color = 'var(--text)';
+        tooltip.style.pointerEvents = 'none';
+        tooltip.style.opacity = '0';
+        tooltip.style.transition = 'opacity 0.2s';
+        tooltip.style.zIndex = '1000';
+        tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        tooltip.style.whiteSpace = 'nowrap';
+        tooltip.style.maxWidth = '300px';
+        
+        // Build tooltip content with all days
+        let tooltipContent = '';
+        if(points.length === 1) {
+          const dateObj = parseDate(points[0].date);
+          tooltipContent = `
+            <div style="font-weight:bold; margin-bottom:4px;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>
+            <div>XP: <span style="color:#46b478; font-weight:bold;">${points[0].xp}</span></div>
+            <div>Complete: <span style="color:#46b478; font-weight:bold;">${points[0].pct}%</span></div>
+          `;
+        } else {
+          // Multiple days with same values
+          tooltipContent = `
+            <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+              ${points.length} days
+            </div>
+            <div style="margin-bottom:4px;">XP: <span style="color:#46b478; font-weight:bold;">${representativePoint.xp}</span></div>
+            <div style="margin-bottom:8px;">Complete: <span style="color:#46b478; font-weight:bold;">${representativePoint.pct}%</span></div>
+            <div style="font-size:11px; color:var(--text-dim);">Dates:</div>
+            <div style="max-height:150px; overflow-y:auto; margin-top:4px;">
+              ${points.map(p => {
+                const dateObj = parseDate(p.date);
+                return `<div style="padding:2px 0;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>`;
+              }).join('')}
+            </div>
+          `;
+        }
+        tooltip.innerHTML = tooltipContent;
+        
+        scatterWrapper.appendChild(tooltip);
+        
+        // Hover events
+        circle.addEventListener('mouseenter', (e) => {
+          circle.setAttribute('r', parseInt(circle.dataset.originalRadius) + 4);
+          circle.setAttribute('fill', '#46b478'); // Bright green on hover
+          tooltip.style.opacity = '1';
+          
+          // Position tooltip relative to circle position
+          tooltip.style.left = (x + 10) + 'px';
+          tooltip.style.top = (y - 40) + 'px';
+        });
+        
+        circle.addEventListener('mouseleave', () => {
+          circle.setAttribute('r', circle.dataset.originalRadius);
+          circle.setAttribute('fill', circle.dataset.originalFill);
+          circle.setAttribute('stroke', 'var(--bg-elev)');
+          circle.setAttribute('stroke-width', '2');
+          tooltip.style.opacity = '0';
+        });
+        
+        svg.appendChild(circle);
+      });
+    }, 50);
+    
+    scatterWrapper.appendChild(svg);
+    scatterContainer.appendChild(scatterWrapper);
+  }
 }
 
 /* ---------- Panels ---------- */
@@ -1481,7 +1905,8 @@ function closeAllPanels(){
   document.getElementById('overlay').classList.remove('show');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
   document.getElementById('modal-delete-scope').classList.remove('show');
-  activeTaskId = null; activeDayStr = null;
+  activeTaskId = null;
+  // Don't clear activeDayStr as it might be needed when opening task panel from day panel
 }
 
 /* ============================================================
@@ -1589,6 +2014,11 @@ function unlockApp(){
   renderToday();
   updateSyncIndicator('synced');
   startPolling();
+  
+  // Initialize task panel color swatches
+  setTimeout(() => {
+    buildColorSwatches();
+  }, 100);
 }
 function doLogout(){
   const s = getSession();
