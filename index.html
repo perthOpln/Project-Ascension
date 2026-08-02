@@ -230,7 +230,7 @@ button{ font-family:inherit; cursor:pointer; }
 .cal-pct.full{ color:var(--accent); }
 
 /* side panel */
-.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:140; display:none; backdrop-filter:blur(2px); }
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:140; display:none; backdrop-filter:blur(2px); pointer-events:auto; }
 .overlay.show{ display:block; animation:fadein .2s ease; }
 .panel{
   position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
@@ -280,9 +280,9 @@ button{ font-family:inherit; cursor:pointer; }
 #panel-help .insight br{ display:block; margin:8px 0; content:''; }
 #panel-help .insight br:first-child{ margin-top:0; }
 
-.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:160; }
+.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:160; pointer-events:auto; }
 .modal.show{ display:flex; }
-.modal-box{ background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius); padding:22px; width:320px; max-width:90vw; display:flex; flex-direction:column; gap:8px; animation:fadein .18s ease; }
+.modal-box{ background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius); padding:22px; width:320px; max-width:90vw; display:flex; flex-direction:column; gap:8px; animation:fadein .18s ease; pointer-events:auto; }
 .modal-box h3{ font-family:var(--font-display); font-size:17px; margin-bottom:2px; }
 .modal-sub{ color:var(--text-dim); font-size:12.5px; margin-bottom:8px; }
 .modal-opt{ justify-content:center; width:100%; }
@@ -2857,7 +2857,31 @@ async function gateRegister(){
     unlockApp();
   }catch(e){ status.textContent = 'Error: '+e.message; }
 }
+let sessionRefreshTimer = null;
+let sessionRefreshTriggered = false;
+function clearSessionRefreshTimer(){ if(sessionRefreshTimer){ clearTimeout(sessionRefreshTimer); sessionRefreshTimer = null; } }
+function scheduleSessionRefreshCheck(){
+  clearSessionRefreshTimer();
+  const s = getSession();
+  if(!s){ sessionRefreshTriggered = false; return; }
+  sessionRefreshTriggered = false;
+  sessionRefreshTimer = setTimeout(async ()=>{
+    const activeSession = getSession();
+    if(!activeSession) return;
+    try{
+      await apiCall('getState', {token:activeSession.token});
+    }catch(err){
+      if(!sessionRefreshTriggered){
+        sessionRefreshTriggered = true;
+        setSession(null);
+        lockApp();
+        setTimeout(()=>window.location.reload(), 400);
+      }
+    }
+  }, 300000);
+}
 function lockApp(){
+  clearSessionRefreshTimer();
   setSession(null);
   stopPolling();
   localStorage.removeItem(STORE_KEY);
@@ -2876,6 +2900,7 @@ function unlockApp(){
   renderToday();
   updateSyncIndicator('synced');
   startPolling();
+  scheduleSessionRefreshCheck();
   
   // Initialize task panel color swatches
   setTimeout(() => {
@@ -3030,6 +3055,10 @@ function openDeleteAccountConfirm(){
   document.getElementById('da-status').textContent = '';
   document.getElementById('overlay').classList.add('show');
   document.getElementById('modal-delete-account').classList.add('show');
+  setTimeout(()=>{
+    const firstInput = document.getElementById('da-username');
+    if(firstInput){ firstInput.focus(); }
+  }, 60);
 }
 function closeDeleteAccountConfirm(){
   document.getElementById('modal-delete-account').classList.remove('show');
