@@ -1,7 +1,8 @@
 const CACHE_NAME = 'project-ascension-v1';
 const urlsToCache = [
-  './Project Ascension.html',
-  './manifest.json'
+  './index.html',
+  './manifest.json',
+  './sw.js'
 ];
 
 self.addEventListener('install', event => {
