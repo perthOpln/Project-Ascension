@@ -125,7 +125,7 @@ button{ font-family:inherit; cursor:pointer; }
 .page-title{ font-family:var(--font-display); font-size:28px; font-weight:600; }
 .page-sub{ color:var(--text-dim); font-size:13px; margin-top:3px;}
 
-.btn{ padding:9px 16px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text); font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:.15s;}
+.btn{ padding:9px 16px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text); font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; transition:.15s;}
 .btn:hover{ border-color:var(--accent); }
 .btn-primary{ background:var(--accent); color:#1a1300; border:none; }
 .btn-primary:hover{ filter:brightness(1.08); }
@@ -280,7 +280,7 @@ button{ font-family:inherit; cursor:pointer; }
 #panel-help .insight br{ display:block; margin:8px 0; content:''; }
 #panel-help .insight br:first-child{ margin-top:0; }
 
-.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60; }
+.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:160; }
 .modal.show{ display:flex; }
 .modal-box{ background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius); padding:22px; width:320px; max-width:90vw; display:flex; flex-direction:column; gap:8px; animation:fadein .18s ease; }
 .modal-box h3{ font-family:var(--font-display); font-size:17px; margin-bottom:2px; }
@@ -432,8 +432,8 @@ button{ font-family:inherit; cursor:pointer; }
           <div class="page-sub" id="today-sub"></div>
         </div>
         <div style="display:flex; gap:8px;">
-          <button class="btn btn-primary" onclick="openTaskPanel()" data-i18n="today.newtask">+ New Task</button>
-          <button class="btn btn-secondary" onclick="openCategoryPanel()">+ Categories</button>
+          <button class="btn btn-primary" style="flex:1; min-width:0;" onclick="openTaskPanel()" data-i18n="today.newtask">+ New Task</button>
+          <button class="btn btn-secondary" style="flex:1; min-width:0;" onclick="openCategoryPanel()" data-i18n="today.categories">+ Categories</button>
         </div>
       </div>
       <div class="stat-row">
@@ -470,12 +470,6 @@ button{ font-family:inherit; cursor:pointer; }
           <div class="page-title" data-i18n="analytics.title">Analytics</div>
           <div class="page-sub" data-i18n="analytics.sub">Your consistency, quantified</div>
         </div>
-        <div class="period-selector" id="analytics-period-selector">
-          <button class="period-btn active" data-period="days" onclick="setAnalyticsPeriod('days')" data-i18n="period.days">Days</button>
-          <button class="period-btn" data-period="month" onclick="setAnalyticsPeriod('month')" data-i18n="period.thismonth">This Month</button>
-          <button class="period-btn" data-period="months" onclick="setAnalyticsPeriod('months')" data-i18n="period.months">Months</button>
-          <button class="period-btn" data-period="years" onclick="setAnalyticsPeriod('years')" data-i18n="period.years">Years</button>
-        </div>
       </div>
 
       <div class="stat-row">
@@ -488,18 +482,24 @@ button{ font-family:inherit; cursor:pointer; }
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.todaystasks">Today's Tasks</div><div class="sc-val" id="an-todaystasks">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.todaycompleted">Today's Completed</div><div class="sc-val" id="an-todaycompleted">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.todayrate">Today's Success Rate</div><div class="sc-val" id="an-todayrate">0%</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgpct">Avg Completion (All-Time)</div><div class="sc-val" id="an-avgpct">0%</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.consistency">Consistency Score (20d)</div><div class="sc-val teal" id="an-consistency">0%</div></div>
       </div>
       <div class="stat-row">
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgxp">Avg Daily XP (All-Time)</div><div class="sc-val" id="an-avgxp">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.perfectdays">Perfect Days</div><div class="sc-val gold" id="an-perfectdays">0</div></div>
         <div class="stat-card"><div class="sc-label" data-i18n="analytics.bestday">Most Productive Day</div><div class="sc-val teal" id="an-bestday">—</div></div>
-        <div class="stat-card"><div class="sc-label" data-i18n="analytics.consistency">Consistency Score (90d)</div><div class="sc-val teal" id="an-consistency">0%</div></div>
+        <div class="stat-card"><div class="sc-label" data-i18n="analytics.avgpct">Most Productive Month</div><div class="sc-val teal" id="an-avgpct">—</div></div>
       </div>
 
       <div class="card">
         <h3 data-i18n="analytics.monthlyheatmap">Monthly Heatmap</h3>
         <div class="heatmap-wrap"><div class="heatmap-grid" id="monthly-heatmap"></div></div>
+      </div>
+      <div class="period-selector" id="analytics-period-selector" style="margin:16px 0; justify-content:flex-start;">
+        <button class="period-btn active" data-period="days" onclick="setAnalyticsPeriod('days')" data-i18n="period.days">Days</button>
+        <button class="period-btn" data-period="month" onclick="setAnalyticsPeriod('month')" data-i18n="period.thismonth">This Month</button>
+        <button class="period-btn" data-period="months" onclick="setAnalyticsPeriod('months')" data-i18n="period.months">Months</button>
+        <button class="period-btn" data-period="years" onclick="setAnalyticsPeriod('years')" data-i18n="period.years">Years</button>
       </div>
       <div class="card">
         <h3 data-i18n="analytics.currentmonth">% Complete Chart</h3>
@@ -615,8 +615,8 @@ button{ font-family:inherit; cursor:pointer; }
 <!-- Category management panel -->
 <div class="panel" id="panel-category">
   <button class="panel-close" onclick="closeAllPanels()">✕</button>
-  <h2 id="category-panel-title">Categories</h2>
-  <div class="panel-sub">Manage task categories and their colors</div>
+  <h2 id="category-panel-title" data-i18n="category.title">Categories</h2>
+  <div class="panel-sub" data-i18n="category.subtitle">Manage task categories and their colors</div>
   <div class="form-grid">
     <button class="btn btn-secondary" style="margin-bottom:6px;" onclick="openCategoryPanel()">+ New Category</button>
     <div class="field"><label>Category Name</label><input id="cat-name" placeholder="Work, Personal, etc."></div>
@@ -635,7 +635,7 @@ button{ font-family:inherit; cursor:pointer; }
 <!-- Day detail panel -->
 <div class="panel" id="panel-day">
   <button class="panel-close" onclick="closeAllPanels()">✕</button>
-  <h2 id="day-panel-title">Day</h2>
+  <h2 id="day-panel-title" data-i18n="daypanel.title">Day</h2>
   <div class="panel-sub" id="day-panel-sub"></div>
   <div class="stat-row" style="grid-template-columns:1fr 1fr;">
     <div class="stat-card"><div class="sc-label" data-i18n="daypanel.xp">XP Earned</div><div class="sc-val gold" id="day-xp">0</div></div>
@@ -643,7 +643,7 @@ button{ font-family:inherit; cursor:pointer; }
   </div>
   <div style="display:flex; gap:8px; margin-bottom:12px;">
     <button class="btn btn-primary" style="flex:1;" id="day-panel-add-task" data-i18n="today.newtask">+ New Task</button>
-    <button class="btn btn-secondary" onclick="openCategoryPanel()">+ Categories</button>
+    <button class="btn btn-secondary" style="flex:1;" onclick="openCategoryPanel()" data-i18n="today.categories">+ Categories</button>
   </div>
   <div id="day-tasklist"></div>
   <div class="field" style="margin-top:14px;">
@@ -737,7 +737,7 @@ const I18N = {
     'help.calendarview':'Calendar View',
     'help.calendarview.desc':'<strong>What it does:</strong> Shows a monthly calendar with color-coded days based on your productivity.<br><br><strong>How to use:</strong><br>• Use ← Prev / Next → buttons to navigate months<br>• Click "Today" to jump to the current month<br>• Click any day to see that day\'s tasks and notes<br>• Days are colored based on XP earned (lighter = less XP, darker = more XP)<br>• Colored dots on each day show which tasks were completed<br><br><strong>Day Details Panel:</strong> When you click a day, you can:<br>• View all tasks for that day<br>• Add new tasks to that specific day<br>• Add personal notes about how that day went<br>• See XP earned and completion percentage',
     'help.analyticsview':'Analytics View',
-    'help.analyticsview.desc':'<strong>What it does:</strong> Comprehensive statistics and visualizations of your consistency and productivity over time.<br><br><strong>Key Metrics:</strong><br>• <strong>Tasks Completed (All-Time):</strong> Total number of tasks you\'ve ever completed<br>• <strong>Active Tasks:</strong> Number of currently active/recurring tasks<br>• <strong>Days Tracked:</strong> How many days you\'ve used the app<br>• <strong>Overall Success Rate:</strong> Your average completion rate across all days<br>• <strong>Today\'s Metrics:</strong> Real-time stats for the current day<br>• <strong>Avg Completion (All-Time):</strong> Your historical average completion percentage<br>• <strong>Avg Daily XP:</strong> Your average XP earned per day<br>• <strong>Perfect Days:</strong> Days where you completed 100% of tasks<br>• <strong>Most Productive Day:</strong> The day you earned the most XP<br>• <strong>Consistency Score (90d):</strong> How consistent you\'ve been in the last 90 days<br><br><strong>Visualizations:</strong><br>• <strong>Monthly Heatmap:</strong> Grid showing your productivity over the last year (darker = more productive)<br>• <strong>Current Month Daily % Complete:</strong> Bar chart showing completion rate each day this month<br>• <strong>Current Month Daily XP:</strong> Bar chart showing XP earned each day this month<br>• <strong>XP vs % Complete Scatter Plot:</strong> Shows relationship between XP earned and completion rate',
+    'help.analyticsview.desc':'<strong>What it does:</strong> Comprehensive statistics and visualizations of your consistency and productivity over time.<br><br><strong>Key Metrics:</strong><br>• <strong>Tasks Completed (All-Time):</strong> Total number of tasks you\'ve ever completed<br>• <strong>Active Tasks:</strong> Number of currently active/recurring tasks<br>• <strong>Days Tracked:</strong> How many days you\'ve used the app<br>• <strong>Overall Success Rate:</strong> Your average completion rate across all days<br>• <strong>Today\'s Metrics:</strong> Real-time stats for the current day<br>• <strong>Avg Completion (All-Time):</strong> Your historical average completion percentage<br>• <strong>Avg Daily XP:</strong> Your average XP earned per day<br>• <strong>Perfect Days:</strong> Days where you completed 100% of tasks<br>• <strong>Most Productive Day:</strong> The day you earned the most XP<br>• <strong>Consistency Score (20d):</strong> How consistent you\'ve been in the last 20 days<br><br><strong>Visualizations:</strong><br>• <strong>Monthly Heatmap:</strong> Grid showing your productivity over the last year (darker = more productive)<br>• <strong>Current Month Daily % Complete:</strong> Bar chart showing completion rate each day this month<br>• <strong>Current Month Daily XP:</strong> Bar chart showing XP earned each day this month<br>• <strong>XP vs % Complete Scatter Plot:</strong> Shows relationship between XP earned and completion rate',
     'help.deletingtasks':'Deleting Tasks',
     'help.deletingtasks.desc':'<strong>When you delete a recurring task, you have three options:</strong><br><br>• <strong>This event only:</strong> Delete just this one occurrence (future occurrences remain)<br>• <strong>This and following events:</strong> Delete this occurrence and all future ones (keeps past history)<br>• <strong>All events:</strong> Delete every occurrence of this task, including past completions<br><br>This flexibility lets you adjust your routine without losing historical data.',
     'help.account':'Account Management',
@@ -749,20 +749,22 @@ const I18N = {
     'gate.creating':'Creating account…', 'gate.signing':'Signing in…',
     'gate.enterboth':'Enter your username and password.', 'gate.checking':'Checking session…',
     'gate.expired':'Session expired — please log in again.', 'gate.createbtn':'Create Account',
-    'today.title':'Today', 'today.newtask':'+ New Task', 'today.xp':"Today's XP",
+    'today.title':'Today', 'today.newtask':'+ New Task', 'today.categories':'+ Categories', 'today.xp':"Today's XP",
     'today.completion':'Completion', 'today.bestpct':'Highest % Complete', 'today.bestxp':'Highest XP',
+    'today.uncategorized':'Uncategorized',
     'today.empty':'No tasks scheduled for today. Add one to get started.',
     'calendar.title':'Calendar', 'calendar.sub':'Click a day for details',
     'calendar.prev':'← Prev', 'calendar.next':'Next →', 'calendar.today':'Today',
     'analytics.title':'Analytics', 'analytics.sub':'Your consistency, quantified',
     'analytics.overallsuccess':'Overall Success Rate', 'analytics.todaystasks':"Today's Tasks", 'analytics.todaycompleted':"Today's Completed", 'analytics.todayrate':"Today's Success Rate",
-    'analytics.avgpct':'Avg Completion (All-Time)', 'analytics.avgxp':'Avg Daily XP (All-Time)',
+    'analytics.avgpct':'Most Productive Month', 'analytics.avgxp':'Avg Daily XP (All-Time)',
     'analytics.bestday':'Most Productive Day',
     'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'% Complete Chart',
     'analytics.currentmonthxp':'XP Chart',
     'analytics.scatterplot':'XP vs % Complete Scatter Plot',
-    'analytics.consistency':'Consistency Score (90d)', 'analytics.perfectdays':'Perfect Days',
+    'analytics.consistency':'Consistency Score (20d)', 'analytics.perfectdays':'Perfect Days',
     'analytics.totalcompleted':'Tasks Completed (All-Time)', 'analytics.activetasks':'Active Tasks', 'analytics.daystracked':'Days Tracked',
+    'analytics.yearTotal':'Year Total', 'analytics.yearAvg':'avg',
     'period.days':'Days', 'period.thismonth':'This Month', 'period.months':'Months', 'period.years':'Years',
     'taskform.newtitle':'New Task', 'taskform.edittitle':'Edit Task', 'taskform.sub':'Define what it is and how often it repeats',
     'taskform.name':'Name', 'taskform.xp':'XP Reward', 'taskform.color':'Color', 'taskform.repeat':'Repeat',
@@ -791,28 +793,30 @@ const I18N = {
   },
   th: {
     'nav.today':'วันนี้', 'nav.calendar':'ปฏิทิน', 'nav.tasks':'งาน', 'nav.analytics':'วิเคราะห์ข้อมูล', 'nav.install':'ติดตั้งแอป',
-    'credit':'สร้างโดย Perth',
-    'about.title':'เกี่ยวกับ', 'about.name':'พงษ์กร โชติปัญญาวรกุล', 'about.role':'ผู้สร้างและพัฒนา',
+    'credit':'สร้างโดย เพิร์ธ',
+    'about.title':'เกี่ยวกับ', 'about.name':'เพิร์ธ - พงษ์กร โชติปัญญาวรกุล', 'about.role':'ผู้สร้างและพัฒนา',
     'about.description':'Project Ascension คือระบบปฏิบัติการเพื่อความสม่ำเสมอส่วนตัว รวมปฏิทิน ตัวติดตามนิสัย ระบบ XP และแดชบอร์ดวิเคราะห์ข้อมูลไว้ในที่เดียว สร้างขึ้นเพื่อให้การทำสิ่งต่าง ๆ อย่างสม่ำเสมอในทุกวันกลายเป็นความก้าวหน้าที่มองเห็นได้จริง',
     'gate.subtitle':'เข้าสู่ระบบเพื่อดำเนินการต่อ', 'gate.login':'เข้าสู่ระบบ', 'gate.register':'สมัครสมาชิก',
     'gate.username':'ชื่อผู้ใช้', 'gate.password':'รหัสผ่าน',
     'gate.creating':'กำลังสร้างบัญชี…', 'gate.signing':'กำลังเข้าสู่ระบบ…',
     'gate.enterboth':'กรอกชื่อผู้ใช้และรหัสผ่าน', 'gate.checking':'กำลังตรวจสอบเซสชัน…',
     'gate.expired':'เซสชันหมดอายุ — กรุณาเข้าสู่ระบบอีกครั้ง', 'gate.createbtn':'สร้างบัญชี',
-    'today.title':'วันนี้', 'today.newtask':'+ เพิ่มงาน', 'today.xp':'XP วันนี้',
+    'today.title':'วันนี้', 'today.newtask':'+ เพิ่มงาน', 'today.categories':'+ หมวดหมู่', 'today.xp':'XP วันนี้',
     'today.completion':'ความสำเร็จ', 'today.bestpct':'ความสำเร็จสูงสุด', 'today.bestxp':'XP สูงสุด',
+    'today.uncategorized':'ไม่จัดหมวดหมู่',
     'today.empty':'ไม่มีงานสำหรับวันนี้ เพิ่มงานเพื่อเริ่มต้น',
     'calendar.title':'ปฏิทิน', 'calendar.sub':'คลิกวันที่เพื่อดูรายละเอียด',
     'calendar.prev':'← ก่อนหน้า', 'calendar.next':'ถัดไป →', 'calendar.today':'วันนี้',
     'analytics.title':'วิเคราะห์ข้อมูล', 'analytics.sub':'ความสม่ำเสมอของคุณ วัดผลได้',
     'analytics.overallsuccess':'อัตราความสำเร็จโดยรวม', 'analytics.todaystasks':'งานวันนี้', 'analytics.todaycompleted':'งานที่ทำสำเร็จวันนี้', 'analytics.todayrate':'อัตราความสำเร็จวันนี้',
-    'analytics.avgpct':'ความสำเร็จเฉลี่ย (ทั้งหมด)', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (ทั้งหมด)',
+    'analytics.avgpct':'เดือนที่ทำได้ดีที่สุด', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (ทั้งหมด)',
     'analytics.bestday':'วันที่ทำได้ดีที่สุด',
     'analytics.monthlyheatmap':'แผนที่ความสำเร็จรายเดือน', 'analytics.currentmonth':'กราฟความสำเร็จ',
     'analytics.currentmonthxp':'กราฟ XP',
     'analytics.scatterplot':'กราฟกระจาย XP กับความสำเร็จ',
-    'analytics.consistency':'คะแนนความสม่ำเสมอ (90 วัน)', 'analytics.perfectdays':'วันที่สมบูรณ์แบบ',
-    'analytics.totalcompleted':'งานที่ทำสำเร็จ (ทั้งหมด)', 'analytics.activetasks':'งานที่ใช้งานอยู่', 'analytics.daystracked':'จำนวนวันที่ติดตาม',
+    'analytics.consistency':'คะแนนความสม่ำเสมอ (20 วัน)', 'analytics.perfectdays':'วันที่สมบูรณ์แบบ',
+    'analytics.totalcompleted':'งานที่ทำสำเร็จ (ทั้งหมด)', 'analytics.activetasks':'งานที่เหลืออยู่', 'analytics.daystracked':'จำนวนวันที่ติดตาม',
+    'analytics.overallsuccess':'อัตราความสำเร็จโดยรวม',
     'period.days':'วัน', 'period.thismonth':'เดือนนี้', 'period.months':'เดือน', 'period.years':'ปี',
     'taskform.newtitle':'เพิ่มงานใหม่', 'taskform.edittitle':'แก้ไขงาน', 'taskform.sub':'กำหนดรายละเอียดและความถี่ของงาน',
     'taskform.name':'ชื่องาน', 'taskform.xp':'XP ที่ได้รับ', 'taskform.color':'สี', 'taskform.repeat':'ความถี่',
@@ -848,7 +852,7 @@ const I18N = {
     'help.calendarview':'หน้าปฏิทิน',
     'help.calendarview.desc':'หน้า ปฏิทิน ใช้สำหรับดูประวัติและวางแผนล่วงหน้า<br><br>คุณสามารถ<br>• ดูข้อมูลของแต่ละเดือน<br>• ตรวจสอบงานที่ทำในแต่ละวัน<br>• เพิ่มบันทึกประจำวัน<br>• เพิ่มงานในวันที่ต้องการ<br>• ดู XP และเปอร์เซ็นต์ความสำเร็จย้อนหลัง<br><br>วันที่ที่มีสีเข้มกว่าจะหมายถึงวันที่มีผลงานมากกว่า',
     'help.analyticsview':'หน้าการวิเคราะห์',
-    'help.analyticsview.desc':'หน้า การวิเคราะห์ ช่วยติดตามความสม่ำเสมอและพัฒนาการของคุณ<br><br>สามารถดูข้อมูลต่าง ๆ เช่น<br>• จำนวนงานที่ทำสำเร็จทั้งหมด<br>• จำนวนวันที่ใช้งาน<br>• อัตราความสำเร็จโดยรวม<br>• XP เฉลี่ยต่อวัน<br>• จำนวนวันที่ทำครบ 100%<br>• วันที่ได้รับ XP สูงที่สุด<br>• คะแนนความสม่ำเสมอในช่วง 90 วันที่ผ่านมา<br><br>พร้อมกราฟที่ช่วยให้เห็นแนวโน้มและพัฒนาการได้ชัดเจน',
+    'help.analyticsview.desc':'หน้า การวิเคราะห์ ช่วยติดตามความสม่ำเสมอและพัฒนาการของคุณ<br><br>สามารถดูข้อมูลต่าง ๆ เช่น<br>• จำนวนงานที่ทำสำเร็จทั้งหมด<br>• จำนวนวันที่ใช้งาน<br>• อัตราความสำเร็จโดยรวม<br>• XP เฉลี่ยต่อวัน<br>• จำนวนวันที่ทำครบ 100%<br>• วันที่ได้รับ XP สูงที่สุด<br>• คะแนนความสม่ำเสมอในช่วง 20 วันที่ผ่านมา<br><br>พร้อมกราฟที่ช่วยให้เห็นแนวโน้มและพัฒนาการได้ชัดเจน',
     'help.deletingtasks':'การลบงานที่ทำซ้ำ',
     'help.deletingtasks.desc':'เมื่อลบงานที่ตั้งให้ทำซ้ำ ระบบจะให้เลือก<br>• ลบเฉพาะวันนี้<br>• ลบตั้งแต่วันนี้เป็นต้นไป<br>• ลบทั้งหมด<br>เพื่อให้คุณสามารถปรับเปลี่ยนตารางงานได้โดยไม่สูญเสียประวัติที่ต้องการเก็บไว้',
     'help.account':'บัญชีผู้ใช้',
@@ -1168,7 +1172,7 @@ function renderSidebarXP(){
   
   const successRate = totalTasks > 0 ? Math.round(100 * completedTasks / totalTasks) : 0;
   document.getElementById('sb-success').textContent = successRate + '%';
-  document.getElementById('sb-successtext').textContent = 'Overall Success Rate';
+  document.getElementById('sb-successtext').textContent = i18nText('analytics.overallsuccess');
   document.getElementById('sb-successfill').style.width = successRate + '%';
 }
 
@@ -1212,8 +1216,8 @@ function updateAccentColor(pct){
 
 function renderToday(){
   const ds = todayStr();
-  document.getElementById('today-title').textContent = 'Today';
-  document.getElementById('today-sub').textContent = new Date().toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('today-title').textContent = i18nText('today.title');
+  document.getElementById('today-sub').textContent = new Date().toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined,{weekday:'long', month:'long', day:'numeric'});
   const s = dayStats(ds);
   document.getElementById('stat-todayxp').textContent = s.xp;
   document.getElementById('stat-todaypct').textContent = s.pct+'%';
@@ -1224,14 +1228,14 @@ function renderToday(){
   // Format dates for display
   if(records.bestPct.date){
     const bestPctDate = parseDate(records.bestPct.date);
-    document.getElementById('stat-bestpct-date').textContent = bestPctDate.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    document.getElementById('stat-bestpct-date').textContent = bestPctDate.toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined,{month:'short', day:'numeric'});
   } else {
     document.getElementById('stat-bestpct-date').textContent = '';
   }
   
   if(records.bestXP.date){
     const bestXPDate = parseDate(records.bestXP.date);
-    document.getElementById('stat-bestxp-date').textContent = bestXPDate.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    document.getElementById('stat-bestxp-date').textContent = bestXPDate.toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined,{month:'short', day:'numeric'});
   } else {
     document.getElementById('stat-bestxp-date').textContent = '';
   }
@@ -1419,7 +1423,7 @@ function xpToLevel(xp, totalXP){
 
 function renderCalendar(){
   const y = calCursor.getFullYear(), m = calCursor.getMonth();
-  document.getElementById('cal-monthlabel').textContent = calCursor.toLocaleDateString(undefined,{month:'long', year:'numeric'});
+  document.getElementById('cal-monthlabel').textContent = calCursor.toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined,{month:'long', year:'numeric'});
   const dowRow = document.getElementById('cal-dows');
   dowRow.innerHTML = WEEKDAY_LABELS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
 
@@ -1460,7 +1464,7 @@ function calToday(){ calCursor = new Date(); renderCalendar(); }
 function openDayPanel(ds){
   activeDayStr = ds;
   const s = dayStats(ds);
-  document.getElementById('day-panel-title').textContent = parseDate(ds).toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  document.getElementById('day-panel-title').textContent = parseDate(ds).toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'});
   document.getElementById('day-panel-sub').textContent = i18nText('daypanel.completed', {done:s.done, total:s.total});
   document.getElementById('day-xp').textContent = s.xp;
   document.getElementById('day-pct').textContent = s.pct+'%';
@@ -1889,7 +1893,7 @@ function renderAnalytics(){
   
   // Update basic stats (all-time)
   document.getElementById('an-totalcompleted').textContent = completedTasks;
-  document.getElementById('an-activetasks').textContent = state.tasks.filter(t=>!t.deleted).length;
+  document.getElementById('an-activetasks').textContent = Math.max(0, todayStats.total - todayStats.done);
   document.getElementById('an-overallsuccess').textContent = overallSuccessRate + '%';
   
   // Today's metrics (always show today regardless of period)
@@ -1900,8 +1904,33 @@ function renderAnalytics(){
   // Average completion and XP for all-time
   const avgPct = allDayData.length > 0 ? Math.round(allDayData.reduce((a,s)=>a+s.pct,0)/allDayData.length) : 0;
   const avgXP = allDayData.length > 0 ? Math.round(allDayData.reduce((a,s)=>a+s.xp,0)/allDayData.length) : 0;
-  document.getElementById('an-avgpct').textContent = avgPct+'%';
   document.getElementById('an-avgxp').textContent = avgXP;
+
+  // Most productive month (highest average completion)
+  const monthData = {};
+  allDaysList.forEach(ds => {
+    const s = dayStats(ds);
+    if(s.total > 0){
+      const d = parseDate(ds);
+      const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+      if(!monthData[monthKey]) monthData[monthKey] = { totalPct: 0, count: 0 };
+      monthData[monthKey].totalPct += s.pct;
+      monthData[monthKey].count++;
+    }
+  });
+  let bestMonthKey = null;
+  let bestMonthAvg = -1;
+  Object.keys(monthData).forEach(monthKey => {
+    const avg = Math.round(monthData[monthKey].totalPct / monthData[monthKey].count);
+    if(avg > bestMonthAvg){ bestMonthAvg = avg; bestMonthKey = monthKey; }
+  });
+  if(bestMonthKey){
+    const [year, month] = bestMonthKey.split('-').map(Number);
+    const bestMonthLabel = new Date(year, month).toLocaleDateString(currentLang==='th' ? 'th-TH' : undefined, { month:'long', year:'numeric' });
+    document.getElementById('an-avgpct').textContent = bestMonthLabel;
+  } else {
+    document.getElementById('an-avgpct').textContent = '—';
+  }
 
   // Best day by completion rate for all-time
   const byWeekday = [0,0,0,0,0,0,0], cnt=[0,0,0,0,0,0,0];
@@ -1915,7 +1944,8 @@ function renderAnalytics(){
     const avg = v/(cnt[i]||1);
     if(avg>bestAvg){bestAvg=avg; bestDow=i;}
   });
-  document.getElementById('an-bestday').textContent = cnt[bestDow] > 0 ? WEEKDAY_LABELS[bestDow] : '—';
+  const bestDayLabels = currentLang === 'th' ? WEEKDAY_FULL_TH : WEEKDAY_FULL_EN;
+  document.getElementById('an-bestday').textContent = cnt[bestDow] > 0 ? bestDayLabels[bestDow] : '—';
 
   // Days tracked and perfect days for all-time
   document.getElementById('an-daystracked').textContent = allDaysList.length;
@@ -1926,14 +1956,15 @@ function renderAnalytics(){
   });
   document.getElementById('an-perfectdays').textContent = perfectDays;
 
-  // Consistency score for all-time (last 90 days)
-  const ninetyDaysAgo = new Date(today);
-  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  // Consistency score for all-time (last 20 days)
+  const consistencyWindow = 20;
+  const windowStart = new Date(today);
+  windowStart.setDate(windowStart.getDate() - (consistencyWindow - 1));
   let consistencySum = 0, consistencyDays = 0;
   allDaysList.forEach(ds => {
     const d = parseDate(ds);
     const s = dayStats(ds);
-    if(d >= ninetyDaysAgo){ 
+    if(d >= windowStart){ 
       consistencySum += s.pct; 
       consistencyDays++; 
     }
@@ -2467,7 +2498,7 @@ function renderAnalytics(){
     const avgYearPct = yearTotals[year].total > 0 ? Math.round(100 * yearTotals[year].done / yearTotals[year].total) : 0;
     
     yearSummary.innerHTML = `
-      <div style="font-weight:bold; color:var(--text); font-size:16px;">${year} Total</div>
+      <div style="font-weight:bold; color:var(--text); font-size:16px;">${year} ${i18nText('analytics.yearTotal')}</div>
       <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="color:var(--accent); font-weight:bold; font-size:18px;">${yearTotals[year].xp}</span>
@@ -2475,7 +2506,7 @@ function renderAnalytics(){
         </div>
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="color:var(--text-dim); font-weight:bold; font-size:18px;">${avgYearPct}%</span>
-          <span style="color:var(--text-faint); font-size:13px;">avg</span>
+          <span style="color:var(--text-faint); font-size:13px;">${i18nText('analytics.yearAvg')}</span>
         </div>
       </div>
     `;
