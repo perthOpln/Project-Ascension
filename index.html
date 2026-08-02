@@ -196,8 +196,8 @@ button{ font-family:inherit; cursor:pointer; }
 .cal-cell.today .cal-daynum{ color:var(--accent); font-weight:700;}
 .cal-dots{ display:flex; flex-wrap:wrap; gap:2px; margin-top:4px; }
 .cal-dot{ width:6px; height:6px; border-radius:50%; }
-.cal-xp{ position:absolute; top:4px; right:6px; font-family:var(--font-mono); font-size:9px; color:var(--text-faint); font-weight:600; word-spacing:-2px; }
-.cal-pct{ position:absolute; bottom:4px; right:6px; font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
+.cal-xp{ position:absolute; bottom:4px; right:6px; font-family:var(--font-mono); font-size:9px; color:var(--text-faint); font-weight:600; word-spacing:-2px; }
+.cal-pct{ position:absolute; top:50%; right:6px; transform:translateY(-50%); font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
 .cal-pct.full{ color:var(--accent); }
 
 /* side panel */
@@ -1000,28 +1000,34 @@ document.querySelectorAll('.navitem').forEach(btn=> {
 let deferredPrompt = null;
 const installBtn = document.getElementById('install-btn');
 
-function setInstallButtonVisible(visible){
-  if (installBtn) installBtn.style.display = visible ? 'flex' : 'none';
-}
-
 function showInstallFallback(){
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  
+  // Already installed as app
   if (isStandalone) {
-    setInstallButtonVisible(false);
     return;
   }
 
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   const fallbackMessage = isIOS
-    ? 'To install this app on iPhone or iPad:\n\n1. Tap the Share button\n2. Choose "Add to Home Screen"\n3. Tap Add'
-    : 'To install this app:\n\n1. Open it in a browser that supports PWA install\n2. Tap the browser menu\n3. Select "Install App" or "Add to Home Screen"';
+    ? 'To install this app on iPhone:\n\n1. Tap the Share button (arrow up from bottom)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm\n\nThe app will then appear on your home screen.'
+    : 'To install this app:\n\n1. Tap the browser menu (three dots)\n2. Select "Install app" or "Add to Home Screen"\n3. Confirm the installation';
+  
   alert(fallbackMessage);
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  setInstallButtonVisible(true);
+  // Auto-trigger the install prompt
+  setTimeout(() => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        deferredPrompt = null;
+      });
+    }
+  }, 1500);
 });
 
 if (installBtn) {
@@ -1034,11 +1040,6 @@ if (installBtn) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         deferredPrompt = null;
-        if (outcome === 'accepted') {
-          setInstallButtonVisible(false);
-        } else {
-          setInstallButtonVisible(true);
-        }
       } catch (err) {
         console.error(err);
         showInstallFallback();
@@ -1046,15 +1047,27 @@ if (installBtn) {
       return;
     }
 
+    // No deferredPrompt (iOS, or browser doesn't support it) - show fallback
     showInstallFallback();
   });
 }
 
 window.addEventListener('appinstalled', () => {
-  setInstallButtonVisible(false);
+  // App was successfully installed - hide the button
+  if (installBtn) installBtn.style.display = 'none';
 });
 
-setInstallButtonVisible(true);
+// Auto-show iOS install instructions on load
+window.addEventListener('load', () => {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  
+  if (!isStandalone && isIOS && !deferredPrompt) {
+    setTimeout(() => {
+      showInstallFallback();
+    }, 2000);
+  }
+});
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
