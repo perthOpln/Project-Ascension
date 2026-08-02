@@ -132,6 +132,8 @@ button{ font-family:inherit; cursor:pointer; }
 .btn-ghost{ background:none; border:1px solid transparent; color:var(--text-dim); }
 .btn-ghost:hover{ color:var(--text); background:var(--bg-elev-2); }
 .btn-danger{ color:var(--danger); }
+.btn-secondary{ background:var(--bg-elev-1); color:var(--text); }
+.btn-secondary:hover{ background:var(--bg-elev-2); border-color:var(--border-strong); }
 
 /* stat cards */
 .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:24px; }
@@ -161,12 +163,39 @@ button{ font-family:inherit; cursor:pointer; }
 .chk.checked{ background:var(--accent); border-color:var(--accent); color:#04211b; }
 .chk:hover{ border-color:var(--accent); }
 .task-color-dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.category-dot{ width:12px; height:12px; border-radius:50%; flex-shrink:0; }
 .task-name{ flex:1; font-size:14px; font-weight:500; }
 .task-name.strike{ text-decoration:line-through; color:var(--text-faint); }
 .task-xp{ font-family:var(--font-mono); font-size:12px; color:var(--accent); font-weight:600;}
 .task-meta{ font-size:11px; color:var(--text-faint);}
 .task-actions{ display:flex; gap:4px; opacity:0; transition:.15s; }
 .task-row:hover .task-actions{ opacity:1; }
+.category-header{ 
+  display:flex; 
+  align-items:center; 
+  gap:8px; 
+  padding:10px 12px; 
+  background:var(--bg-elev-1); 
+  border-bottom:1px solid var(--border); 
+  cursor:pointer; 
+  user-select:none;
+  font-size:13px; 
+  font-weight:600; 
+  color:var(--text-dim);
+}
+.category-header:hover{ background:var(--bg-elev-2); }
+.category-header .collapse-icon{ 
+  width:16px; 
+  height:16px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  font-size:10px; 
+  transition:transform .2s;
+}
+.category-header.collapsed .collapse-icon{ transform:rotate(-90deg); }
+.category-tasks{ transition:max-height .3s ease-out; overflow:hidden; }
+.category-tasks.collapsed{ max-height:0; }
 .icon-btn{ background:none; border:none; color:var(--text-faint); padding:4px 6px; border-radius:6px; font-size:13px;}
 .icon-btn:hover{ color:var(--text); background:var(--bg-elev-2); }
 .xp-pop{ position:fixed; pointer-events:none; font-family:var(--font-mono); font-weight:700; color:var(--accent); font-size:15px; z-index:999; animation:xppop .8s ease-out forwards; }
@@ -402,7 +431,10 @@ button{ font-family:inherit; cursor:pointer; }
           <div class="page-title" id="today-title" data-i18n="today.title">Today</div>
           <div class="page-sub" id="today-sub"></div>
         </div>
-        <button class="btn btn-primary" onclick="openTaskPanel()" data-i18n="today.newtask">+ New Task</button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" onclick="openTaskPanel()" data-i18n="today.newtask">+ New Task</button>
+          <button class="btn btn-secondary" onclick="openCategoryPanel()">+ Categories</button>
+        </div>
       </div>
       <div class="stat-row">
         <div class="stat-card"><div class="sc-label" data-i18n="today.xp">Today's XP</div><div class="sc-val gold" id="stat-todayxp">0</div></div>
@@ -545,6 +577,11 @@ button{ font-family:inherit; cursor:pointer; }
     <div class="field"><label data-i18n="taskform.color">Color</label>
       <div class="color-swatches" id="tf-colors"></div>
     </div>
+    <div class="field"><label>Category</label>
+      <select id="tf-category">
+        <option value="">No Category</option>
+      </select>
+    </div>
     <div class="field"><label data-i18n="taskform.repeat">Repeat</label>
       <select id="tf-repeat" onchange="onRepeatChange()">
         <option value="daily" data-i18n="repeat.daily">Every Day</option>
@@ -575,6 +612,26 @@ button{ font-family:inherit; cursor:pointer; }
   </div>
 </div>
 
+<!-- Category management panel -->
+<div class="panel" id="panel-category">
+  <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  <h2 id="category-panel-title">Categories</h2>
+  <div class="panel-sub">Manage task categories and their colors</div>
+  <div class="form-grid">
+    <button class="btn btn-secondary" style="margin-bottom:6px;" onclick="openCategoryPanel()">+ New Category</button>
+    <div class="field"><label>Category Name</label><input id="cat-name" placeholder="Work, Personal, etc."></div>
+    <div class="field"><label>Color</label>
+      <div class="color-swatches" id="cat-colors"></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:6px;" onclick="saveCategory()">Save Category</button>
+    <button class="btn btn-danger btn-ghost" id="cat-delete" style="display:none;" onclick="deleteCurrentCategory()">Delete Category</button>
+  </div>
+  <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:16px;">
+    <div style="font-size:12px; color:var(--text-dim); margin-bottom:10px;">Existing Categories</div>
+    <div id="category-list"></div>
+  </div>
+</div>
+
 <!-- Day detail panel -->
 <div class="panel" id="panel-day">
   <button class="panel-close" onclick="closeAllPanels()">✕</button>
@@ -584,7 +641,10 @@ button{ font-family:inherit; cursor:pointer; }
     <div class="stat-card"><div class="sc-label" data-i18n="daypanel.xp">XP Earned</div><div class="sc-val gold" id="day-xp">0</div></div>
     <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="day-pct">0%</div></div>
   </div>
-  <button class="btn btn-primary" style="margin-bottom:12px;" id="day-panel-add-task" data-i18n="today.newtask">+ New Task</button>
+  <div style="display:flex; gap:8px; margin-bottom:12px;">
+    <button class="btn btn-primary" style="flex:1;" id="day-panel-add-task" data-i18n="today.newtask">+ New Task</button>
+    <button class="btn btn-secondary" onclick="openCategoryPanel()">+ Categories</button>
+  </div>
   <div id="day-tasklist"></div>
   <div class="field" style="margin-top:14px;">
     <label data-i18n="daypanel.notes">Notes</label>
@@ -673,7 +733,7 @@ const I18N = {
     'help.todayview':'Today View',
     'help.todayview.desc':'<strong>What it does:</strong> Shows all tasks scheduled for today, your XP progress, and completion statistics.<br><br><strong>How to use:</strong><br>• Check the checkbox next to each task to mark it complete<br>• Click the ✎ icon to edit a task<br>• Click the 🗑 icon to delete a task<br>• Drag tasks using the ⋮⋮ handle to reorder them<br>• Click "+ New Task" to add more tasks for today<br><br><strong>XP System:</strong> Each task has an XP reward. When you complete a task, you earn that XP. Your daily XP is shown at the top.<br><br><strong>Statistics:</strong><br>• Today\'s XP: Total XP earned today<br>• Completion: Percentage of today\'s tasks completed<br>• Highest % Complete: Your best daily completion rate<br>• Highest XP: Your most productive day by XP earned',
     'help.creatingtasks':'Creating Tasks',
-    'help.creatingtasks.desc':'<strong>Task Properties:</strong><br>• <strong>Name:</strong> What the task is called (e.g., "Morning Workout", "Read 30 minutes")<br>• <strong>XP Reward:</strong> How much XP you earn when completing this task (higher XP = more challenging/important)<br>• <strong>Color:</strong> Visual tag to organize tasks by category<br><br><strong>Repeat Options:</strong><br>• <strong>Every Day:</strong> Task appears every single day<br>• <strong>Weekdays:</strong> Monday through Friday only<br>• <strong>Weekends:</strong> Saturday and Sunday only<br>• <strong>Specific Weekdays:</strong> Choose exactly which days (e.g., Mon, Wed, Fri)<br>• <strong>Every X Days:</strong> Repeats every N days (e.g., every 3 days)<br>• <strong>Monthly:</strong> Same date each month (e.g., the 15th of every month)<br>• <strong>Only Today:</strong> One-time task that won\'t repeat<br><br><strong>Date Range:</strong> Optionally set start and end dates for when the task should appear.',
+    'help.creatingtasks.desc':'<strong>Task Properties:</strong><br>• <strong>Name:</strong> What the task is called (e.g., "Morning Workout", "Read 30 minutes")<br>• <strong>XP Reward:</strong> How much XP you earn when completing this task (higher XP = more challenging/important)<br>• <strong>Color:</strong> Visual tag to organize tasks by category<br>• <strong>Category:</strong> Assign a task to a custom category such as Work, Health, or Personal<br><br><strong>Repeat Options:</strong><br>• <strong>Every Day:</strong> Task appears every single day<br>• <strong>Weekdays:</strong> Monday through Friday only<br>• <strong>Weekends:</strong> Saturday and Sunday only<br>• <strong>Specific Weekdays:</strong> Choose exactly which days (e.g., Mon, Wed, Fri)<br>• <strong>Every X Days:</strong> Repeats every N days (e.g., every 3 days)<br>• <strong>Monthly:</strong> Same date each month (e.g., the 15th of every month)<br>• <strong>Only Today:</strong> One-time task that won\'t repeat<br><br><strong>Date Range:</strong> Optionally set start and end dates for when the task should appear.<br><br><strong>Categories:</strong><br>• Open the Categories panel from the day view to create, edit, or delete categories<br>• Give each category a name and color for easy visual grouping<br>• Click an existing category in the list to edit it anytime',
     'help.calendarview':'Calendar View',
     'help.calendarview.desc':'<strong>What it does:</strong> Shows a monthly calendar with color-coded days based on your productivity.<br><br><strong>How to use:</strong><br>• Use ← Prev / Next → buttons to navigate months<br>• Click "Today" to jump to the current month<br>• Click any day to see that day\'s tasks and notes<br>• Days are colored based on XP earned (lighter = less XP, darker = more XP)<br>• Colored dots on each day show which tasks were completed<br><br><strong>Day Details Panel:</strong> When you click a day, you can:<br>• View all tasks for that day<br>• Add new tasks to that specific day<br>• Add personal notes about how that day went<br>• See XP earned and completion percentage',
     'help.analyticsview':'Analytics View',
@@ -683,7 +743,7 @@ const I18N = {
     'help.account':'Account Management',
     'help.account.desc':'<strong>Settings:</strong> Click the sync status in the sidebar footer to access account settings.<br><br><strong>Log Out:</strong> Signs you out but keeps your data stored locally.<br><br><strong>Delete Account:</strong> Permanently removes all your data (tasks, history, notes). This cannot be undone. You\'ll need to re-enter your password to confirm.<br><br><strong>Data Storage:</strong> All data is stored in your browser\'s localStorage. Clearing your browser data will delete your progress.',
     'help.tips':'Pro Tips',
-    'help.tips.desc':'• Start with 3-5 simple daily tasks to build momentum<br>• Use higher XP values for more important or difficult tasks<br>• Color-code tasks by category (e.g., health = green, work = blue)<br>• Check the Analytics view weekly to track your consistency<br>• Use the Calendar to plan ahead and review past performance<br>• Add notes to days to remember what worked or what didn\'t<br>• Aim for consistency over perfection — missing one day is okay<br>• The Success Rate in the sidebar shows your recent performance',
+    'help.tips.desc':'• Start with 3-5 simple daily tasks to build momentum<br>• Use higher XP values for more important or difficult tasks<br>• Create categories for work, health, learning, and personal goals<br>• Use colors to quickly spot category groups in your task list<br>• Edit categories anytime from the Categories panel if your system changes<br>• Check the Analytics view weekly to track your consistency<br>• Use the Calendar to plan ahead and review past performance<br>• Add notes to days to remember what worked or what didn\'t<br>• Aim for consistency over perfection — missing one day is okay<br>• The Success Rate in the sidebar shows your recent performance',
     'gate.subtitle':'Sign in to continue', 'gate.login':'Log In', 'gate.register':'Register',
     'gate.username':'Username', 'gate.password':'Password',
     'gate.creating':'Creating account…', 'gate.signing':'Signing in…',
@@ -784,7 +844,7 @@ const I18N = {
     'help.todayview':'หน้าวันนี้',
     'help.todayview.desc':'<strong>ทำหน้าที่:</strong> แสดงงานทั้งหมดที่กำหนดสำหรับวันนี้ ความคืบหน้า XP และสถิติความสำเร็จ<br><br><strong>วิธีใช้:</strong><br>• คลิกช่องเช็คถัดจากงานเพื่อทำเครื่องหมายว่าเสร็จสิ้น<br>• คลิกไอคอน ✎ เพื่อแก้ไขงาน<br>• คลิกไอคอน 🗑 เพื่อลบงาน<br>• ลากงานโดยใช้จุดจับ ⋮⋮ เพื่อเรียงลำดับใหม่<br>• คลิก \"+ เพิ่มงาน\" เพื่อเพิ่มงานเพิ่มเติมสำหรับวันนี้<br><br><strong>ระบบ XP:</strong> งานแต่ละงานมีค่า XP เมื่อคุณทำงานเสร็จ คุณจะได้รับ XP นั้น XP รายวันของคุณจะแสดงที่ด้านบน<br><br><strong>สถิติ:</strong><br>• XP วันนี้: XP รวมที่ได้รับวันนี้<br>• ความสำเร็จ: เปอร์เซ็นต์ของงานวันนี้ที่เสร็จสิ้น<br>• ความสำเร็จสูงสุด: อัตราความสำเร็จรายวันที่ดีที่สุดของคุณ<br>• XP สูงสุด: วันที่ทำได้ดีที่สุดโดย XP',
     'help.creatingtasks':'สร้างงาน',
-    'help.creatingtasks.desc':'<strong>คุณสมบัติของงาน:</strong><br>• <strong>ชื่องาน:</strong> ชื่อของงาน (เช่น \"ออกกำลังกายเช้า\", \"อ่านหนังสือ 30 นาที\")<br>• <strong>XP ที่ได้รับ:</strong> XP ที่คุณจะได้เมื่อทำงานเสร็จ (XP สูง = ยากหรือสำคัญมาก)<br>• <strong>สี:</strong> แท็กสำหรับจัดกลุ่มงานตามหมวดหมู่<br><br><strong>ตัวเลือกความถี่:</strong><br>• <strong>ทุกวัน:</strong> งานจะปรากฏทุกวัน<br>• <strong>วันธรรมดา:</strong> เฉพาะวันจันทร์ถึงศุกร์<br>• <strong>วันหยุดสุดสัปดาห์:</strong> เฉพาะวันเสาร์และวันอาทิตย์<br>• <strong>กำหนดวันเอง:</strong> เลือกวันที่ต้องการ (เช่น จ-พ-ศ)<br>• <strong>ทุก X วัน:</strong> เกิดซ้ำทุก N วัน (เช่น ทุก 3 วัน)<br>• <strong>รายเดือน:</strong> วันที่เดียวกันทุกเดือน (เช่น วันที่ 15 ของทุกเดือน)<br>• <strong>ครั้งเดียว:</strong> งานครั้งเดียวที่ไม่เกิดซ้ำ<br><br><strong>ช่วงวันที่:</strong> ตั้งค่าวันที่เริ่มและสิ้นสุดสำหรับงาน',
+    'help.creatingtasks.desc':'<strong>คุณสมบัติของงาน:</strong><br>• <strong>ชื่องาน:</strong> ชื่อของงาน (เช่น \"ออกกำลังกายเช้า\", \"อ่านหนังสือ 30 นาที\")<br>• <strong>XP ที่ได้รับ:</strong> XP ที่คุณจะได้เมื่อทำงานเสร็จ (XP สูง = ยากหรือสำคัญมาก)<br>• <strong>สี:</strong> แท็กสำหรับจัดกลุ่มงานตามหมวดหมู่<br>• <strong>หมวดหมู่:</strong> กำหนดงานให้กับหมวดหมู่ที่คุณสร้างไว้ เช่น งาน สุขภาพ หรือส่วนตัว<br><br><strong>ตัวเลือกความถี่:</strong><br>• <strong>ทุกวัน:</strong> งานจะปรากฏทุกวัน<br>• <strong>วันธรรมดา:</strong> เฉพาะวันจันทร์ถึงศุกร์<br>• <strong>วันหยุดสุดสัปดาห์:</strong> เฉพาะวันเสาร์และวันอาทิตย์<br>• <strong>กำหนดวันเอง:</strong> เลือกวันที่ต้องการ (เช่น จ-พ-ศ)<br>• <strong>ทุก X วัน:</strong> เกิดซ้ำทุก N วัน (เช่น ทุก 3 วัน)<br>• <strong>รายเดือน:</strong> วันที่เดียวกันทุกเดือน (เช่น วันที่ 15 ของทุกเดือน)<br>• <strong>ครั้งเดียว:</strong> งานครั้งเดียวที่ไม่เกิดซ้ำ<br><br><strong>ช่วงวันที่:</strong> ตั้งค่าวันที่เริ่มและสิ้นสุดสำหรับงาน<br><br><strong>หมวดหมู่:</strong><br>• เปิดแผงหมวดหมู่จากมุมมองวันเพื่อสร้าง แก้ไข หรือลบหมวดหมู่<br>• ให้แต่ละหมวดหมู่ชื่อและสีเพื่อจัดกลุ่มงานได้ง่าย<br>• คลิกหมวดหมู่ที่มีอยู่ในรายการเพื่อแก้ไขได้ตลอดเวลา',
     'help.calendarview':'หน้าปฏิทิน',
     'help.calendarview.desc':'<strong>ทำหน้าที่:</strong> แสดงปฏิทินรายเดือนพร้อมสีตามผลผลิตของคุณ<br><br><strong>วิธีใช้:</strong><br>• ใช้ปุ่ม ← ก่อนหน้า / ถัดไป → เพื่อเปลี่ยนเดือน<br>• คลิก \"วันนี้\" เพื่อไปที่เดือนปัจจุบัน<br>• คลิกวันใดวันหนึ่งเพื่อดูงานและบันทึกของวันนั้น<br>• วันจะมีสีตาม XP ที่ได้รับ (สีอ่อน = XP น้อย, สีเข้ม = XP มาก)<br>• จุดสีบนแต่ละวันแสดงงานที่ทำสำเร็จ<br><br><strong>แผงรายละเอียดวัน:</strong> เมื่อคลิกวัน คุณสามารถ:<br>• ดูงานทั้งหมดของวันนั้น<br>• เพิ่มงานใหม่ให้กับวันนั้น<br>• เพิ่มบันทึกส่วนตัวเกี่ยวกับวันนั้น<br>• ดู XP ที่ได้รับและเปอร์เซ็นต์ความสำเร็จ',
     'help.analyticsview':'หน้าวิเคราะห์ข้อมูล',
@@ -794,7 +854,7 @@ const I18N = {
     'help.account':'จัดการบัญชี',
     'help.account.desc':'<strong>การตั้งค่า:</strong> คลิกสถานะซิงค์ที่ส่วนท้ายของแถบข้างเพื่อเข้าถึงการตั้งค่าบัญชี<br><br><strong>ออกจากระบบ:</strong> ออกจากระบบแต่ข้อมูลยังถูกเก็บในเบราว์เซอร์<br><br><strong>ลบบัญชี:</strong> ลบข้อมูลทั้งหมด (งาน ประวัติ บันทึก) อย่างถาวร ไม่สามารถย้อนกลับได้ ต้องกรอกรหัสผ่านอีกครั้งเพื่อยืนยัน<br><br><strong>การเก็บข้อมูล:</strong> ข้อมูลทั้งหมดถูกเก็บใน localStorage ของเบราว์เซอร์ การล้างข้อมูลเบราว์เซอร์จะลบความคืบหน้าของคุณ',
     'help.tips':'เคล็ดลับ',
-    'help.tips.desc':'• เริ่มต้นด้วยงานง่าย ๆ 3-5 งานต่อวันเพื่อสร้างโมเมนตัม<br>• ใช้ค่า XP สูงสำหรับงานที่สำคัญหรือยากกว่า<br>• ใช้สีแยกหมวดหมู่งาน (เช่น สุขภาพ = เขียว, งาน = น้ำเงิน)<br>• ตรวจสอบหน้าวิเคราะห์ข้อมูลทุกสัปดาห์เพื่อติดตามความสม่ำเสมอ<br>• ใช้ปฏิทินเพื่อวางแผนล่วงหน้าและทบทวนผลผลิตในอดีต<br>• เพิ่มบันทึกในแต่ละวันเพื่อจำสิ่งที่ทำได้หรือไม่ได้<br>• มุ่งเน้นความสม่ำเสมอมากกว่าความสมบูรณ์แบบ — พลาดวันหนึ่งไม่เป็นไร<br>• อัตราความสำเร็จในแถบข้างแสดงผลงานเร็ว ๆ ของคุณ',
+    'help.tips.desc':'• เริ่มต้นด้วยงานง่าย ๆ 3-5 งานต่อวันเพื่อสร้างโมเมนตัม<br>• ใช้ค่า XP สูงสำหรับงานที่สำคัญหรือยากกว่า<br>• สร้างหมวดหมู่สำหรับงาน การออกกำลังกาย การเรียนรู้ และเป้าหมายส่วนตัว<br>• ใช้สีเพื่อแยกหมวดหมู่ให้มองเห็นได้ทันทีในรายการงาน<br>• แก้ไขหมวดหมู่ได้ตลอดเวลาในแผงหมวดหมู่หากต้องการเปลี่ยนแปลงระบบของคุณ<br>• ตรวจสอบหน้าวิเคราะห์ข้อมูลทุกสัปดาห์เพื่อติดตามความสม่ำเสมอ<br>• ใช้ปฏิทินเพื่อวางแผนล่วงหน้าและทบทวนผลผลิตในอดีต<br>• เพิ่มบันทึกในแต่ละวันเพื่อจำสิ่งที่ทำได้หรือไม่ได้<br>• มุ่งเน้นความสม่ำเสมอมากกว่าความสมบูรณ์แบบ — พลาดวันหนึ่งไม่เป็นไร<br>• อัตราความสำเร็จในแถบข้างแสดงผลงานเร็ว ๆ ของคุณ',
   }
 };
 let currentLang = localStorage.getItem('ascend_lang') || 'en';
@@ -831,16 +891,42 @@ function todayStr(){ return fmtDate(new Date()); }
 function fmtDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function parseDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 
+function normalizeStateShape(input){
+  const base = input && typeof input === 'object' ? input : {};
+  return {
+    tasks: Array.isArray(base.tasks) ? base.tasks : [],
+    logs: base.logs || {},
+    notes: base.notes || {},
+    categories: Array.isArray(base.categories) ? base.categories : [],
+    collapsedCategories: base.collapsedCategories || {},
+    createdAt: base.createdAt || todayStr(),
+    ...base,
+    tasks: Array.isArray(base.tasks) ? base.tasks : [],
+    logs: base.logs || {},
+    notes: base.notes || {},
+    categories: Array.isArray(base.categories) ? base.categories : [],
+    collapsedCategories: base.collapsedCategories || {},
+    createdAt: base.createdAt || todayStr(),
+  };
+}
+
 /* ---------- State ---------- */
 let state = loadState();
 function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(raw) return JSON.parse(raw);
-  }catch(e){}
-  return { tasks: [], logs: {}, notes: {}, createdAt: todayStr() };
+    if(raw) {
+      const loaded = JSON.parse(raw);
+      console.log('Loaded state from localStorage:', loaded);
+      return normalizeStateShape(loaded);
+    }
+  }catch(e){
+    console.error('Error loading state:', e);
+  }
+  console.log('Returning default state');
+  return normalizeStateShape({ tasks: [], logs: {}, notes: {}, createdAt: todayStr() });
 }
-function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); scheduleSync(); }
+function saveState(){ state = normalizeStateShape(state); localStorage.setItem(STORE_KEY, JSON.stringify(state)); scheduleSync(); }
 
 function seedTasks(){
   const now = new Date().toISOString();
@@ -1160,23 +1246,107 @@ function renderToday(){
     renderSidebarXP();
     return;
   }
+  
+  // Group tasks by category
+  const grouped = {};
+  const uncategorized = [];
   applicable.forEach(t=>{
-    const done = isCompleted(ds, t.id);
-    const row = document.createElement('div');
-    row.className = 'task-row'+(done?' done':'');
-    row.dataset.tid = t.id;
-    row.innerHTML = `
-      <span class="drag-handle">⠿</span>
-      <button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
-      <span class="task-color-dot" style="background:${t.color}"></span>
-      <span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
-      <span class="task-xp">+${t.xp} XP</span>
-      <div class="task-actions">
-        <button class="icon-btn" data-edit="${t.id}">✎</button>
-        <button class="icon-btn" data-del="${t.id}">🗑</button>
-      </div>`;
-    list.appendChild(row);
+    if(t.categoryId && state.categories && state.categories.find(c=>c.id===t.categoryId)){
+      if(!grouped[t.categoryId]) grouped[t.categoryId] = [];
+      grouped[t.categoryId].push(t);
+    } else {
+      uncategorized.push(t);
+    }
   });
+  
+  // Render categorized tasks
+  Object.keys(grouped).forEach(catId => {
+    const category = state.categories ? state.categories.find(c=>c.id===catId) : null;
+    if(!category) return;
+    
+    const isCollapsed = state.collapsedCategories && state.collapsedCategories[catId];
+    
+    const header = document.createElement('div');
+    header.className = 'category-header' + (isCollapsed ? ' collapsed' : '');
+    header.innerHTML = `
+      <span class="collapse-icon">▼</span>
+      <span class="category-dot" style="background:${category.color}"></span>
+      <span>${category.name}</span>
+    `;
+    header.onclick = () => {
+      if(!state.collapsedCategories) state.collapsedCategories = {};
+      state.collapsedCategories[catId] = !state.collapsedCategories[catId];
+      saveState();
+      renderToday();
+    };
+    list.appendChild(header);
+    
+    const tasksContainer = document.createElement('div');
+    tasksContainer.className = 'category-tasks' + (isCollapsed ? ' collapsed' : '');
+    
+    grouped[catId].forEach(t=>{
+      const done = isCompleted(ds, t.id);
+      const row = document.createElement('div');
+      row.className = 'task-row'+(done?' done':'');
+      row.dataset.tid = t.id;
+      row.innerHTML = `
+        <span class="drag-handle">⠿</span>
+        <button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+        <span class="task-color-dot" style="background:${t.color}"></span>
+        <span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+        <span class="task-xp">+${t.xp} XP</span>
+        <div class="task-actions">
+          <button class="icon-btn" data-edit="${t.id}">✎</button>
+          <button class="icon-btn" data-del="${t.id}">🗑</button>
+        </div>`;
+      tasksContainer.appendChild(row);
+    });
+    
+    list.appendChild(tasksContainer);
+  });
+  
+  // Render uncategorized tasks
+  if(uncategorized.length > 0){
+    const isCollapsed = state.collapsedCategories && state.collapsedCategories['uncategorized'];
+    
+    const header = document.createElement('div');
+    header.className = 'category-header' + (isCollapsed ? ' collapsed' : '');
+    header.innerHTML = `
+      <span class="collapse-icon">▼</span>
+      <span>Uncategorized</span>
+    `;
+    header.onclick = () => {
+      if(!state.collapsedCategories) state.collapsedCategories = {};
+      state.collapsedCategories['uncategorized'] = !state.collapsedCategories['uncategorized'];
+      saveState();
+      renderToday();
+    };
+    list.appendChild(header);
+    
+    const tasksContainer = document.createElement('div');
+    tasksContainer.className = 'category-tasks' + (isCollapsed ? ' collapsed' : '');
+    
+    uncategorized.forEach(t=>{
+      const done = isCompleted(ds, t.id);
+      const row = document.createElement('div');
+      row.className = 'task-row'+(done?' done':'');
+      row.dataset.tid = t.id;
+      row.innerHTML = `
+        <span class="drag-handle">⠿</span>
+        <button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+        <span class="task-color-dot" style="background:${t.color}"></span>
+        <span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+        <span class="task-xp">+${t.xp} XP</span>
+        <div class="task-actions">
+          <button class="icon-btn" data-edit="${t.id}">✎</button>
+          <button class="icon-btn" data-del="${t.id}">🗑</button>
+        </div>`;
+      tasksContainer.appendChild(row);
+    });
+    
+    list.appendChild(tasksContainer);
+  }
+  
   list.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=>openDeleteScopeModal(b.dataset.del, ds)));
   list.querySelectorAll('.chk').forEach(chk=>{
     chk.addEventListener('click', (e)=>{
@@ -1198,17 +1368,29 @@ function initTodaySortable(){
   const list = document.getElementById('today-list');
   if(todaySortable){ todaySortable.destroy(); todaySortable = null; }
   if(typeof Sortable === 'undefined' || !list.children.length) return;
-  todaySortable = Sortable.create(list, {
-    handle: '.drag-handle',
-    animation: 150,
-    ghostClass: 'drag-ghost',
-    onEnd: function(){
-      const now = new Date().toISOString();
-      Array.from(list.children).forEach((row, i)=>{
-        const t = state.tasks.find(x=>x.id===row.dataset.tid);
-        if(t && t.order !== i){ t.order = i; t.updatedAt = now; }
+  
+  // Initialize sortable for each category container
+  const containers = list.querySelectorAll('.category-tasks');
+  containers.forEach(container => {
+    if(container.children.length > 0){
+      Sortable.create(container, {
+        handle: '.drag-handle',
+        animation: 150,
+        ghostClass: 'drag-ghost',
+        onEnd: function(){
+          const now = new Date().toISOString();
+          // Re-calculate orders for all tasks
+          let order = 0;
+          containers.forEach(c => {
+            Array.from(c.children).forEach(row => {
+              const t = state.tasks.find(x=>x.id===row.dataset.tid);
+              if(t && t.order !== order){ t.order = order; t.updatedAt = now; }
+              order++;
+            });
+          });
+          saveState();
+        }
       });
-      saveState();
     }
   });
 }
@@ -1284,19 +1466,99 @@ function openDayPanel(ds){
   document.getElementById('day-pct').textContent = s.pct+'%';
   const list = document.getElementById('day-tasklist');
   list.innerHTML = '';
+  
+  // Group tasks by category
+  const grouped = {};
+  const uncategorized = [];
   s.applicable.forEach(t=>{
-    const done = isCompleted(ds, t.id);
-    const row = document.createElement('div');
-    row.className = 'task-row'+(done?' done':'');
-    row.innerHTML = `<button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
-      <span class="task-color-dot" style="background:${t.color}"></span><span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
-      <span class="task-xp">+${t.xp} XP</span>
-      <div class="task-actions" style="opacity:1;">
-        <button class="icon-btn" data-edit="${t.id}">✏️</button>
-        <button class="icon-btn" data-del="${t.id}">🗑</button>
-      </div>`;
-    list.appendChild(row);
+    if(t.categoryId && state.categories && state.categories.find(c=>c.id===t.categoryId)){
+      if(!grouped[t.categoryId]) grouped[t.categoryId] = [];
+      grouped[t.categoryId].push(t);
+    } else {
+      uncategorized.push(t);
+    }
   });
+  
+  // Render categorized tasks
+  Object.keys(grouped).forEach(catId => {
+    const category = state.categories ? state.categories.find(c=>c.id===catId) : null;
+    if(!category) return;
+    
+    const isCollapsed = state.collapsedCategories && state.collapsedCategories[catId];
+    
+    const header = document.createElement('div');
+    header.className = 'category-header' + (isCollapsed ? ' collapsed' : '');
+    header.innerHTML = `
+      <span class="collapse-icon">▼</span>
+      <span class="category-dot" style="background:${category.color}"></span>
+      <span>${category.name}</span>
+    `;
+    header.onclick = () => {
+      if(!state.collapsedCategories) state.collapsedCategories = {};
+      state.collapsedCategories[catId] = !state.collapsedCategories[catId];
+      saveState();
+      openDayPanel(ds);
+    };
+    list.appendChild(header);
+    
+    const tasksContainer = document.createElement('div');
+    tasksContainer.className = 'category-tasks' + (isCollapsed ? ' collapsed' : '');
+    
+    grouped[catId].forEach(t=>{
+      const done = isCompleted(ds, t.id);
+      const row = document.createElement('div');
+      row.className = 'task-row'+(done?' done':'');
+      row.innerHTML = `<button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+        <span class="task-color-dot" style="background:${t.color}"></span><span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+        <span class="task-xp">+${t.xp} XP</span>
+        <div class="task-actions" style="opacity:1;">
+          <button class="icon-btn" data-edit="${t.id}">✏️</button>
+          <button class="icon-btn" data-del="${t.id}">🗑</button>
+        </div>`;
+      tasksContainer.appendChild(row);
+    });
+    
+    list.appendChild(tasksContainer);
+  });
+  
+  // Render uncategorized tasks
+  if(uncategorized.length > 0){
+    const isCollapsed = state.collapsedCategories && state.collapsedCategories['uncategorized'];
+    
+    const header = document.createElement('div');
+    header.className = 'category-header' + (isCollapsed ? ' collapsed' : '');
+    header.innerHTML = `
+      <span class="collapse-icon">▼</span>
+      <span>Uncategorized</span>
+    `;
+    header.onclick = () => {
+      if(!state.collapsedCategories) state.collapsedCategories = {};
+      state.collapsedCategories['uncategorized'] = !state.collapsedCategories['uncategorized'];
+      saveState();
+      openDayPanel(ds);
+    };
+    list.appendChild(header);
+    
+    const tasksContainer = document.createElement('div');
+    tasksContainer.className = 'category-tasks' + (isCollapsed ? ' collapsed' : '');
+    
+    uncategorized.forEach(t=>{
+      const done = isCompleted(ds, t.id);
+      const row = document.createElement('div');
+      row.className = 'task-row'+(done?' done':'');
+      row.innerHTML = `<button class="chk ${done?'checked':''}" data-tid="${t.id}">${done?'✓':''}</button>
+        <span class="task-color-dot" style="background:${t.color}"></span><span class="task-name ${done?'strike':''}">${escapeHtml(t.name)}</span>
+        <span class="task-xp">+${t.xp} XP</span>
+        <div class="task-actions" style="opacity:1;">
+          <button class="icon-btn" data-edit="${t.id}">✏️</button>
+          <button class="icon-btn" data-del="${t.id}">🗑</button>
+        </div>`;
+      tasksContainer.appendChild(row);
+    });
+    
+    list.appendChild(tasksContainer);
+  }
+  
   list.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=>openDeleteScopeModal(b.dataset.del, ds)));
   list.querySelectorAll('[data-edit]').forEach(b=> b.addEventListener('click', ()=>{
     closeAllPanels();
@@ -1314,9 +1576,11 @@ function openDayPanel(ds){
   
   // Add event listener to the "New Task" button
   const addTaskBtn = document.getElementById('day-panel-add-task');
-  addTaskBtn.onclick = function() {
-    openTaskPanelForDay();
-  };
+  if(addTaskBtn){
+    addTaskBtn.onclick = function() {
+      openTaskPanelForDay();
+    };
+  }
   
   showPanel('panel-day');
 }
@@ -1343,6 +1607,13 @@ function openTaskPanelForDay(){
   document.getElementById('tf-everyx').value = 2;
   document.getElementById('tf-startdate').value = activeDayStr || '';
   document.getElementById('tf-enddate').value = activeDayStr || '';
+  
+  // Populate category dropdown
+  const catSelect = document.getElementById('tf-category');
+  catSelect.innerHTML = '<option value="">No Category</option>' + 
+    (state.categories ? state.categories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('') : '');
+  catSelect.value = '';
+  
   onRepeatChange();
   
   // Build color swatches after onRepeatChange to ensure they exist
@@ -1401,6 +1672,13 @@ function openTaskPanel(taskId){
   document.getElementById('tf-everyx').value = t && t.everyx ? t.everyx : 2;
   document.getElementById('tf-startdate').value = t && t.startDate ? t.startDate : '';
   document.getElementById('tf-enddate').value = t && t.endDate ? t.endDate : '';
+  
+  // Populate category dropdown
+  const catSelect = document.getElementById('tf-category');
+  catSelect.innerHTML = '<option value="">No Category</option>' + 
+    (state.categories ? state.categories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('') : '');
+  catSelect.value = t && t.categoryId ? t.categoryId : '';
+  
   onRepeatChange();
   buildColorSwatches(); // Make sure color swatches are built
   document.querySelectorAll('#tf-colors .swatch').forEach(s=> s.classList.toggle('sel', t ? s.dataset.color===t.color : s.dataset.color===COLORS[0]));
@@ -1418,11 +1696,13 @@ function saveTask(){
   const color = (document.querySelector('#tf-colors .swatch.sel')||{}).dataset?.color || COLORS[0];
   const weekdays = Array.from(document.querySelectorAll('#tf-weekdays .swatch.sel')).map(s=>Number(s.dataset.day));
   const repeat = document.getElementById('tf-repeat').value;
+  const categoryId = document.getElementById('tf-category').value || null;
   const data = {
     name,
     xp: Number(document.getElementById('tf-xp').value)||10,
     color, repeat: repeat,
     weekdays, everyx: Number(document.getElementById('tf-everyx').value)||2,
+    categoryId,
     updatedAt: new Date().toISOString(),
   };
   
@@ -1457,6 +1737,83 @@ function deleteCurrentTask(){
   saveState();
   closeAllPanels();
   renderToday(); renderCalendar();
+}
+
+/* ---------- Category management ---------- */
+let activeCategoryId = null;
+function openCategoryPanel(categoryId){
+  activeCategoryId = categoryId || null;
+  document.getElementById('category-panel-title').textContent = categoryId ? 'Edit Category' : 'New Category';
+  document.getElementById('cat-delete').style.display = categoryId ? 'block' : 'none';
+  const cat = categoryId ? state.categories.find(x=>x.id===categoryId) : null;
+  document.getElementById('cat-name').value = cat ? cat.name : '';
+  buildCategoryColorSwatches();
+  document.querySelectorAll('#cat-colors .swatch').forEach(s=> s.classList.toggle('sel', cat ? s.dataset.color===cat.color : s.dataset.color===COLORS[0]));
+  renderCategoryList();
+  showPanel('panel-category');
+}
+function buildCategoryColorSwatches(){
+  const wrap = document.getElementById('cat-colors');
+  wrap.innerHTML = COLORS.map(c=>`<span class="swatch" data-color="${c}" style="background:${c}"></span>`).join('');
+  wrap.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));
+      sw.classList.add('sel');
+    });
+  });
+}
+function saveCategory(){
+  console.log('saveCategory called');
+  const name = document.getElementById('cat-name').value.trim();
+  console.log('Category name:', name);
+  if(!name){ document.getElementById('cat-name').focus(); return; }
+  const color = (document.querySelector('#cat-colors .swatch.sel')||{}).dataset?.color || COLORS[0];
+  console.log('Category color:', color);
+  const data = {
+    name,
+    color,
+    updatedAt: new Date().toISOString(),
+  };
+  if(!state.categories) state.categories = [];
+  console.log('Categories before save:', state.categories);
+  if(activeCategoryId){
+    Object.assign(state.categories.find(c=>c.id===activeCategoryId), data);
+  } else {
+    state.categories.push({ id: uid(), ...data });
+  }
+  console.log('Categories after save:', state.categories);
+  saveState();
+  console.log('State saved to localStorage');
+  closeAllPanels();
+  renderToday(); renderCalendar();
+}
+function deleteCurrentCategory(){
+  if(!activeCategoryId) return;
+  if(!state.categories) state.categories = [];
+  state.categories = state.categories.filter(c=>c.id!==activeCategoryId);
+  // Remove category reference from tasks
+  state.tasks.forEach(t=> {
+    if(t.categoryId === activeCategoryId) delete t.categoryId;
+  });
+  saveState();
+  closeAllPanels();
+  renderToday(); renderCalendar();
+}
+function renderCategoryList(){
+  const list = document.getElementById('category-list');
+  if(!state.categories || !state.categories.length){
+    list.innerHTML = '<div style="font-size:12px; color:var(--text-faint);">No categories yet</div>';
+    return;
+  }
+  list.innerHTML = state.categories.map(cat=>`
+    <div class="category-item" style="display:flex; align-items:center; gap:8px; padding:8px; border-bottom:1px solid var(--border);">
+      <button type="button" style="display:flex; align-items:center; gap:8px; flex:1; background:none; border:none; padding:0; text-align:left; color:inherit; cursor:pointer;" onclick="openCategoryPanel('${cat.id}')">
+        <span class="category-dot" style="width:12px; height:12px; border-radius:50%; background:${cat.color}; flex-shrink:0;"></span>
+        <span style="flex:1; font-size:13px;">${escapeHtml(cat.name)}</span>
+      </button>
+      <button type="button" class="icon-btn" onclick="event.stopPropagation(); openCategoryPanel('${cat.id}')" title="Edit category">✏️</button>
+    </div>
+  `).join('');
 }
 
 /* ---------- Apple-Calendar-style occurrence delete ---------- */
@@ -2372,7 +2729,7 @@ async function gateRegister(){
   try{
     const data = await apiCall('register', {username, password});
     setSession({ token:data.token, userId:data.userId, username });
-    state = { tasks: seedTasks(), logs:{}, notes:{}, createdAt: todayStr() };
+    state = normalizeStateShape({ tasks: seedTasks(), logs:{}, notes:{}, createdAt: todayStr() });
     localStorage.setItem(STORE_KEY, JSON.stringify(state));
     await pushStateToBackend();
     unlockApp();
@@ -2382,7 +2739,7 @@ function lockApp(){
   setSession(null);
   stopPolling();
   localStorage.removeItem(STORE_KEY);
-  state = { tasks:[], logs:{}, notes:{}, createdAt: todayStr() };
+  state = normalizeStateShape({ tasks:[], logs:{}, notes:{}, createdAt: todayStr() });
   closeAllPanels();
   document.getElementById('app').classList.remove('unlocked');
   document.getElementById('gate').classList.remove('hidden');
@@ -2414,7 +2771,7 @@ function doLogout(){
 async function fetchStateSilently(){
   const s = getSession(); if(!s) throw new Error('No session');
   const data = await apiCall('getState', {token:s.token});
-  state = data.state || { tasks:[], logs:{}, notes:{}, createdAt: todayStr() };
+  state = normalizeStateShape(data.state || { tasks:[], logs:{}, notes:{}, createdAt: todayStr() });
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
 }
 async function pullStateFromBackend(){
@@ -2437,7 +2794,8 @@ async function pushStateToBackend(){
    instead of being resurrected by a device that hasn't seen them.
    ============================================================ */
 function mergeState(local, remote){
-  if(!remote) return local;
+  if(!remote) return normalizeStateShape(local);
+
   // Tasks: union by id, newer updatedAt wins (including deletions, since a
   // delete just sets deleted:true with a fresh updatedAt).
   const taskMap = {};
@@ -2467,7 +2825,24 @@ function mergeState(local, remote){
     mergedNotes[ds] = (l.updatedAt||'') >= (r.updatedAt||'') ? l : r;
   });
 
-  return { tasks: mergedTasks, logs: mergedLogs, notes: mergedNotes, createdAt: local.createdAt || remote.createdAt };
+  // Categories and collapsed state should survive sync as well.
+  const categoryMap = {};
+  (remote.categories||[]).forEach(c=> categoryMap[c.id] = c);
+  (local.categories||[]).forEach(c=>{
+    const r = categoryMap[c.id];
+    if(!r || (c.updatedAt||'') > (r.updatedAt||'')) categoryMap[c.id] = c;
+  });
+  const mergedCategories = Object.values(categoryMap);
+  const mergedCollapsedCategories = { ...(remote.collapsedCategories||{}), ...(local.collapsedCategories||{}) };
+
+  return normalizeStateShape({
+    tasks: mergedTasks,
+    logs: mergedLogs,
+    notes: mergedNotes,
+    categories: mergedCategories,
+    collapsedCategories: mergedCollapsedCategories,
+    createdAt: local.createdAt || remote.createdAt,
+  });
 }
 
 let pollTimer = null;
