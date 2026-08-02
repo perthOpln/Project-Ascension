@@ -2577,12 +2577,23 @@ function renderPeriodChart(container, chartType, period, today, created){
     
     Object.keys(monthData).sort().forEach(monthKey => {
       const [year, month] = monthKey.split('-');
-      const avg = monthData[monthKey].count > 0 ? Math.round(monthData[monthKey].total / monthData[monthKey].count) : 0;
-      dataPoints.push({ 
-        label: new Date(parseInt(year), parseInt(month)).toLocaleDateString('en', {month:'short'}), 
-        value: avg,
-        monthKey: monthKey
-      });
+      if(chartType === 'xp'){
+        // XP chart: show sum instead of average
+        const sum = monthData[monthKey].total;
+        dataPoints.push({ 
+          label: new Date(parseInt(year), parseInt(month)).toLocaleDateString('en', {month:'short'}), 
+          value: sum,
+          monthKey: monthKey
+        });
+      } else {
+        // % Complete chart: show average
+        const avg = monthData[monthKey].count > 0 ? Math.round(monthData[monthKey].total / monthData[monthKey].count) : 0;
+        dataPoints.push({ 
+          label: new Date(parseInt(year), parseInt(month)).toLocaleDateString('en', {month:'short'}), 
+          value: avg,
+          monthKey: monthKey
+        });
+      }
     });
   } else if(period === 'years'){
     // For years: aggregate by year
