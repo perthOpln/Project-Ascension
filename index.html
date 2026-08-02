@@ -1884,10 +1884,27 @@ function renderAnalytics(){
   const currentYear = today.getFullYear();
   if(!sortedYears.includes(currentYear)) sortedYears.push(currentYear);
   
-  // Year totals for summary row
+  // Year totals for summary row, calculated from each year's start date through today
   const yearTotals = {};
   sortedYears.forEach(year => {
-    yearTotals[year] = { xp: 0, pct: 0, count: 0 };
+    const startDate = [...Object.keys(state.logs)]
+      .map(d => parseDate(d))
+      .filter(d => d.getFullYear() === year)
+      .sort((a, b) => a - b)[0] || new Date(year, 0, 1);
+    const endDate = year === currentYear ? today : new Date(year, 11, 31);
+
+    let xp = 0;
+    let done = 0;
+    let total = 0;
+
+    for (let c = new Date(startDate); c <= endDate; c.setDate(c.getDate() + 1)) {
+      const s = dayStats(fmtDate(c));
+      xp += s.xp;
+      done += s.done;
+      total += s.total;
+    }
+
+    yearTotals[year] = { xp, done, total, pct: total > 0 ? Math.round(100 * done / total) : 0 };
   });
   
   // Create month cells for each year
@@ -1933,11 +1950,6 @@ function renderAnalytics(){
       
       const monthPct = monthTotal > 0 ? Math.round(100 * monthDone / monthTotal) : 0;
       
-      // Add to year totals
-      yearTotals[year].xp += monthXP;
-      yearTotals[year].pct += monthPct;
-      yearTotals[year].count++;
-      
       const cell = document.createElement('div');
       cell.className = 'month-cell';
       cell.style.border = '1px solid var(--border)';
@@ -1982,10 +1994,11 @@ function renderAnalytics(){
       const dimColor = monthPct > 0 ? 'var(--accent)' : 'var(--text-dim)';
       
       cell.innerHTML = `
-        <div style="font-size:16px; font-weight:bold; color:${xpColor}; margin-bottom:2px;">${monthXP}</div>
-        <div style="font-size:10px; color:${dimColor}; margin-bottom:6px;">XP</div>
-        <div style="font-size:12px; color:${textColor}; font-weight:600; margin-bottom:4px;">${monthName}</div>
-        <div style="position:absolute; top:8px; right:8px; font-size:14px; font-weight:bold; color:${dimColor};">${monthPct}%</div>
+        <div style="display:flex; flex:1; flex-direction:column; justify-content:center; align-items:center; gap:2px; padding-top:10px;">
+          <div style="font-size:16px; font-weight:bold; color:${xpColor};">${monthXP}</div>
+          <div style="font-size:10px; color:${dimColor};">XP</div>
+          <div style="font-size:12px; color:${textColor}; font-weight:600;">${monthName}</div>
+        </div>
       `;
       
       monthGrid.appendChild(cell);
@@ -2006,7 +2019,7 @@ function renderAnalytics(){
     yearSummary.style.flexWrap = 'wrap';
     yearSummary.style.gap = '12px';
     
-    const avgYearPct = yearTotals[year].count > 0 ? Math.round(yearTotals[year].pct / yearTotals[year].count) : 0;
+    const avgYearPct = yearTotals[year].total > 0 ? Math.round(100 * yearTotals[year].done / yearTotals[year].total) : 0;
     
     yearSummary.innerHTML = `
       <div style="font-weight:bold; color:var(--text); font-size:16px;">${year} Total</div>
