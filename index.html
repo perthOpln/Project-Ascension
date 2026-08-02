@@ -346,6 +346,13 @@ button{ font-family:inherit; cursor:pointer; }
   width:340px; max-width:100%;
   background:var(--bg-elev); border:1px solid var(--border-strong); border-radius:var(--radius);
   padding:30px 26px; animation:fadein .3s ease;
+  position: relative;
+  z-index: 101;
+}
+.gate-card input{
+  -webkit-appearance: none;
+  -webkit-user-select: text;
+  user-select: text;
 }
 .gate-brand{ text-align:center; margin-bottom:26px; }
 .gate-brand .brand-mark{ font-size:30px; }
@@ -377,8 +384,8 @@ button{ font-family:inherit; cursor:pointer; }
         <button class="gate-tab active" id="gate-tab-login" onclick="setGateMode('login')" data-i18n="gate.login">Log In</button>
         <button class="gate-tab" id="gate-tab-register" onclick="setGateMode('register')" data-i18n="gate.register">Register</button>
       </div>
-      <div class="field"><label data-i18n="gate.username">Username</label><input id="gate-username"></div>
-      <div class="field"><label data-i18n="gate.password">Password</label><input id="gate-password" type="password"></div>
+      <div class="field"><label data-i18n="gate.username">Username</label><input id="gate-username" autocomplete="username"></div>
+      <div class="field"><label data-i18n="gate.password">Password</label><input id="gate-password" type="password" autocomplete="current-password"></div>
       <button class="btn btn-primary" id="gate-submit-btn" onclick="gateLogin()">Log In</button>
       <div class="gate-status" id="gate-auth-status"></div>
     </div>
