@@ -81,7 +81,7 @@ button{ font-family:inherit; cursor:pointer; }
 }
 .brand{ display:flex; align-items:center; gap:10px; padding:4px 8px 10px; }
 .lang-toggle{ display:flex; gap:6px; padding:0 8px 16px; }
-.lang-btn{ flex:1; padding:6px 0; border-radius:7px; border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text-dim); font-size:11px; font-weight:700; letter-spacing:.4px; transition:.15s; }
+.lang-btn{ flex:1; padding:6px 0; border-radius:7px; border:1px solid var(--border-strong); background:var(--bg-elev-2); color:var(--text-dim); font-size:11px; font-weight:700; letter-spacing:.4px; transition:.15s; cursor:pointer; }
 .lang-btn:hover{ color:var(--text); }
 .lang-btn.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
 .credit-line{ display:block; width:100%; text-align:center; font-size:10.5px; color:var(--text-faint); margin-top:12px; text-decoration:underline; text-decoration-color:transparent; transition:.15s; }
@@ -840,21 +840,21 @@ const I18N = {
     'insight.perfectdays':'คุณทำวันที่สมบูรณ์แบบได้ {n} วัน — ทำครบทุกงานที่กำหนด',
     'help.title':'วิธีใช้', 'help.subtitle':'คู่มือการใช้งานทุกฟีเจอร์',
     'help.gettingstarted':'เริ่มต้นใช้งาน',
-    'help.gettingstarted.desc':'<strong>1. สร้างบัญชี:</strong> คลิก \"สมัครสมาชิก\" ที่หน้าเข้าสู่ระบบ กรอกชื่อผู้ใช้และรหัสผ่าน แล้วคลิก \"สร้างบัญชี\" ข้อมูลของคุณจะถูกเก็บในเบราว์เซอร์<br><br><strong>2. เข้าสู่ระบบ:</strong> หลังจากสมัครแล้ว ใช้ข้อมูลของคุณเข้าสู่ระบบ คุณจะถูกนำไปที่หน้าวันนี้<br><br><strong>3. สร้างงานแรก:</strong> คลิกปุ่ม \"+ เพิ่มงาน\" เพื่อเพิ่มนิสัย เป้าหมาย หรือกิจกรรมประจำวันที่คุณต้องการติดตาม',
-    'help.todayview':'หน้าวันนี้',
-    'help.todayview.desc':'<strong>ทำหน้าที่:</strong> แสดงงานทั้งหมดที่กำหนดสำหรับวันนี้ ความคืบหน้า XP และสถิติความสำเร็จ<br><br><strong>วิธีใช้:</strong><br>• คลิกช่องเช็คถัดจากงานเพื่อทำเครื่องหมายว่าเสร็จสิ้น<br>• คลิกไอคอน ✎ เพื่อแก้ไขงาน<br>• คลิกไอคอน 🗑 เพื่อลบงาน<br>• ลากงานโดยใช้จุดจับ ⋮⋮ เพื่อเรียงลำดับใหม่<br>• คลิก \"+ เพิ่มงาน\" เพื่อเพิ่มงานเพิ่มเติมสำหรับวันนี้<br><br><strong>ระบบ XP:</strong> งานแต่ละงานมีค่า XP เมื่อคุณทำงานเสร็จ คุณจะได้รับ XP นั้น XP รายวันของคุณจะแสดงที่ด้านบน<br><br><strong>สถิติ:</strong><br>• XP วันนี้: XP รวมที่ได้รับวันนี้<br>• ความสำเร็จ: เปอร์เซ็นต์ของงานวันนี้ที่เสร็จสิ้น<br>• ความสำเร็จสูงสุด: อัตราความสำเร็จรายวันที่ดีที่สุดของคุณ<br>• XP สูงสุด: วันที่ทำได้ดีที่สุดโดย XP',
-    'help.creatingtasks':'สร้างงาน',
-    'help.creatingtasks.desc':'<strong>คุณสมบัติของงาน:</strong><br>• <strong>ชื่องาน:</strong> ชื่อของงาน (เช่น \"ออกกำลังกายเช้า\", \"อ่านหนังสือ 30 นาที\")<br>• <strong>XP ที่ได้รับ:</strong> XP ที่คุณจะได้เมื่อทำงานเสร็จ (XP สูง = ยากหรือสำคัญมาก)<br>• <strong>สี:</strong> แท็กสำหรับจัดกลุ่มงานตามหมวดหมู่<br>• <strong>หมวดหมู่:</strong> กำหนดงานให้กับหมวดหมู่ที่คุณสร้างไว้ เช่น งาน สุขภาพ หรือส่วนตัว<br><br><strong>ตัวเลือกความถี่:</strong><br>• <strong>ทุกวัน:</strong> งานจะปรากฏทุกวัน<br>• <strong>วันธรรมดา:</strong> เฉพาะวันจันทร์ถึงศุกร์<br>• <strong>วันหยุดสุดสัปดาห์:</strong> เฉพาะวันเสาร์และวันอาทิตย์<br>• <strong>กำหนดวันเอง:</strong> เลือกวันที่ต้องการ (เช่น จ-พ-ศ)<br>• <strong>ทุก X วัน:</strong> เกิดซ้ำทุก N วัน (เช่น ทุก 3 วัน)<br>• <strong>รายเดือน:</strong> วันที่เดียวกันทุกเดือน (เช่น วันที่ 15 ของทุกเดือน)<br>• <strong>ครั้งเดียว:</strong> งานครั้งเดียวที่ไม่เกิดซ้ำ<br><br><strong>ช่วงวันที่:</strong> ตั้งค่าวันที่เริ่มและสิ้นสุดสำหรับงาน<br><br><strong>หมวดหมู่:</strong><br>• เปิดแผงหมวดหมู่จากมุมมองวันเพื่อสร้าง แก้ไข หรือลบหมวดหมู่<br>• ให้แต่ละหมวดหมู่ชื่อและสีเพื่อจัดกลุ่มงานได้ง่าย<br>• คลิกหมวดหมู่ที่มีอยู่ในรายการเพื่อแก้ไขได้ตลอดเวลา',
+    'help.gettingstarted.desc':'<strong>1. สร้างบัญชี</strong><br>คลิก "สมัครสมาชิก" บนหน้าเข้าสู่ระบบ กรอกชื่อผู้ใช้และรหัสผ่าน จากนั้นกด "สร้างบัญชี" ข้อมูลของคุณจะถูกบันทึกไว้ในเบราว์เซอร์ของอุปกรณ์นี้<br><br><strong>2. เข้าสู่ระบบ</strong><br>ใช้ชื่อผู้ใช้และรหัสผ่านที่สมัครไว้เพื่อเข้าสู่ระบบ แล้วระบบจะพาคุณไปยังหน้า "วันนี้" โดยอัตโนมัติ<br><br><strong>3. สร้างงานแรก</strong><br>คลิก "+ เพิ่มงาน" เพื่อสร้างนิสัย เป้าหมาย หรือกิจกรรมประจำวันที่ต้องการติดตาม<br><br><strong>4. ทำงานให้สำเร็จ</strong><br>เมื่อทำงานเสร็จแล้ว ให้กดเครื่องหมาย ✓ หน้ารายการงาน เพื่อรับ XP และอัปเดตความคืบหน้าของวัน',
+    'help.todayview':'หน้า "วันนี้"',
+    'help.todayview.desc':'หน้านี้เป็นศูนย์รวมงานทั้งหมดของวันนี้<br><br>คุณสามารถ<br>• ทำเครื่องหมายเมื่องานเสร็จ<br>• แก้ไขงานด้วยปุ่ม ✎<br>• ลบงานด้วยปุ่ม 🗑<br>• ลากเพื่อจัดลำดับงาน<br>• เพิ่มงานหรือหมวดหมู่ใหม่<br><br>ด้านบนจะแสดงข้อมูลสำคัญ ได้แก่<br>• XP ที่ได้รับวันนี้<br>• เปอร์เซ็นต์ความสำเร็จของวันนี้<br>• วันที่ทำสำเร็จได้สูงสุด<br>• วันที่ได้รับ XP สูงสุด',
+    'help.creatingtasks':'การสร้างงาน',
+    'help.creatingtasks.desc':'แต่ละงานสามารถกำหนดได้ดังนี้<br>• ชื่องาน<br>• ค่า XP<br>• สี<br>• หมวดหมู่<br>• รูปแบบการทำซ้ำ<br><br>ตัวเลือกการทำซ้ำ<br>• ทุกวัน<br>• วันจันทร์–ศุกร์<br>• วันเสาร์–อาทิตย์<br>• เลือกวันในสัปดาห์<br>• ทุก ๆ X วัน<br>• รายเดือน<br>• ทำครั้งเดียว<br><br>นอกจากนี้ยังสามารถกำหนดวันเริ่มต้นและวันสิ้นสุดของงานได้',
     'help.calendarview':'หน้าปฏิทิน',
-    'help.calendarview.desc':'<strong>ทำหน้าที่:</strong> แสดงปฏิทินรายเดือนพร้อมสีตามผลผลิตของคุณ<br><br><strong>วิธีใช้:</strong><br>• ใช้ปุ่ม ← ก่อนหน้า / ถัดไป → เพื่อเปลี่ยนเดือน<br>• คลิก \"วันนี้\" เพื่อไปที่เดือนปัจจุบัน<br>• คลิกวันใดวันหนึ่งเพื่อดูงานและบันทึกของวันนั้น<br>• วันจะมีสีตาม XP ที่ได้รับ (สีอ่อน = XP น้อย, สีเข้ม = XP มาก)<br>• จุดสีบนแต่ละวันแสดงงานที่ทำสำเร็จ<br><br><strong>แผงรายละเอียดวัน:</strong> เมื่อคลิกวัน คุณสามารถ:<br>• ดูงานทั้งหมดของวันนั้น<br>• เพิ่มงานใหม่ให้กับวันนั้น<br>• เพิ่มบันทึกส่วนตัวเกี่ยวกับวันนั้น<br>• ดู XP ที่ได้รับและเปอร์เซ็นต์ความสำเร็จ',
-    'help.analyticsview':'หน้าวิเคราะห์ข้อมูล',
-    'help.analyticsview.desc':'<strong>ทำหน้าที่:</strong> สถิติและกราฟความสม่ำเสมอและผลผลิตของคุณตลอดเวลา<br><br><strong>ตัวชี้วัดหลัก:</strong><br>• <strong>งานที่ทำสำเร็จ (ทั้งหมด):</strong> จำนวนงานทั้งหมดที่คุณเคยทำสำเร็จ<br>• <strong>งานที่ใช้งานอยู่:</strong> จำนวนงานที่กำลังใช้งาน/เกิดซ้ำอยู่<br>• <strong>จำนวนวันที่ติดตาม:</strong> จำนวนวันที่คุณใช้แอป<br>• <strong>อัตราความสำเร็จโดยรวม:</strong> อัตราความสำเร็จเฉลี่ยของคุณทุกวัน<br>• <strong>ตัวชี้วัดวันนี้:</strong> สถิติแบบเรียลไทม์สำหรับวันนี้<br>• <strong>ความสำเร็จเฉลี่ย (ทั้งหมด):</strong> อัตราความสำเร็จเฉลี่ยทางประวัติศาสตร์<br>• <strong>XP เฉลี่ยต่อวัน:</strong> XP เฉลี่ยที่ได้รับต่อวัน<br>• <strong>วันที่สมบูรณ์แบบ:</strong> วันที่ทำงานครบ 100%<br>• <strong>วันที่ทำได้ดีที่สุด:</strong> วันที่ได้ XP มากที่สุด<br>• <strong>คะแนนความสม่ำเสมอ (90 วัน):</strong> ความสม่ำเสมอใน 90 วันที่ผ่านมา<br><br><strong>การแสดงผล:</strong><br>• <strong>แผนที่ความสำเร็จรายเดือน:</strong> ตารางแสดงผลผลิตในปีที่ผ่านมา (สีเข้ม = ผลผลิตมาก)<br>• <strong>ความสำเร็จรายวันของเดือนปัจจุบัน:</strong> กราฟแท่งแสดงอัตราความสำเร็จแต่ละวันในเดือนนี้<br>• <strong>XP รายวันของเดือนปัจจุบัน:</strong> กราฟแท่งแสดง XP แต่ละวันในเดือนนี้<br>• <strong>กราฟกระจาย XP กับความสำเร็จ:</strong> แสดงความสัมพันธ์ระหว่าง XP และความสำเร็จ',
-    'help.deletingtasks':'ลบงาน',
-    'help.deletingtasks.desc':'<strong>เมื่อคุณลบงานที่เกิดซ้ำ คุณมี 3 ตัวเลือก:</strong><br><br>• <strong>เฉพาะครั้งนี้:</strong> ลบเฉพาะครั้งนี้ (ครั้งถัดไปยังมี)<br>• <strong>ครั้งนี้และครั้งถัดไปทั้งหมด:</strong> ลบครั้งนี้และครั้งถัดไปทั้งหมด (เก็บประวัติไว้)<br>• <strong>ทุกครั้ง:</strong> ลบทุกครั้งของงานนี้ รวมประวัติที่ผ่านมา<br><br>ตัวเลือกนี้ช่วยให้คุณปรับเปลี่ยนกิจวัตรได้โดยไม่สูญเสียประวัติ',
-    'help.account':'จัดการบัญชี',
-    'help.account.desc':'<strong>การตั้งค่า:</strong> คลิกสถานะซิงค์ที่ส่วนท้ายของแถบข้างเพื่อเข้าถึงการตั้งค่าบัญชี<br><br><strong>ออกจากระบบ:</strong> ออกจากระบบแต่ข้อมูลยังถูกเก็บในเบราว์เซอร์<br><br><strong>ลบบัญชี:</strong> ลบข้อมูลทั้งหมด (งาน ประวัติ บันทึก) อย่างถาวร ไม่สามารถย้อนกลับได้ ต้องกรอกรหัสผ่านอีกครั้งเพื่อยืนยัน<br><br><strong>การเก็บข้อมูล:</strong> ข้อมูลทั้งหมดถูกเก็บใน localStorage ของเบราว์เซอร์ การล้างข้อมูลเบราว์เซอร์จะลบความคืบหน้าของคุณ',
+    'help.calendarview.desc':'หน้า ปฏิทิน ใช้สำหรับดูประวัติและวางแผนล่วงหน้า<br><br>คุณสามารถ<br>• ดูข้อมูลของแต่ละเดือน<br>• ตรวจสอบงานที่ทำในแต่ละวัน<br>• เพิ่มบันทึกประจำวัน<br>• เพิ่มงานในวันที่ต้องการ<br>• ดู XP และเปอร์เซ็นต์ความสำเร็จย้อนหลัง<br><br>วันที่ที่มีสีเข้มกว่าจะหมายถึงวันที่มีผลงานมากกว่า',
+    'help.analyticsview':'หน้าการวิเคราะห์',
+    'help.analyticsview.desc':'หน้า การวิเคราะห์ ช่วยติดตามความสม่ำเสมอและพัฒนาการของคุณ<br><br>สามารถดูข้อมูลต่าง ๆ เช่น<br>• จำนวนงานที่ทำสำเร็จทั้งหมด<br>• จำนวนวันที่ใช้งาน<br>• อัตราความสำเร็จโดยรวม<br>• XP เฉลี่ยต่อวัน<br>• จำนวนวันที่ทำครบ 100%<br>• วันที่ได้รับ XP สูงที่สุด<br>• คะแนนความสม่ำเสมอในช่วง 90 วันที่ผ่านมา<br><br>พร้อมกราฟที่ช่วยให้เห็นแนวโน้มและพัฒนาการได้ชัดเจน',
+    'help.deletingtasks':'การลบงานที่ทำซ้ำ',
+    'help.deletingtasks.desc':'เมื่อลบงานที่ตั้งให้ทำซ้ำ ระบบจะให้เลือก<br>• ลบเฉพาะวันนี้<br>• ลบตั้งแต่วันนี้เป็นต้นไป<br>• ลบทั้งหมด<br>เพื่อให้คุณสามารถปรับเปลี่ยนตารางงานได้โดยไม่สูญเสียประวัติที่ต้องการเก็บไว้',
+    'help.account':'บัญชีผู้ใช้',
+    'help.account.desc':'ในหน้าการตั้งค่าบัญชี คุณสามารถ<br>• ออกจากระบบ<br>• ลบบัญชี<br><br>การลบบัญชีจะลบข้อมูลงาน ประวัติ และบันทึกทั้งหมดอย่างถาวร และไม่สามารถกู้คืนได้',
     'help.tips':'เคล็ดลับ',
-    'help.tips.desc':'• เริ่มต้นด้วยงานง่าย ๆ 3-5 งานต่อวันเพื่อสร้างโมเมนตัม<br>• ใช้ค่า XP สูงสำหรับงานที่สำคัญหรือยากกว่า<br>• สร้างหมวดหมู่สำหรับงาน การออกกำลังกาย การเรียนรู้ และเป้าหมายส่วนตัว<br>• ใช้สีเพื่อแยกหมวดหมู่ให้มองเห็นได้ทันทีในรายการงาน<br>• แก้ไขหมวดหมู่ได้ตลอดเวลาในแผงหมวดหมู่หากต้องการเปลี่ยนแปลงระบบของคุณ<br>• ตรวจสอบหน้าวิเคราะห์ข้อมูลทุกสัปดาห์เพื่อติดตามความสม่ำเสมอ<br>• ใช้ปฏิทินเพื่อวางแผนล่วงหน้าและทบทวนผลผลิตในอดีต<br>• เพิ่มบันทึกในแต่ละวันเพื่อจำสิ่งที่ทำได้หรือไม่ได้<br>• มุ่งเน้นความสม่ำเสมอมากกว่าความสมบูรณ์แบบ — พลาดวันหนึ่งไม่เป็นไร<br>• อัตราความสำเร็จในแถบข้างแสดงผลงานเร็ว ๆ ของคุณ',
+    'help.tips.desc':'• เริ่มจากงานประจำวันง่าย ๆ ประมาณ 3–5 งาน<br>• กำหนด XP สูงให้กับงานที่สำคัญหรือท้าทาย<br>• ใช้หมวดหมู่เพื่อจัดระเบียบงาน<br>• ตรวจสอบหน้าการวิเคราะห์เป็นประจำ<br>• ใช้ปฏิทินเพื่อทบทวนและวางแผน<br>• เน้นความสม่ำเสมอมากกว่าความสมบูรณ์แบบ เพราะการทำต่อเนื่องสำคัญกว่าการทำได้ครบทุกวัน'
   }
 };
 let currentLang = localStorage.getItem('ascend_lang') || 'en';
@@ -2103,6 +2103,80 @@ function renderAnalytics(){
         yLabel.textContent = 'XP';
         svg.appendChild(yLabel);
         
+        // Linear regression trend line for XP vs % Complete
+        const maxXP = Math.max(...dataPoints.map(p => p.xp), 1);
+        const regressionPoints = dataPoints.map(point => ({
+          x: point.pct,
+          y: point.xp
+        }));
+
+        let slope = 0;
+        let intercept = 0;
+        if(regressionPoints.length > 1) {
+          const meanX = regressionPoints.reduce((sum, p) => sum + p.x, 0) / regressionPoints.length;
+          const meanY = regressionPoints.reduce((sum, p) => sum + p.y, 0) / regressionPoints.length;
+          let numerator = 0;
+          let denominator = 0;
+          regressionPoints.forEach(point => {
+            const dx = point.x - meanX;
+            const dy = point.y - meanY;
+            numerator += dx * dy;
+            denominator += dx * dx;
+          });
+          if(denominator !== 0) {
+            slope = numerator / denominator;
+            intercept = meanY - slope * meanX;
+          }
+        }
+
+        const x1 = 0;
+        const x2 = 100;
+        const y1 = intercept + slope * x1;
+        const y2 = intercept + slope * x2;
+
+        const plotLeft = padding;
+        const plotRight = width - padding;
+        const plotTop = padding;
+        const plotBottom = height - padding;
+        const plotWidth = plotRight - plotLeft;
+        const plotHeight = plotBottom - plotTop;
+
+        const clipY = value => Math.max(0, Math.min(maxXP, value));
+        const getPlotCoord = point => ({
+          x: plotLeft + (point.x / 100) * plotWidth,
+          y: plotBottom - (point.y / maxXP) * plotHeight
+        });
+
+        const linePoints = [{x: x1, y: y1}, {x: x2, y: y2}];
+        const visiblePoints = linePoints.filter(p => p.y >= 0 && p.y <= maxXP);
+
+        const addIntersection = (pA, pB, boundY) => {
+          if((pA.y < boundY && pB.y > boundY) || (pA.y > boundY && pB.y < boundY)){
+            const t = (boundY - pA.y) / (pB.y - pA.y);
+            const x = pA.x + (pB.x - pA.x) * t;
+            if(x >= 0 && x <= 100){
+              visiblePoints.push({ x, y: boundY });
+            }
+          }
+        };
+
+        addIntersection(linePoints[0], linePoints[1], 0);
+        addIntersection(linePoints[0], linePoints[1], maxXP);
+
+        if(visiblePoints.length === 2){
+          const pA = getPlotCoord(visiblePoints[0]);
+          const pB = getPlotCoord(visiblePoints[1]);
+          const trendLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          trendLine.setAttribute('x1', pA.x);
+          trendLine.setAttribute('y1', pA.y);
+          trendLine.setAttribute('x2', pB.x);
+          trendLine.setAttribute('y2', pB.y);
+          trendLine.setAttribute('stroke', 'rgba(255,255,255,0.65)');
+          trendLine.setAttribute('stroke-width', '1.5');
+          svg.appendChild(trendLine);
+
+        }
+
         // Group data points by same XP and completion percentage
         const groupedPoints = {};
         dataPoints.forEach(point => {
@@ -2119,7 +2193,6 @@ function renderAnalytics(){
           const representativePoint = points[0]; // Use first point for positioning
           
           const x = padding + (representativePoint.pct / 100) * (width - 2 * padding);
-          const maxXP = Math.max(...dataPoints.map(p => p.xp), 1);
           const y = (height - padding) - (representativePoint.xp / maxXP) * (height - 2 * padding);
           
           const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
