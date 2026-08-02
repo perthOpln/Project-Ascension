@@ -2076,8 +2076,15 @@ function renderPeriodChart(container, chartType, period, today, created){
     });
     
     Object.keys(yearData).sort().forEach(yearKey => {
-      const avg = yearData[yearKey].count > 0 ? Math.round(yearData[yearKey].total / yearData[yearKey].count) : 0;
-      dataPoints.push({ label: yearKey.toString(), value: avg, yearKey: yearKey });
+      if(chartType === 'xp'){
+        // XP chart: show sum instead of average
+        const sum = yearData[yearKey].total;
+        dataPoints.push({ label: yearKey.toString(), value: sum, yearKey: yearKey });
+      } else {
+        // % Complete chart: show average
+        const avg = yearData[yearKey].count > 0 ? Math.round(yearData[yearKey].total / yearData[yearKey].count) : 0;
+        dataPoints.push({ label: yearKey.toString(), value: avg, yearKey: yearKey });
+      }
     });
   }
   
@@ -2088,7 +2095,7 @@ function renderPeriodChart(container, chartType, period, today, created){
   const chartWrapper = document.createElement('div');
   chartWrapper.style.display = 'flex';
   chartWrapper.style.alignItems = 'flex-end';
-  chartWrapper.style.gap = period === 'month' ? '8px' : '16px';
+  chartWrapper.style.gap = '8px';
   chartWrapper.style.height = '300px';
   chartWrapper.style.padding = '20px 0 0 0';
   
@@ -2098,13 +2105,13 @@ function renderPeriodChart(container, chartType, period, today, created){
     column.style.flexDirection = 'column';
     column.style.alignItems = 'center';
     column.style.flex = '1';
-    column.style.minWidth = period === 'month' ? '10px' : '30px';
+    column.style.minWidth = '10px';
     column.style.gap = '3px';
     column.style.position = 'relative';
     
     const bar = document.createElement('div');
     const barHeight = (point.value / maxValue * 280);
-    bar.style.width = period === 'month' ? '100%' : '40px';
+    bar.style.width = '100%';
     bar.style.height = Math.max(barHeight, 4) + 'px';
     bar.style.borderRadius = '3px';
     bar.style.transition = 'height 0.2s';
@@ -2119,11 +2126,14 @@ function renderPeriodChart(container, chartType, period, today, created){
     bar.title = `${point.label}: ${point.value}${chartType === 'pct' ? '%' : ''}`;
     
     if(chartType === 'pct'){
-      if(point.value === 100) bar.style.background = '#46b478';
-      else if(point.value >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
-      else if(point.value >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
-      else if(point.value >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
-      else bar.style.background = 'rgba(70,180,120,0.2)';
+      // % Complete chart uses same green gradient based on value relative to max
+      const normalizedValue = point.value / maxValue;
+      if(normalizedValue === 1) bar.style.background = '#46b478';
+      else if(normalizedValue >= 0.75) bar.style.background = 'rgba(70,180,120,0.8)';
+      else if(normalizedValue >= 0.5) bar.style.background = 'rgba(70,180,120,0.6)';
+      else if(normalizedValue >= 0.25) bar.style.background = 'rgba(70,180,120,0.4)';
+      else if(point.value > 0) bar.style.background = 'rgba(70,180,120,0.2)';
+      else bar.style.background = 'rgba(224,100,90,0.2)';
     } else {
       // XP chart uses same green gradient based on value relative to max
       const normalizedValue = point.value / maxValue;
@@ -2144,7 +2154,7 @@ function renderPeriodChart(container, chartType, period, today, created){
     
     const label = document.createElement('div');
     label.textContent = point.label;
-    label.style.fontSize = period === 'month' ? '9px' : '10px';
+    label.style.fontSize = '9px';
     label.style.color = 'var(--text-faint)';
     
     // Build detailed tooltip text for title attribute
