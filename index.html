@@ -1019,15 +1019,6 @@ function showInstallFallback(){
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // Auto-trigger the install prompt
-  setTimeout(() => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        deferredPrompt = null;
-      });
-    }
-  }, 1500);
 });
 
 if (installBtn) {
@@ -1040,6 +1031,10 @@ if (installBtn) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         deferredPrompt = null;
+
+        if (outcome === 'accepted') {
+          if (installBtn) installBtn.style.display = 'none';
+        }
       } catch (err) {
         console.error(err);
         showInstallFallback();
@@ -1047,26 +1042,17 @@ if (installBtn) {
       return;
     }
 
-    // No deferredPrompt (iOS, or browser doesn't support it) - show fallback
     showInstallFallback();
   });
 }
 
-window.addEventListener('appinstalled', () => {
-  // App was successfully installed - hide the button
-  if (installBtn) installBtn.style.display = 'none';
-});
+// Keep install button hidden until the user explicitly taps it.
+if (installBtn) {
+  installBtn.style.display = 'none';
+}
 
-// Auto-show iOS install instructions on load
-window.addEventListener('load', () => {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  
-  if (!isStandalone && isIOS && !deferredPrompt) {
-    setTimeout(() => {
-      showInstallFallback();
-    }, 2000);
-  }
+window.addEventListener('appinstalled', () => {
+  if (installBtn) installBtn.style.display = 'none';
 });
 
 // Register Service Worker
