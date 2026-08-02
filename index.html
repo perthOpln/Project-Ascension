@@ -189,12 +189,12 @@ button{ font-family:inherit; cursor:pointer; }
 .cal-pct.full{ color:var(--accent); }
 
 /* side panel */
-.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; display:none; backdrop-filter:blur(2px); }
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:140; display:none; backdrop-filter:blur(2px); }
 .overlay.show{ display:block; animation:fadein .2s ease; }
 .panel{
   position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
   background:var(--bg-elev); border-left:1px solid var(--border-strong);
-  z-index:51; transform:translateX(100%); transition:transform .25s cubic-bezier(.4,0,.2,1);
+  z-index:150; transform:translateX(100%); transition:transform .25s cubic-bezier(.4,0,.2,1);
   overflow-y:auto; padding:24px;
 }
 .panel.show{ transform:translateX(0); }
@@ -231,6 +231,13 @@ button{ font-family:inherit; cursor:pointer; }
 .card h3{ font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-dim); margin-bottom:14px; }
 .chart-row{ display:grid; grid-template-columns:1.4fr 1fr; gap:20px; }
 .insight{ font-size:13px; color:var(--text); padding:10px 12px; background:var(--bg-elev-2); border-radius:8px; margin-bottom:8px; border-left:2px solid var(--accent); }
+/* Help panel specific styling */
+#panel-help .card{ margin-bottom:16px; }
+#panel-help .card h3{ font-size:14px; color:var(--accent); font-weight:600; margin-bottom:12px; text-transform:none; letter-spacing:normal; }
+#panel-help .insight{ line-height:1.7; padding:14px 16px; border-left:3px solid var(--accent); }
+#panel-help .insight strong{ color:var(--text); }
+#panel-help .insight br{ display:block; margin:8px 0; content:''; }
+#panel-help .insight br:first-child{ margin-top:0; }
 
 .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60; }
 .modal.show{ display:flex; }
@@ -242,6 +249,12 @@ button{ font-family:inherit; cursor:pointer; }
 .sync-row{ display:flex; align-items:center; gap:8px; padding:8px 6px; margin-bottom:8px; cursor:pointer; font-size:12px; color:var(--text-dim); border-radius:8px; }
 .sync-row:hover{ color:var(--text); background:var(--bg-elev-2); }
 .sync-dot{ width:8px; height:8px; border-radius:50%; background:var(--text-faint); flex-shrink:0; }
+
+/* Period selector buttons */
+.period-selector{ display:flex; gap:6px; }
+.period-btn{ padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:var(--bg-elev-2); color:var(--text-dim); font-size:11px; font-weight:600; cursor:pointer; transition:.15s; }
+.period-btn:hover{ border-color:var(--accent); color:var(--text); }
+.period-btn.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
 
 @media (max-width: 880px){
   #sidebar{ position:fixed; z-index:40; height:100%; transform:translateX(-100%); transition:transform .25s cubic-bezier(.4,0,.2,1); box-shadow:0 0 40px rgba(0,0,0,0.6); }
@@ -329,6 +342,7 @@ button{ font-family:inherit; cursor:pointer; }
       <div class="gate-status" id="gate-auth-status"></div>
     </div>
     <button class="credit-line" style="margin-top:18px; background:none; border:none; cursor:pointer;" data-i18n="credit" onclick="openAboutPanel()">Built by Perth</button>
+    <button class="gate-link" style="margin-top:12px; background:none; border:none; cursor:pointer;" onclick="openHelpPanel()" data-i18n="help.title">How to Use</button>
   </div>
 </div>
 <div id="app">
@@ -347,6 +361,7 @@ button{ font-family:inherit; cursor:pointer; }
       <button class="navitem active" data-view="today"><span class="ic">◈</span> <span data-i18n="nav.today">Today</span></button>
       <button class="navitem" data-view="calendar"><span class="ic">▦</span> <span data-i18n="nav.calendar">Calendar</span></button>
       <button class="navitem" data-view="analytics"><span class="ic">◔</span> <span data-i18n="nav.analytics">Analytics</span></button>
+      <button class="navitem" onclick="openHelpPanel()"><span class="ic">?</span> <span data-i18n="help.title">How to Use</span></button>
     </nav>
     <div class="sidebar-foot">
       <div class="sync-row" id="sync-row" onclick="openSettingsPanel()">
@@ -410,6 +425,12 @@ button{ font-family:inherit; cursor:pointer; }
           <div class="page-title" data-i18n="analytics.title">Analytics</div>
           <div class="page-sub" data-i18n="analytics.sub">Your consistency, quantified</div>
         </div>
+        <div class="period-selector" id="analytics-period-selector">
+          <button class="period-btn active" data-period="days" onclick="setAnalyticsPeriod('days')" data-i18n="period.days">Days</button>
+          <button class="period-btn" data-period="month" onclick="setAnalyticsPeriod('month')" data-i18n="period.thismonth">This Month</button>
+          <button class="period-btn" data-period="months" onclick="setAnalyticsPeriod('months')" data-i18n="period.months">Months</button>
+          <button class="period-btn" data-period="years" onclick="setAnalyticsPeriod('years')" data-i18n="period.years">Years</button>
+        </div>
       </div>
 
       <div class="stat-row">
@@ -436,11 +457,11 @@ button{ font-family:inherit; cursor:pointer; }
         <div class="heatmap-wrap"><div class="heatmap-grid" id="monthly-heatmap"></div></div>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.currentmonth">Current Month Daily % Complete</h3>
+        <h3 data-i18n="analytics.currentmonth">% Complete Chart</h3>
         <div id="current-month-bars"></div>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.currentmonthxp">Current Month Daily XP</h3>
+        <h3 data-i18n="analytics.currentmonthxp">XP Chart</h3>
         <div id="current-month-xp-bars"></div>
       </div>
       <div class="card">
@@ -452,6 +473,53 @@ button{ font-family:inherit; cursor:pointer; }
 </div>
 
 <div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- Help panel (accessible from login screen) -->
+<div class="panel" id="panel-help">
+  <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  <h2 data-i18n="help.title">How to Use</h2>
+  <div class="panel-sub" data-i18n="help.subtitle">Complete guide to every feature</div>
+  
+  <div class="card">
+    <h3 data-i18n="help.gettingstarted">Getting Started</h3>
+    <div class="insight" data-i18n-html="help.gettingstarted.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.todayview">Today View</h3>
+    <div class="insight" data-i18n-html="help.todayview.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.creatingtasks">Creating Tasks</h3>
+    <div class="insight" data-i18n-html="help.creatingtasks.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.calendarview">Calendar View</h3>
+    <div class="insight" data-i18n-html="help.calendarview.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.analyticsview">Analytics View</h3>
+    <div class="insight" data-i18n-html="help.analyticsview.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.deletingtasks">Deleting Tasks</h3>
+    <div class="insight" data-i18n-html="help.deletingtasks.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.account">Account Management</h3>
+    <div class="insight" data-i18n-html="help.account.desc"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="help.tips">Pro Tips</h3>
+    <div class="insight" data-i18n-html="help.tips.desc"></div>
+  </div>
+</div>
 
 <!-- Task create/edit panel -->
 <div class="panel" id="panel-task">
@@ -586,6 +654,23 @@ const I18N = {
     'credit':'Built by Perth',
     'about.title':'About', 'about.name':'Perth - Pongsakorn Chotpunyavorakul', 'about.role':'Creator & Developer',
     'about.description':'Project Ascension is a personal consistency operating system — a calendar, habit tracker, XP system, and analytics dashboard rolled into one, built to make showing up every day feel like progress you can actually see.',
+    'help.title':'How to Use', 'help.subtitle':'Complete guide to every feature',
+    'help.gettingstarted':'Getting Started',
+    'help.gettingstarted.desc':'<strong>1. Create an Account:</strong> Click "Register" on the login screen, enter a username and password, and click "Create Account". Your data is stored locally in your browser.<br><br><strong>2. Log In:</strong> After registering, use your credentials to log in. You\'ll be taken to the Today view.<br><br><strong>3. Create Your First Task:</strong> Click the "+ New Task" button to add habits, goals, or daily activities you want to track.',
+    'help.todayview':'Today View',
+    'help.todayview.desc':'<strong>What it does:</strong> Shows all tasks scheduled for today, your XP progress, and completion statistics.<br><br><strong>How to use:</strong><br>• Check the checkbox next to each task to mark it complete<br>• Click the ✎ icon to edit a task<br>• Click the 🗑 icon to delete a task<br>• Drag tasks using the ⋮⋮ handle to reorder them<br>• Click "+ New Task" to add more tasks for today<br><br><strong>XP System:</strong> Each task has an XP reward. When you complete a task, you earn that XP. Your daily XP is shown at the top.<br><br><strong>Statistics:</strong><br>• Today\'s XP: Total XP earned today<br>• Completion: Percentage of today\'s tasks completed<br>• Highest % Complete: Your best daily completion rate<br>• Highest XP: Your most productive day by XP earned',
+    'help.creatingtasks':'Creating Tasks',
+    'help.creatingtasks.desc':'<strong>Task Properties:</strong><br>• <strong>Name:</strong> What the task is called (e.g., "Morning Workout", "Read 30 minutes")<br>• <strong>XP Reward:</strong> How much XP you earn when completing this task (higher XP = more challenging/important)<br>• <strong>Color:</strong> Visual tag to organize tasks by category<br><br><strong>Repeat Options:</strong><br>• <strong>Every Day:</strong> Task appears every single day<br>• <strong>Weekdays:</strong> Monday through Friday only<br>• <strong>Weekends:</strong> Saturday and Sunday only<br>• <strong>Specific Weekdays:</strong> Choose exactly which days (e.g., Mon, Wed, Fri)<br>• <strong>Every X Days:</strong> Repeats every N days (e.g., every 3 days)<br>• <strong>Monthly:</strong> Same date each month (e.g., the 15th of every month)<br>• <strong>Only Today:</strong> One-time task that won\'t repeat<br><br><strong>Date Range:</strong> Optionally set start and end dates for when the task should appear.',
+    'help.calendarview':'Calendar View',
+    'help.calendarview.desc':'<strong>What it does:</strong> Shows a monthly calendar with color-coded days based on your productivity.<br><br><strong>How to use:</strong><br>• Use ← Prev / Next → buttons to navigate months<br>• Click "Today" to jump to the current month<br>• Click any day to see that day\'s tasks and notes<br>• Days are colored based on XP earned (lighter = less XP, darker = more XP)<br>• Colored dots on each day show which tasks were completed<br><br><strong>Day Details Panel:</strong> When you click a day, you can:<br>• View all tasks for that day<br>• Add new tasks to that specific day<br>• Add personal notes about how that day went<br>• See XP earned and completion percentage',
+    'help.analyticsview':'Analytics View',
+    'help.analyticsview.desc':'<strong>What it does:</strong> Comprehensive statistics and visualizations of your consistency and productivity over time.<br><br><strong>Key Metrics:</strong><br>• <strong>Tasks Completed (All-Time):</strong> Total number of tasks you\'ve ever completed<br>• <strong>Active Tasks:</strong> Number of currently active/recurring tasks<br>• <strong>Days Tracked:</strong> How many days you\'ve used the app<br>• <strong>Overall Success Rate:</strong> Your average completion rate across all days<br>• <strong>Today\'s Metrics:</strong> Real-time stats for the current day<br>• <strong>Avg Completion (All-Time):</strong> Your historical average completion percentage<br>• <strong>Avg Daily XP:</strong> Your average XP earned per day<br>• <strong>Perfect Days:</strong> Days where you completed 100% of tasks<br>• <strong>Most Productive Day:</strong> The day you earned the most XP<br>• <strong>Consistency Score (90d):</strong> How consistent you\'ve been in the last 90 days<br><br><strong>Visualizations:</strong><br>• <strong>Monthly Heatmap:</strong> Grid showing your productivity over the last year (darker = more productive)<br>• <strong>Current Month Daily % Complete:</strong> Bar chart showing completion rate each day this month<br>• <strong>Current Month Daily XP:</strong> Bar chart showing XP earned each day this month<br>• <strong>XP vs % Complete Scatter Plot:</strong> Shows relationship between XP earned and completion rate',
+    'help.deletingtasks':'Deleting Tasks',
+    'help.deletingtasks.desc':'<strong>When you delete a recurring task, you have three options:</strong><br><br>• <strong>This event only:</strong> Delete just this one occurrence (future occurrences remain)<br>• <strong>This and following events:</strong> Delete this occurrence and all future ones (keeps past history)<br>• <strong>All events:</strong> Delete every occurrence of this task, including past completions<br><br>This flexibility lets you adjust your routine without losing historical data.',
+    'help.account':'Account Management',
+    'help.account.desc':'<strong>Settings:</strong> Click the sync status in the sidebar footer to access account settings.<br><br><strong>Log Out:</strong> Signs you out but keeps your data stored locally.<br><br><strong>Delete Account:</strong> Permanently removes all your data (tasks, history, notes). This cannot be undone. You\'ll need to re-enter your password to confirm.<br><br><strong>Data Storage:</strong> All data is stored in your browser\'s localStorage. Clearing your browser data will delete your progress.',
+    'help.tips':'Pro Tips',
+    'help.tips.desc':'• Start with 3-5 simple daily tasks to build momentum<br>• Use higher XP values for more important or difficult tasks<br>• Color-code tasks by category (e.g., health = green, work = blue)<br>• Check the Analytics view weekly to track your consistency<br>• Use the Calendar to plan ahead and review past performance<br>• Add notes to days to remember what worked or what didn\'t<br>• Aim for consistency over perfection — missing one day is okay<br>• The Success Rate in the sidebar shows your recent performance',
     'gate.subtitle':'Sign in to continue', 'gate.login':'Log In', 'gate.register':'Register',
     'gate.username':'Username', 'gate.password':'Password',
     'gate.creating':'Creating account…', 'gate.signing':'Signing in…',
@@ -600,11 +685,12 @@ const I18N = {
     'analytics.overallsuccess':'Overall Success Rate', 'analytics.todaystasks':"Today's Tasks", 'analytics.todaycompleted':"Today's Completed", 'analytics.todayrate':"Today's Success Rate",
     'analytics.avgpct':'Avg Completion (All-Time)', 'analytics.avgxp':'Avg Daily XP (All-Time)',
     'analytics.bestday':'Most Productive Day',
-    'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'Current Month Daily % Complete',
-    'analytics.currentmonthxp':'Current Month Daily XP',
+    'analytics.monthlyheatmap':'Monthly Heatmap', 'analytics.currentmonth':'% Complete Chart',
+    'analytics.currentmonthxp':'XP Chart',
     'analytics.scatterplot':'XP vs % Complete Scatter Plot',
     'analytics.consistency':'Consistency Score (90d)', 'analytics.perfectdays':'Perfect Days',
     'analytics.totalcompleted':'Tasks Completed (All-Time)', 'analytics.activetasks':'Active Tasks', 'analytics.daystracked':'Days Tracked',
+    'period.days':'Days', 'period.thismonth':'This Month', 'period.months':'Months', 'period.years':'Years',
     'taskform.newtitle':'New Task', 'taskform.edittitle':'Edit Task', 'taskform.sub':'Define what it is and how often it repeats',
     'taskform.name':'Name', 'taskform.xp':'XP Reward', 'taskform.color':'Color', 'taskform.repeat':'Repeat',
     'taskform.whichdays':'Which days', 'taskform.everyn':'Every N days', 'taskform.daterange':'Date Range',
@@ -649,11 +735,12 @@ const I18N = {
     'analytics.overallsuccess':'อัตราความสำเร็จโดยรวม', 'analytics.todaystasks':'งานวันนี้', 'analytics.todaycompleted':'งานที่ทำสำเร็จวันนี้', 'analytics.todayrate':'อัตราความสำเร็จวันนี้',
     'analytics.avgpct':'ความสำเร็จเฉลี่ย (ทั้งหมด)', 'analytics.avgxp':'XP เฉลี่ยต่อวัน (ทั้งหมด)',
     'analytics.bestday':'วันที่ทำได้ดีที่สุด',
-    'analytics.monthlyheatmap':'แผนที่ความสำเร็จรายเดือน', 'analytics.currentmonth':'ความสำเร็จรายวันของเดือนปัจจุบัน',
-    'analytics.currentmonthxp':'XP รายวันของเดือนปัจจุบัน',
+    'analytics.monthlyheatmap':'แผนที่ความสำเร็จรายเดือน', 'analytics.currentmonth':'กราฟความสำเร็จ',
+    'analytics.currentmonthxp':'กราฟ XP',
     'analytics.scatterplot':'กราฟกระจาย XP กับความสำเร็จ',
     'analytics.consistency':'คะแนนความสม่ำเสมอ (90 วัน)', 'analytics.perfectdays':'วันที่สมบูรณ์แบบ',
     'analytics.totalcompleted':'งานที่ทำสำเร็จ (ทั้งหมด)', 'analytics.activetasks':'งานที่ใช้งานอยู่', 'analytics.daystracked':'จำนวนวันที่ติดตาม',
+    'period.days':'วัน', 'period.thismonth':'เดือนนี้', 'period.months':'เดือน', 'period.years':'ปี',
     'taskform.newtitle':'เพิ่มงานใหม่', 'taskform.edittitle':'แก้ไขงาน', 'taskform.sub':'กำหนดรายละเอียดและความถี่ของงาน',
     'taskform.name':'ชื่องาน', 'taskform.xp':'XP ที่ได้รับ', 'taskform.color':'สี', 'taskform.repeat':'ความถี่',
     'taskform.whichdays':'เลือกวัน', 'taskform.everyn':'ทุก N วัน', 'taskform.daterange':'ช่วงวันที่',
@@ -678,6 +765,23 @@ const I18N = {
     'insight.improving':'ความสม่ำเสมอของคุณดีขึ้น {p}% เทียบกับ 30 วันก่อนหน้า',
     'insight.declining':'ความสม่ำเสมอของคุณลดลง {p}% เทียบกับ 30 วันก่อนหน้า',
     'insight.perfectdays':'คุณทำวันที่สมบูรณ์แบบได้ {n} วัน — ทำครบทุกงานที่กำหนด',
+    'help.title':'วิธีใช้', 'help.subtitle':'คู่มือการใช้งานทุกฟีเจอร์',
+    'help.gettingstarted':'เริ่มต้นใช้งาน',
+    'help.gettingstarted.desc':'<strong>1. สร้างบัญชี:</strong> คลิก \"สมัครสมาชิก\" ที่หน้าเข้าสู่ระบบ กรอกชื่อผู้ใช้และรหัสผ่าน แล้วคลิก \"สร้างบัญชี\" ข้อมูลของคุณจะถูกเก็บในเบราว์เซอร์<br><br><strong>2. เข้าสู่ระบบ:</strong> หลังจากสมัครแล้ว ใช้ข้อมูลของคุณเข้าสู่ระบบ คุณจะถูกนำไปที่หน้าวันนี้<br><br><strong>3. สร้างงานแรก:</strong> คลิกปุ่ม \"+ เพิ่มงาน\" เพื่อเพิ่มนิสัย เป้าหมาย หรือกิจกรรมประจำวันที่คุณต้องการติดตาม',
+    'help.todayview':'หน้าวันนี้',
+    'help.todayview.desc':'<strong>ทำหน้าที่:</strong> แสดงงานทั้งหมดที่กำหนดสำหรับวันนี้ ความคืบหน้า XP และสถิติความสำเร็จ<br><br><strong>วิธีใช้:</strong><br>• คลิกช่องเช็คถัดจากงานเพื่อทำเครื่องหมายว่าเสร็จสิ้น<br>• คลิกไอคอน ✎ เพื่อแก้ไขงาน<br>• คลิกไอคอน 🗑 เพื่อลบงาน<br>• ลากงานโดยใช้จุดจับ ⋮⋮ เพื่อเรียงลำดับใหม่<br>• คลิก \"+ เพิ่มงาน\" เพื่อเพิ่มงานเพิ่มเติมสำหรับวันนี้<br><br><strong>ระบบ XP:</strong> งานแต่ละงานมีค่า XP เมื่อคุณทำงานเสร็จ คุณจะได้รับ XP นั้น XP รายวันของคุณจะแสดงที่ด้านบน<br><br><strong>สถิติ:</strong><br>• XP วันนี้: XP รวมที่ได้รับวันนี้<br>• ความสำเร็จ: เปอร์เซ็นต์ของงานวันนี้ที่เสร็จสิ้น<br>• ความสำเร็จสูงสุด: อัตราความสำเร็จรายวันที่ดีที่สุดของคุณ<br>• XP สูงสุด: วันที่ทำได้ดีที่สุดโดย XP',
+    'help.creatingtasks':'สร้างงาน',
+    'help.creatingtasks.desc':'<strong>คุณสมบัติของงาน:</strong><br>• <strong>ชื่องาน:</strong> ชื่อของงาน (เช่น \"ออกกำลังกายเช้า\", \"อ่านหนังสือ 30 นาที\")<br>• <strong>XP ที่ได้รับ:</strong> XP ที่คุณจะได้เมื่อทำงานเสร็จ (XP สูง = ยากหรือสำคัญมาก)<br>• <strong>สี:</strong> แท็กสำหรับจัดกลุ่มงานตามหมวดหมู่<br><br><strong>ตัวเลือกความถี่:</strong><br>• <strong>ทุกวัน:</strong> งานจะปรากฏทุกวัน<br>• <strong>วันธรรมดา:</strong> เฉพาะวันจันทร์ถึงศุกร์<br>• <strong>วันหยุดสุดสัปดาห์:</strong> เฉพาะวันเสาร์และวันอาทิตย์<br>• <strong>กำหนดวันเอง:</strong> เลือกวันที่ต้องการ (เช่น จ-พ-ศ)<br>• <strong>ทุก X วัน:</strong> เกิดซ้ำทุก N วัน (เช่น ทุก 3 วัน)<br>• <strong>รายเดือน:</strong> วันที่เดียวกันทุกเดือน (เช่น วันที่ 15 ของทุกเดือน)<br>• <strong>ครั้งเดียว:</strong> งานครั้งเดียวที่ไม่เกิดซ้ำ<br><br><strong>ช่วงวันที่:</strong> ตั้งค่าวันที่เริ่มและสิ้นสุดสำหรับงาน',
+    'help.calendarview':'หน้าปฏิทิน',
+    'help.calendarview.desc':'<strong>ทำหน้าที่:</strong> แสดงปฏิทินรายเดือนพร้อมสีตามผลผลิตของคุณ<br><br><strong>วิธีใช้:</strong><br>• ใช้ปุ่ม ← ก่อนหน้า / ถัดไป → เพื่อเปลี่ยนเดือน<br>• คลิก \"วันนี้\" เพื่อไปที่เดือนปัจจุบัน<br>• คลิกวันใดวันหนึ่งเพื่อดูงานและบันทึกของวันนั้น<br>• วันจะมีสีตาม XP ที่ได้รับ (สีอ่อน = XP น้อย, สีเข้ม = XP มาก)<br>• จุดสีบนแต่ละวันแสดงงานที่ทำสำเร็จ<br><br><strong>แผงรายละเอียดวัน:</strong> เมื่อคลิกวัน คุณสามารถ:<br>• ดูงานทั้งหมดของวันนั้น<br>• เพิ่มงานใหม่ให้กับวันนั้น<br>• เพิ่มบันทึกส่วนตัวเกี่ยวกับวันนั้น<br>• ดู XP ที่ได้รับและเปอร์เซ็นต์ความสำเร็จ',
+    'help.analyticsview':'หน้าวิเคราะห์ข้อมูล',
+    'help.analyticsview.desc':'<strong>ทำหน้าที่:</strong> สถิติและกราฟความสม่ำเสมอและผลผลิตของคุณตลอดเวลา<br><br><strong>ตัวชี้วัดหลัก:</strong><br>• <strong>งานที่ทำสำเร็จ (ทั้งหมด):</strong> จำนวนงานทั้งหมดที่คุณเคยทำสำเร็จ<br>• <strong>งานที่ใช้งานอยู่:</strong> จำนวนงานที่กำลังใช้งาน/เกิดซ้ำอยู่<br>• <strong>จำนวนวันที่ติดตาม:</strong> จำนวนวันที่คุณใช้แอป<br>• <strong>อัตราความสำเร็จโดยรวม:</strong> อัตราความสำเร็จเฉลี่ยของคุณทุกวัน<br>• <strong>ตัวชี้วัดวันนี้:</strong> สถิติแบบเรียลไทม์สำหรับวันนี้<br>• <strong>ความสำเร็จเฉลี่ย (ทั้งหมด):</strong> อัตราความสำเร็จเฉลี่ยทางประวัติศาสตร์<br>• <strong>XP เฉลี่ยต่อวัน:</strong> XP เฉลี่ยที่ได้รับต่อวัน<br>• <strong>วันที่สมบูรณ์แบบ:</strong> วันที่ทำงานครบ 100%<br>• <strong>วันที่ทำได้ดีที่สุด:</strong> วันที่ได้ XP มากที่สุด<br>• <strong>คะแนนความสม่ำเสมอ (90 วัน):</strong> ความสม่ำเสมอใน 90 วันที่ผ่านมา<br><br><strong>การแสดงผล:</strong><br>• <strong>แผนที่ความสำเร็จรายเดือน:</strong> ตารางแสดงผลผลิตในปีที่ผ่านมา (สีเข้ม = ผลผลิตมาก)<br>• <strong>ความสำเร็จรายวันของเดือนปัจจุบัน:</strong> กราฟแท่งแสดงอัตราความสำเร็จแต่ละวันในเดือนนี้<br>• <strong>XP รายวันของเดือนปัจจุบัน:</strong> กราฟแท่งแสดง XP แต่ละวันในเดือนนี้<br>• <strong>กราฟกระจาย XP กับความสำเร็จ:</strong> แสดงความสัมพันธ์ระหว่าง XP และความสำเร็จ',
+    'help.deletingtasks':'ลบงาน',
+    'help.deletingtasks.desc':'<strong>เมื่อคุณลบงานที่เกิดซ้ำ คุณมี 3 ตัวเลือก:</strong><br><br>• <strong>เฉพาะครั้งนี้:</strong> ลบเฉพาะครั้งนี้ (ครั้งถัดไปยังมี)<br>• <strong>ครั้งนี้และครั้งถัดไปทั้งหมด:</strong> ลบครั้งนี้และครั้งถัดไปทั้งหมด (เก็บประวัติไว้)<br>• <strong>ทุกครั้ง:</strong> ลบทุกครั้งของงานนี้ รวมประวัติที่ผ่านมา<br><br>ตัวเลือกนี้ช่วยให้คุณปรับเปลี่ยนกิจวัตรได้โดยไม่สูญเสียประวัติ',
+    'help.account':'จัดการบัญชี',
+    'help.account.desc':'<strong>การตั้งค่า:</strong> คลิกสถานะซิงค์ที่ส่วนท้ายของแถบข้างเพื่อเข้าถึงการตั้งค่าบัญชี<br><br><strong>ออกจากระบบ:</strong> ออกจากระบบแต่ข้อมูลยังถูกเก็บในเบราว์เซอร์<br><br><strong>ลบบัญชี:</strong> ลบข้อมูลทั้งหมด (งาน ประวัติ บันทึก) อย่างถาวร ไม่สามารถย้อนกลับได้ ต้องกรอกรหัสผ่านอีกครั้งเพื่อยืนยัน<br><br><strong>การเก็บข้อมูล:</strong> ข้อมูลทั้งหมดถูกเก็บใน localStorage ของเบราว์เซอร์ การล้างข้อมูลเบราว์เซอร์จะลบความคืบหน้าของคุณ',
+    'help.tips':'เคล็ดลับ',
+    'help.tips.desc':'• เริ่มต้นด้วยงานง่าย ๆ 3-5 งานต่อวันเพื่อสร้างโมเมนตัม<br>• ใช้ค่า XP สูงสำหรับงานที่สำคัญหรือยากกว่า<br>• ใช้สีแยกหมวดหมู่งาน (เช่น สุขภาพ = เขียว, งาน = น้ำเงิน)<br>• ตรวจสอบหน้าวิเคราะห์ข้อมูลทุกสัปดาห์เพื่อติดตามความสม่ำเสมอ<br>• ใช้ปฏิทินเพื่อวางแผนล่วงหน้าและทบทวนผลผลิตในอดีต<br>• เพิ่มบันทึกในแต่ละวันเพื่อจำสิ่งที่ทำได้หรือไม่ได้<br>• มุ่งเน้นความสม่ำเสมอมากกว่าความสมบูรณ์แบบ — พลาดวันหนึ่งไม่เป็นไร<br>• อัตราความสำเร็จในแถบข้างแสดงผลงานเร็ว ๆ ของคุณ',
   }
 };
 let currentLang = localStorage.getItem('ascend_lang') || 'en';
@@ -695,6 +799,7 @@ function setLanguage(lang){
 }
 function applyLanguage(){
   document.querySelectorAll('[data-i18n]').forEach(el=> el.textContent = i18nText(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(el=> el.innerHTML = i18nText(el.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(el=> el.placeholder = i18nText(el.dataset.i18nPh));
   // refresh whatever's currently on screen so dynamically-generated strings pick up the new language too
   setGateMode(gateMode);
@@ -1309,66 +1414,388 @@ function deleteOccurrence(taskId, dateStr, scope){
 /* ---------- Analytics ---------- */
 let currentMonthChartPct = null;
 let currentMonthChartXP = null;
+let analyticsPeriod = 'days';
+
+function setAnalyticsPeriod(period){
+  analyticsPeriod = period;
+  // Update button states
+  const selector = document.getElementById('analytics-period-selector');
+  selector.querySelectorAll('.period-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.period === period);
+  });
+  renderAnalytics();
+}
+
 function renderAnalytics(){
   const today = new Date();
   const todayDs = todayStr();
   const todayStats = dayStats(todayDs);
+  const created = parseDate(state.createdAt || todayStr());
   
-  // Overall success rate calculation
-  let totalTasks = 0;
-  let completedTasks = 0;
-  Object.keys(state.logs).forEach(dateStr => {
-    const s = dayStats(dateStr);
+  // Get all days from account creation to today (all-time data for statistics)
+  const allDaysList = [];
+  for(const c = new Date(created); c <= today; c.setDate(c.getDate() + 1)){
+    allDaysList.push(fmtDate(c));
+  }
+  const allDayData = allDaysList.map(ds => dayStats(ds));
+  
+  // Calculate statistics for all-time data
+  let totalTasks = 0, completedTasks = 0;
+  allDayData.forEach(s => {
     totalTasks += s.total;
     completedTasks += s.done;
   });
   const overallSuccessRate = totalTasks > 0 ? Math.round(100 * completedTasks / totalTasks) : 0;
   
-  // Update basic stats
+  // Update basic stats (all-time)
   document.getElementById('an-totalcompleted').textContent = completedTasks;
   document.getElementById('an-activetasks').textContent = state.tasks.filter(t=>!t.deleted).length;
   document.getElementById('an-overallsuccess').textContent = overallSuccessRate + '%';
   
-  // Today's metrics
+  // Today's metrics (always show today regardless of period)
   document.getElementById('an-todaystasks').textContent = todayStats.total;
   document.getElementById('an-todaycompleted').textContent = todayStats.done;
   document.getElementById('an-todayrate').textContent = todayStats.pct + '%';
   
-  // All days from first tracked day to current
-  const created = parseDate(state.createdAt || todayStr());
-  const allDays = [];
-  for(const c = new Date(created); c <= today; c.setDate(c.getDate() + 1)){
-    allDays.push(fmtDate(c));
-  }
-  const allDayData = allDays.map(ds=>dayStats(ds));
-  const avgPct = Math.round(allDayData.reduce((a,s)=>a+s.pct,0)/allDays.length);
-  const avgXP = Math.round(allDayData.reduce((a,s)=>a+s.xp,0)/allDays.length);
+  // Average completion and XP for all-time
+  const avgPct = allDayData.length > 0 ? Math.round(allDayData.reduce((a,s)=>a+s.pct,0)/allDayData.length) : 0;
+  const avgXP = allDayData.length > 0 ? Math.round(allDayData.reduce((a,s)=>a+s.xp,0)/allDayData.length) : 0;
   document.getElementById('an-avgpct').textContent = avgPct+'%';
   document.getElementById('an-avgxp').textContent = avgXP;
 
-  // Best day by completion rate
+  // Best day by completion rate for all-time
   const byWeekday = [0,0,0,0,0,0,0], cnt=[0,0,0,0,0,0,0];
-  allDays.forEach((ds,idx)=>{ const dow = parseDate(ds).getDay(); byWeekday[dow]+=allDayData[idx].pct; cnt[dow]++; });
+  allDaysList.forEach((ds,idx)=>{ 
+    const dow = parseDate(ds).getDay(); 
+    byWeekday[dow]+=allDayData[idx].pct; 
+    cnt[dow]++; 
+  });
   let bestDow=0, bestAvg=-1;
   byWeekday.forEach((v,i)=>{
     const avg = v/(cnt[i]||1);
     if(avg>bestAvg){bestAvg=avg; bestDow=i;}
   });
-  document.getElementById('an-bestday').textContent = WEEKDAY_LABELS[bestDow];
+  document.getElementById('an-bestday').textContent = cnt[bestDow] > 0 ? WEEKDAY_LABELS[bestDow] : '—';
 
-  // All-time walk from account creation: consistency score, perfect days, days tracked
-  const daysTracked = Math.max(1, Math.round((today - created)/86400000) + 1);
-  document.getElementById('an-daystracked').textContent = daysTracked;
+  // Days tracked and perfect days for all-time
+  document.getElementById('an-daystracked').textContent = allDaysList.length;
 
-  const consistencyStart = new Date(today); consistencyStart.setDate(today.getDate() - Math.min(89, daysTracked-1));
-  let consistencySum = 0, consistencyDays = 0, perfectDays = 0;
-  for(const c=new Date(created); c<=today; c.setDate(c.getDate()+1)){
-    const s = dayStats(fmtDate(c));
+  let perfectDays = 0;
+  allDayData.forEach(s => {
     if(s.total>0 && s.done===s.total) perfectDays++;
-    if(c>=consistencyStart){ consistencySum += s.pct; consistencyDays++; }
-  }
+  });
   document.getElementById('an-perfectdays').textContent = perfectDays;
-  document.getElementById('an-consistency').textContent = Math.round(consistencySum/(consistencyDays||1))+'%';
+
+  // Consistency score for all-time (last 90 days)
+  const ninetyDaysAgo = new Date(today);
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  let consistencySum = 0, consistencyDays = 0;
+  allDaysList.forEach(ds => {
+    const d = parseDate(ds);
+    const s = dayStats(ds);
+    if(d >= ninetyDaysAgo){ 
+      consistencySum += s.pct; 
+      consistencyDays++; 
+    }
+  });
+  document.getElementById('an-consistency').textContent = consistencyDays > 0 ? Math.round(consistencySum/consistencyDays)+'%' : '0%';
+
+  // Scatter plot: XP vs % Complete (using selected period)
+  const scatterContainer = document.getElementById('scatter-plot');
+  if(scatterContainer){
+    scatterContainer.innerHTML = '';
+    
+    // Collect data points based on period
+    const dataPoints = [];
+    
+    if(analyticsPeriod === 'days'){
+      // For days: show daily data (all-time)
+      allDaysList.forEach(ds => {
+        const s = dayStats(ds);
+        if(s.total > 0){ // Only include days with tasks
+          dataPoints.push({
+            date: ds,
+            xp: s.xp,
+            pct: s.pct
+          });
+        }
+      });
+    } else if(analyticsPeriod === 'month'){
+      // For month: show only current month data
+      const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      const endDate = today;
+      const adjustedStart = created > startDate ? created : startDate;
+      
+      for(const c = new Date(adjustedStart); c <= endDate; c.setDate(c.getDate() + 1)){
+        if(c > today) break;
+        const ds = fmtDate(c);
+        const s = dayStats(ds);
+        if(s.total > 0){
+          dataPoints.push({
+            date: ds,
+            xp: s.xp,
+            pct: s.pct
+          });
+        }
+      }
+    } else if(analyticsPeriod === 'months'){
+      // For months: aggregate by month
+      const monthData = {};
+      allDaysList.forEach(ds => {
+        const s = dayStats(ds);
+        if(s.total > 0){
+          const d = parseDate(ds);
+          const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+          if(!monthData[monthKey]){
+            monthData[monthKey] = { totalXP: 0, totalPct: 0, count: 0 };
+          }
+          monthData[monthKey].totalXP += s.xp;
+          monthData[monthKey].totalPct += s.pct;
+          monthData[monthKey].count++;
+        }
+      });
+      
+      Object.keys(monthData).forEach(monthKey => {
+        const [year, month] = monthKey.split('-');
+        const avgXP = Math.round(monthData[monthKey].totalXP / monthData[monthKey].count);
+        const avgPct = Math.round(monthData[monthKey].totalPct / monthData[monthKey].count);
+        dataPoints.push({
+          date: monthKey,
+          xp: avgXP,
+          pct: avgPct,
+          label: new Date(parseInt(year), parseInt(month)).toLocaleDateString('en', {month:'short', year:'numeric'})
+        });
+      });
+    } else if(analyticsPeriod === 'years'){
+      // For years: aggregate by year
+      const yearData = {};
+      allDaysList.forEach(ds => {
+        const s = dayStats(ds);
+        if(s.total > 0){
+          const d = parseDate(ds);
+          const yearKey = d.getFullYear();
+          if(!yearData[yearKey]){
+            yearData[yearKey] = { totalXP: 0, totalPct: 0, count: 0 };
+          }
+          yearData[yearKey].totalXP += s.xp;
+          yearData[yearKey].totalPct += s.pct;
+          yearData[yearKey].count++;
+        }
+      });
+      
+      Object.keys(yearData).forEach(yearKey => {
+        const avgXP = Math.round(yearData[yearKey].totalXP / yearData[yearKey].count);
+        const avgPct = Math.round(yearData[yearKey].totalPct / yearData[yearKey].count);
+        dataPoints.push({
+          date: yearKey.toString(),
+          xp: avgXP,
+          pct: avgPct,
+          label: yearKey.toString()
+        });
+      });
+    }
+    
+    if(dataPoints.length > 0){
+      const scatterWrapper = document.createElement('div');
+      scatterWrapper.style.position = 'relative';
+      scatterWrapper.style.width = '100%';
+      scatterWrapper.style.height = '350px';
+      scatterWrapper.style.padding = '30px';
+      scatterWrapper.style.border = '1px solid var(--border)';
+      scatterWrapper.style.borderRadius = '10px';
+      scatterWrapper.style.background = 'var(--bg-elev)';
+      scatterWrapper.style.boxSizing = 'border-box';
+      
+      // Create SVG for scatter plot
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.style.width = '100%';
+      svg.style.height = '100%';
+      svg.style.overflow = 'visible';
+      svg.style.display = 'block';
+      
+      // Wait for layout to settle before calculating dimensions
+      setTimeout(() => {
+        const width = scatterWrapper.clientWidth - 60;
+        const height = scatterWrapper.clientHeight - 60;
+        const padding = 30;
+        
+        // Clear and recreate SVG content
+        while (svg.firstChild) {
+          svg.removeChild(svg.firstChild);
+        }
+        
+        // Add axes
+        const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxis.setAttribute('x1', padding);
+        xAxis.setAttribute('y1', height - padding);
+        xAxis.setAttribute('x2', width - padding);
+        xAxis.setAttribute('y2', height - padding);
+        xAxis.setAttribute('stroke', 'var(--border)');
+        xAxis.setAttribute('stroke-width', '1');
+        svg.appendChild(xAxis);
+        
+        const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxis.setAttribute('x1', padding);
+        yAxis.setAttribute('y1', padding);
+        yAxis.setAttribute('x2', padding);
+        yAxis.setAttribute('y2', height - padding);
+        yAxis.setAttribute('stroke', 'var(--border)');
+        yAxis.setAttribute('stroke-width', '1');
+        svg.appendChild(yAxis);
+        
+        // Add axis labels
+        const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xLabel.setAttribute('x', width / 2);
+        xLabel.setAttribute('y', height - 5);
+        xLabel.setAttribute('text-anchor', 'middle');
+        xLabel.setAttribute('fill', 'var(--text-faint)');
+        xLabel.setAttribute('font-size', '12');
+        xLabel.textContent = '% Complete';
+        svg.appendChild(xLabel);
+        
+        const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yLabel.setAttribute('x', 10);
+        yLabel.setAttribute('y', height / 2);
+        yLabel.setAttribute('text-anchor', 'middle');
+        yLabel.setAttribute('fill', 'var(--text-faint)');
+        yLabel.setAttribute('font-size', '12');
+        yLabel.setAttribute('transform', `rotate(-90, 10, ${height / 2})`);
+        yLabel.textContent = 'XP';
+        svg.appendChild(yLabel);
+        
+        // Group data points by same XP and completion percentage
+        const groupedPoints = {};
+        dataPoints.forEach(point => {
+          const key = `${point.xp}-${point.pct}`;
+          if(!groupedPoints[key]) {
+            groupedPoints[key] = [];
+          }
+          groupedPoints[key].push(point);
+        });
+        
+        // Plot data points (one circle per unique XP/percentage combination)
+        Object.keys(groupedPoints).forEach(key => {
+          const points = groupedPoints[key];
+          const representativePoint = points[0]; // Use first point for positioning
+          
+          const x = padding + (representativePoint.pct / 100) * (width - 2 * padding);
+          const maxXP = Math.max(...dataPoints.map(p => p.xp), 1);
+          const y = (height - padding) - (representativePoint.xp / maxXP) * (height - 2 * padding);
+          
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', x);
+          circle.setAttribute('cy', y);
+          
+          // Make circle slightly larger if it represents multiple days
+          const baseRadius = points.length > 1 ? 8 : 6;
+          circle.setAttribute('r', baseRadius);
+          
+          // Use green color based on completion percentage
+          let fillColor;
+          if(representativePoint.pct === 100) fillColor = '#46b478';
+          else if(representativePoint.pct >= 75) fillColor = 'rgba(70,180,120,0.8)';
+          else if(representativePoint.pct >= 50) fillColor = 'rgba(70,180,120,0.6)';
+          else if(representativePoint.pct >= 25) fillColor = 'rgba(70,180,120,0.4)';
+          else fillColor = 'rgba(70,180,120,0.2)';
+          
+          circle.setAttribute('fill', fillColor);
+          circle.setAttribute('stroke', 'var(--bg-elev)');
+          circle.setAttribute('stroke-width', '2');
+          circle.style.cursor = 'pointer';
+          circle.style.transition = 'r 0.2s, fill 0.2s';
+          
+          // Store the original fill color and radius for hover restoration
+          circle.dataset.originalFill = fillColor;
+          circle.dataset.originalRadius = baseRadius;
+          circle.dataset.xp = representativePoint.xp;
+          circle.dataset.pct = representativePoint.pct;
+          circle.dataset.pointCount = points.length;
+          
+          // Create tooltip
+          const tooltip = document.createElement('div');
+          tooltip.className = 'scatter-tooltip';
+          tooltip.style.position = 'absolute';
+          tooltip.style.background = 'var(--bg-elev-2)';
+          tooltip.style.border = '1px solid var(--border)';
+          tooltip.style.borderRadius = '8px';
+          tooltip.style.padding = '12px';
+          tooltip.style.fontSize = '12px';
+          tooltip.style.color = 'var(--text)';
+          tooltip.style.pointerEvents = 'none';
+          tooltip.style.opacity = '0';
+          tooltip.style.transition = 'opacity 0.2s';
+          tooltip.style.zIndex = '1000';
+          tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+          tooltip.style.whiteSpace = 'nowrap';
+          tooltip.style.maxWidth = '300px';
+          
+          // Build tooltip content with all days
+          let tooltipContent = '';
+          if(points.length === 1) {
+            if(representativePoint.label){
+              // Monthly aggregated data
+              tooltipContent = `
+                <div style="font-weight:bold; margin-bottom:4px;">${representativePoint.label}</div>
+                <div>XP: <span style="color:#46b478; font-weight:bold;">${points[0].xp}</span></div>
+                <div>Complete: <span style="color:#46b478; font-weight:bold;">${points[0].pct}%</span></div>
+              `;
+            } else {
+              // Daily data
+              const dateObj = parseDate(points[0].date);
+              tooltipContent = `
+                <div style="font-weight:bold; margin-bottom:4px;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>
+                <div>XP: <span style="color:#46b478; font-weight:bold;">${points[0].xp}</span></div>
+                <div>Complete: <span style="color:#46b478; font-weight:bold;">${points[0].pct}%</span></div>
+              `;
+            }
+          } else {
+            // Multiple days with same values
+            tooltipContent = `
+              <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+                ${points.length} days
+              </div>
+              <div style="margin-bottom:4px;">XP: <span style="color:#46b478; font-weight:bold;">${representativePoint.xp}</span></div>
+              <div style="margin-bottom:8px;">Complete: <span style="color:#46b478; font-weight:bold;">${representativePoint.pct}%</span></div>
+              <div style="font-size:11px; color:var(--text-dim);">Dates:</div>
+              <div style="max-height:150px; overflow-y:auto; margin-top:4px;">
+                ${points.map(p => {
+                  const dateObj = parseDate(p.date);
+                  return `<div style="padding:2px 0;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>`;
+                }).join('')}
+              </div>
+            `;
+          }
+          tooltip.innerHTML = tooltipContent;
+          
+          scatterWrapper.appendChild(tooltip);
+          
+          // Hover events
+          circle.addEventListener('mouseenter', (e) => {
+            circle.setAttribute('r', parseInt(circle.dataset.originalRadius) + 4);
+            circle.setAttribute('fill', '#46b478'); // Bright green on hover
+            tooltip.style.opacity = '1';
+            
+            // Position tooltip relative to circle position
+            tooltip.style.left = (x + 10) + 'px';
+            tooltip.style.top = (y - 40) + 'px';
+          });
+          
+          circle.addEventListener('mouseleave', () => {
+            circle.setAttribute('r', circle.dataset.originalRadius);
+            circle.setAttribute('fill', circle.dataset.originalFill);
+            circle.setAttribute('stroke', 'var(--bg-elev)');
+            circle.setAttribute('stroke-width', '2');
+            tooltip.style.opacity = '0';
+          });
+          
+          svg.appendChild(circle);
+        });
+      }, 50);
+      
+      scatterWrapper.appendChild(svg);
+      scatterContainer.appendChild(scatterWrapper);
+    }
+  }
 
   // Monthly heatmap
   const hm = document.getElementById('monthly-heatmap');
@@ -1530,370 +1957,210 @@ function renderAnalytics(){
     hm.appendChild(yearContainer);
   });
 
-  // Current month daily completion % chart
+  // % Complete chart - respect selected period
   const barsContainer = document.getElementById('current-month-bars');
   if(barsContainer){
-    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    
-    // Start from first tracked day or current month start, whichever is later
-    const startDate = created > currentMonthStart ? created : currentMonthStart;
-    
-    barsContainer.innerHTML = '';
-    
-    const chartWrapper = document.createElement('div');
-    chartWrapper.style.display = 'flex';
-    chartWrapper.style.alignItems = 'flex-end';
-    chartWrapper.style.gap = '8px';
-    chartWrapper.style.height = '300px';
-    chartWrapper.style.padding = '20px 0 0 0';
-    
-    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
-      if(c > today) break;
-      const ds = fmtDate(c);
-      const s = dayStats(ds);
-      
-      const dayColumn = document.createElement('div');
-      dayColumn.style.display = 'flex';
-      dayColumn.style.flexDirection = 'column';
-      dayColumn.style.alignItems = 'center';
-      dayColumn.style.flex = '1';
-      dayColumn.style.minWidth = '10px';
-      dayColumn.style.gap = '3px';
-      
-      const bar = document.createElement('div');
-      bar.style.width = '100%';
-      bar.style.height = (s.pct / 100 * 280) + 'px';
-      bar.style.minHeight = '4px';
-      bar.style.borderRadius = '3px';
-      bar.style.transition = 'height 0.2s';
-      bar.style.position = 'relative';
-      bar.style.display = 'flex';
-      bar.style.alignItems = 'flex-start';
-      bar.style.justifyContent = 'center';
-      bar.style.paddingTop = '4px';
-      
-      if(s.pct === 100) bar.style.background = '#46b478';
-      else if(s.pct >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
-      else if(s.pct >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
-      else if(s.pct >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
-      else bar.style.background = 'rgba(70,180,120,0.2)';
-      
-      const pct = document.createElement('div');
-      pct.textContent = s.pct + '%';
-      pct.style.fontSize = '10px';
-      pct.style.color = 'var(--text)';
-      pct.style.fontWeight = '600';
-      pct.style.zIndex = '1';
-      
-      const day = document.createElement('div');
-      day.textContent = c.getDate();
-      day.style.fontSize = '9px';
-      day.style.color = 'var(--text-faint)';
-      
-      bar.appendChild(pct);
-      dayColumn.appendChild(bar);
-      dayColumn.appendChild(day);
-      chartWrapper.appendChild(dayColumn);
-    }
-    
-    barsContainer.appendChild(chartWrapper);
+    renderPeriodChart(barsContainer, 'pct', analyticsPeriod, today, created);
   }
 
-  // Current month daily XP chart
+  // XP chart - respect selected period
   const xpBarsContainer = document.getElementById('current-month-xp-bars');
   if(xpBarsContainer){
-    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    
-    // Start from first tracked day or current month start, whichever is later
-    const startDate = created > currentMonthStart ? created : currentMonthStart;
-    
-    // Find max XP for scaling
-    let maxXP = 0;
-    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
-      if(c > today) break;
-      const ds = fmtDate(c);
-      const s = dayStats(ds);
-      if(s.xp > maxXP) maxXP = s.xp;
-    }
-    
-    xpBarsContainer.innerHTML = '';
-    
-    const xpChartWrapper = document.createElement('div');
-    xpChartWrapper.style.display = 'flex';
-    xpChartWrapper.style.alignItems = 'flex-end';
-    xpChartWrapper.style.gap = '8px';
-    xpChartWrapper.style.height = '300px';
-    xpChartWrapper.style.padding = '20px 0 0 0';
-    
-    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
-      if(c > today) break;
-      const ds = fmtDate(c);
-      const s = dayStats(ds);
-      
-      const dayColumn = document.createElement('div');
-      dayColumn.style.display = 'flex';
-      dayColumn.style.flexDirection = 'column';
-      dayColumn.style.alignItems = 'center';
-      dayColumn.style.flex = '1';
-      dayColumn.style.minWidth = '10px';
-      dayColumn.style.gap = '3px';
-      
-      const bar = document.createElement('div');
-      bar.style.width = '100%';
-      const barHeight = maxXP > 0 ? (s.xp / maxXP * 280) : 0;
-      bar.style.height = Math.max(barHeight, 4) + 'px';
-      bar.style.borderRadius = '3px';
-      bar.style.transition = 'height 0.2s';
-      bar.style.position = 'relative';
-      bar.style.display = 'flex';
-      bar.style.alignItems = 'flex-start';
-      bar.style.justifyContent = 'center';
-      bar.style.paddingTop = '4px';
-      
-      // Use green color for XP
-      if(s.xp > 0 && s.xp === maxXP) bar.style.background = '#46b478';
-      else if(s.xp >= maxXP * 0.75) bar.style.background = 'rgba(70,180,120,0.8)';
-      else if(s.xp >= maxXP * 0.5) bar.style.background = 'rgba(70,180,120,0.6)';
-      else if(s.xp >= maxXP * 0.25) bar.style.background = 'rgba(70,180,120,0.4)';
-      else bar.style.background = 'rgba(70,180,120,0.2)';
-      
-      const xp = document.createElement('div');
-      xp.textContent = s.xp;
-      xp.style.fontSize = '10px';
-      xp.style.color = 'var(--text)';
-      xp.style.fontWeight = '600';
-      xp.style.zIndex = '1';
-      
-      const day = document.createElement('div');
-      day.textContent = c.getDate();
-      day.style.fontSize = '9px';
-      day.style.color = 'var(--text-faint)';
-      
-      bar.appendChild(xp);
-      dayColumn.appendChild(bar);
-      dayColumn.appendChild(day);
-      xpChartWrapper.appendChild(dayColumn);
-    }
-    
-    xpBarsContainer.appendChild(xpChartWrapper);
+    renderPeriodChart(xpBarsContainer, 'xp', analyticsPeriod, today, created);
   }
+}
 
-  // Scatter plot: XP vs % Complete
-  const scatterContainer = document.getElementById('scatter-plot');
-  if(scatterContainer){
-    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    const startDate = created > currentMonthStart ? created : currentMonthStart;
+function renderPeriodChart(container, chartType, period, today, created){
+  container.innerHTML = '';
+  
+  // Remove any existing tooltips from previous renders
+  document.querySelectorAll('.bar-tooltip').forEach(t => t.remove());
+  
+  let startDate, endDate, dataPoints = [];
+  let monthData = {}, yearData = {};
+  
+  // Get all days from account creation to today
+  const allDaysList = [];
+  for(const c = new Date(created); c <= today; c.setDate(c.getDate() + 1)){
+    allDaysList.push(fmtDate(c));
+  }
+  
+  if(period === 'days'){
+    // For days: show daily data (all-time)
+    allDaysList.forEach(ds => {
+      const s = dayStats(ds);
+      const d = parseDate(ds);
+      dataPoints.push({ label: `${d.getMonth()+1}/${d.getDate()}`, value: chartType === 'pct' ? s.pct : s.xp });
+    });
+  } else if(period === 'month'){
+    // For month: show only current month data
+    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    endDate = today;
+    startDate = created > startDate ? created : startDate;
     
-    // Collect data points
-    const dataPoints = [];
-    for(const c = new Date(startDate); c <= currentMonthEnd; c.setDate(c.getDate() + 1)){
+    for(const c = new Date(startDate); c <= endDate; c.setDate(c.getDate() + 1)){
       if(c > today) break;
       const ds = fmtDate(c);
       const s = dayStats(ds);
-      if(s.total > 0){ // Only include days with tasks
-        dataPoints.push({
-          date: ds,
-          xp: s.xp,
-          pct: s.pct,
-          day: c.getDate()
-        });
+      dataPoints.push({ label: c.getDate(), value: chartType === 'pct' ? s.pct : s.xp });
+    }
+  } else if(period === 'months'){
+    // For months: aggregate by month
+    allDaysList.forEach(ds => {
+      const s = dayStats(ds);
+      const d = parseDate(ds);
+      const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+      if(!monthData[monthKey]){
+        monthData[monthKey] = { total: 0, count: 0 };
+      }
+      monthData[monthKey].total += chartType === 'pct' ? s.pct : s.xp;
+      monthData[monthKey].count++;
+    });
+    
+    Object.keys(monthData).sort().forEach(monthKey => {
+      const [year, month] = monthKey.split('-');
+      const avg = monthData[monthKey].count > 0 ? Math.round(monthData[monthKey].total / monthData[monthKey].count) : 0;
+      dataPoints.push({ 
+        label: new Date(parseInt(year), parseInt(month)).toLocaleDateString('en', {month:'short'}), 
+        value: avg,
+        monthKey: monthKey
+      });
+    });
+  } else if(period === 'years'){
+    // For years: aggregate by year
+    allDaysList.forEach(ds => {
+      const s = dayStats(ds);
+      const d = parseDate(ds);
+      const yearKey = d.getFullYear();
+      if(!yearData[yearKey]){
+        yearData[yearKey] = { total: 0, count: 0 };
+      }
+      yearData[yearKey].total += chartType === 'pct' ? s.pct : s.xp;
+      yearData[yearKey].count++;
+    });
+    
+    Object.keys(yearData).sort().forEach(yearKey => {
+      const avg = yearData[yearKey].count > 0 ? Math.round(yearData[yearKey].total / yearData[yearKey].count) : 0;
+      dataPoints.push({ label: yearKey.toString(), value: avg, yearKey: yearKey });
+    });
+  }
+  
+  if(dataPoints.length === 0) return;
+  
+  const maxValue = Math.max(...dataPoints.map(p => p.value), 1);
+  
+  const chartWrapper = document.createElement('div');
+  chartWrapper.style.display = 'flex';
+  chartWrapper.style.alignItems = 'flex-end';
+  chartWrapper.style.gap = period === 'month' ? '8px' : '16px';
+  chartWrapper.style.height = '300px';
+  chartWrapper.style.padding = '20px 0 0 0';
+  
+  dataPoints.forEach((point, index) => {
+    const column = document.createElement('div');
+    column.style.display = 'flex';
+    column.style.flexDirection = 'column';
+    column.style.alignItems = 'center';
+    column.style.flex = '1';
+    column.style.minWidth = period === 'month' ? '10px' : '30px';
+    column.style.gap = '3px';
+    column.style.position = 'relative';
+    
+    const bar = document.createElement('div');
+    const barHeight = (point.value / maxValue * 280);
+    bar.style.width = period === 'month' ? '100%' : '40px';
+    bar.style.height = Math.max(barHeight, 4) + 'px';
+    bar.style.borderRadius = '3px';
+    bar.style.transition = 'height 0.2s';
+    bar.style.position = 'relative';
+    bar.style.display = 'flex';
+    bar.style.alignItems = 'flex-start';
+    bar.style.justifyContent = 'center';
+    bar.style.paddingTop = '4px';
+    bar.style.cursor = 'pointer';
+    
+    // Add simple title as fallback
+    bar.title = `${point.label}: ${point.value}${chartType === 'pct' ? '%' : ''}`;
+    
+    if(chartType === 'pct'){
+      if(point.value === 100) bar.style.background = '#46b478';
+      else if(point.value >= 75) bar.style.background = 'rgba(70,180,120,0.8)';
+      else if(point.value >= 50) bar.style.background = 'rgba(70,180,120,0.6)';
+      else if(point.value >= 25) bar.style.background = 'rgba(70,180,120,0.4)';
+      else bar.style.background = 'rgba(70,180,120,0.2)';
+    } else {
+      // XP chart uses same green gradient based on value relative to max
+      const normalizedValue = point.value / maxValue;
+      if(normalizedValue === 1) bar.style.background = '#46b478';
+      else if(normalizedValue >= 0.75) bar.style.background = 'rgba(70,180,120,0.8)';
+      else if(normalizedValue >= 0.5) bar.style.background = 'rgba(70,180,120,0.6)';
+      else if(normalizedValue >= 0.25) bar.style.background = 'rgba(70,180,120,0.4)';
+      else if(point.value > 0) bar.style.background = 'rgba(70,180,120,0.2)';
+      else bar.style.background = 'rgba(224,100,90,0.2)';
+    }
+    
+    const val = document.createElement('div');
+    val.textContent = point.value + (chartType === 'pct' ? '%' : '');
+    val.style.fontSize = '10px';
+    val.style.color = 'var(--text)';
+    val.style.fontWeight = '600';
+    val.style.zIndex = '1';
+    
+    const label = document.createElement('div');
+    label.textContent = point.label;
+    label.style.fontSize = period === 'month' ? '9px' : '10px';
+    label.style.color = 'var(--text-faint)';
+    
+    // Build detailed tooltip text for title attribute
+    let tooltipText = '';
+    if(period === 'days' || period === 'month'){
+      const dateStr = period === 'month' ? 
+        `${today.getFullYear()}/${today.getMonth() + 1}/${point.label}` : 
+        point.label;
+      
+      // Get the actual day stats for this data point
+      let dayStats = { total: 0, done: 0, xp: 0, pct: 0 };
+      if(period === 'month'){
+        const ds = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(point.label).padStart(2, '0')}`;
+        dayStats = window.dayStats ? window.dayStats(ds) : dayStats;
+      } else {
+        const dateIndex = index;
+        const actualDate = allDaysList[dateIndex];
+        if(actualDate){
+          dayStats = window.dayStats ? window.dayStats(actualDate) : dayStats;
+        }
+      }
+      
+      if(chartType === 'pct'){
+        tooltipText = `${dateStr}\nCompletion: ${point.value}%\nTasks: ${dayStats.done}/${dayStats.total}`;
+      } else {
+        tooltipText = `${dateStr}\nXP: ${point.value}\nTasks: ${dayStats.done}/${dayStats.total}`;
+      }
+    } else if(period === 'months'){
+      const dayCount = point.monthKey && monthData[point.monthKey] ? monthData[point.monthKey].count : 0;
+      if(chartType === 'pct'){
+        tooltipText = `${point.label}\nAvg Completion: ${point.value}%\nDays: ${dayCount}`;
+      } else {
+        tooltipText = `${point.label}\nAvg XP: ${point.value}\nDays: ${dayCount}`;
+      }
+    } else if(period === 'years'){
+      const dayCount = point.yearKey && yearData[point.yearKey] ? yearData[point.yearKey].count : 0;
+      if(chartType === 'pct'){
+        tooltipText = `${point.label}\nAvg Completion: ${point.value}%\nDays: ${dayCount}`;
+      } else {
+        tooltipText = `${point.label}\nAvg XP: ${point.value}\nDays: ${dayCount}`;
       }
     }
     
-    scatterContainer.innerHTML = '';
+    bar.title = tooltipText;
     
-    const scatterWrapper = document.createElement('div');
-    scatterWrapper.style.position = 'relative';
-    scatterWrapper.style.width = '100%';
-    scatterWrapper.style.height = '350px';
-    scatterWrapper.style.padding = '30px';
-    scatterWrapper.style.border = '1px solid var(--border)';
-    scatterWrapper.style.borderRadius = '10px';
-    scatterWrapper.style.background = 'var(--bg-elev)';
-    scatterWrapper.style.boxSizing = 'border-box';
-    
-    // Create SVG for scatter plot
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.style.width = '100%';
-    svg.style.height = '100%';
-    svg.style.overflow = 'visible';
-    svg.style.display = 'block';
-    
-    // Wait for layout to settle before calculating dimensions
-    setTimeout(() => {
-      const width = scatterWrapper.clientWidth - 60;
-      const height = scatterWrapper.clientHeight - 60;
-      const padding = 30;
-      
-      // Clear and recreate SVG content
-      while (svg.firstChild) {
-        svg.removeChild(svg.firstChild);
-      }
-      
-      // Add axes
-      const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      xAxis.setAttribute('x1', padding);
-      xAxis.setAttribute('y1', height - padding);
-      xAxis.setAttribute('x2', width - padding);
-      xAxis.setAttribute('y2', height - padding);
-      xAxis.setAttribute('stroke', 'var(--border)');
-      xAxis.setAttribute('stroke-width', '1');
-      svg.appendChild(xAxis);
-      
-      const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      yAxis.setAttribute('x1', padding);
-      yAxis.setAttribute('y1', padding);
-      yAxis.setAttribute('x2', padding);
-      yAxis.setAttribute('y2', height - padding);
-      yAxis.setAttribute('stroke', 'var(--border)');
-      yAxis.setAttribute('stroke-width', '1');
-      svg.appendChild(yAxis);
-      
-      // Add axis labels
-      const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      xLabel.setAttribute('x', width / 2);
-      xLabel.setAttribute('y', height - 5);
-      xLabel.setAttribute('text-anchor', 'middle');
-      xLabel.setAttribute('fill', 'var(--text-faint)');
-      xLabel.setAttribute('font-size', '12');
-      xLabel.textContent = '% Complete';
-      svg.appendChild(xLabel);
-      
-      const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      yLabel.setAttribute('x', 10);
-      yLabel.setAttribute('y', height / 2);
-      yLabel.setAttribute('text-anchor', 'middle');
-      yLabel.setAttribute('fill', 'var(--text-faint)');
-      yLabel.setAttribute('font-size', '12');
-      yLabel.setAttribute('transform', `rotate(-90, 10, ${height / 2})`);
-      yLabel.textContent = 'XP';
-      svg.appendChild(yLabel);
-      
-      // Group data points by same XP and completion percentage
-      const groupedPoints = {};
-      dataPoints.forEach(point => {
-        const key = `${point.xp}-${point.pct}`;
-        if(!groupedPoints[key]) {
-          groupedPoints[key] = [];
-        }
-        groupedPoints[key].push(point);
-      });
-      
-      // Plot data points (one circle per unique XP/percentage combination)
-      Object.keys(groupedPoints).forEach(key => {
-        const points = groupedPoints[key];
-        const representativePoint = points[0]; // Use first point for positioning
-        
-        const x = padding + (representativePoint.pct / 100) * (width - 2 * padding);
-        const maxXP = Math.max(...dataPoints.map(p => p.xp), 1);
-        const y = (height - padding) - (representativePoint.xp / maxXP) * (height - 2 * padding);
-        
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', x);
-        circle.setAttribute('cy', y);
-        
-        // Make circle slightly larger if it represents multiple days
-        const baseRadius = points.length > 1 ? 8 : 6;
-        circle.setAttribute('r', baseRadius);
-        
-        // Use green color based on completion percentage
-        let fillColor;
-        if(representativePoint.pct === 100) fillColor = '#46b478';
-        else if(representativePoint.pct >= 75) fillColor = 'rgba(70,180,120,0.8)';
-        else if(representativePoint.pct >= 50) fillColor = 'rgba(70,180,120,0.6)';
-        else if(representativePoint.pct >= 25) fillColor = 'rgba(70,180,120,0.4)';
-        else fillColor = 'rgba(70,180,120,0.2)';
-        
-        circle.setAttribute('fill', fillColor);
-        circle.setAttribute('stroke', 'var(--bg-elev)');
-        circle.setAttribute('stroke-width', '2');
-        circle.style.cursor = 'pointer';
-        circle.style.transition = 'r 0.2s, fill 0.2s';
-        
-        // Store the original fill color and radius for hover restoration
-        circle.dataset.originalFill = fillColor;
-        circle.dataset.originalRadius = baseRadius;
-        circle.dataset.xp = representativePoint.xp;
-        circle.dataset.pct = representativePoint.pct;
-        circle.dataset.pointCount = points.length;
-        
-        // Create tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'scatter-tooltip';
-        tooltip.style.position = 'absolute';
-        tooltip.style.background = 'var(--bg-elev-2)';
-        tooltip.style.border = '1px solid var(--border)';
-        tooltip.style.borderRadius = '8px';
-        tooltip.style.padding = '12px';
-        tooltip.style.fontSize = '12px';
-        tooltip.style.color = 'var(--text)';
-        tooltip.style.pointerEvents = 'none';
-        tooltip.style.opacity = '0';
-        tooltip.style.transition = 'opacity 0.2s';
-        tooltip.style.zIndex = '1000';
-        tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-        tooltip.style.whiteSpace = 'nowrap';
-        tooltip.style.maxWidth = '300px';
-        
-        // Build tooltip content with all days
-        let tooltipContent = '';
-        if(points.length === 1) {
-          const dateObj = parseDate(points[0].date);
-          tooltipContent = `
-            <div style="font-weight:bold; margin-bottom:4px;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>
-            <div>XP: <span style="color:#46b478; font-weight:bold;">${points[0].xp}</span></div>
-            <div>Complete: <span style="color:#46b478; font-weight:bold;">${points[0].pct}%</span></div>
-          `;
-        } else {
-          // Multiple days with same values
-          tooltipContent = `
-            <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">
-              ${points.length} days
-            </div>
-            <div style="margin-bottom:4px;">XP: <span style="color:#46b478; font-weight:bold;">${representativePoint.xp}</span></div>
-            <div style="margin-bottom:8px;">Complete: <span style="color:#46b478; font-weight:bold;">${representativePoint.pct}%</span></div>
-            <div style="font-size:11px; color:var(--text-dim);">Dates:</div>
-            <div style="max-height:150px; overflow-y:auto; margin-top:4px;">
-              ${points.map(p => {
-                const dateObj = parseDate(p.date);
-                return `<div style="padding:2px 0;">${dateObj.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'})}</div>`;
-              }).join('')}
-            </div>
-          `;
-        }
-        tooltip.innerHTML = tooltipContent;
-        
-        scatterWrapper.appendChild(tooltip);
-        
-        // Hover events
-        circle.addEventListener('mouseenter', (e) => {
-          circle.setAttribute('r', parseInt(circle.dataset.originalRadius) + 4);
-          circle.setAttribute('fill', '#46b478'); // Bright green on hover
-          tooltip.style.opacity = '1';
-          
-          // Position tooltip relative to circle position
-          tooltip.style.left = (x + 10) + 'px';
-          tooltip.style.top = (y - 40) + 'px';
-        });
-        
-        circle.addEventListener('mouseleave', () => {
-          circle.setAttribute('r', circle.dataset.originalRadius);
-          circle.setAttribute('fill', circle.dataset.originalFill);
-          circle.setAttribute('stroke', 'var(--bg-elev)');
-          circle.setAttribute('stroke-width', '2');
-          tooltip.style.opacity = '0';
-        });
-        
-        svg.appendChild(circle);
-      });
-    }, 50);
-    
-    scatterWrapper.appendChild(svg);
-    scatterContainer.appendChild(scatterWrapper);
-  }
+    bar.appendChild(val);
+    column.appendChild(bar);
+    column.appendChild(label);
+    chartWrapper.appendChild(column);
+  });
+  
+  container.appendChild(chartWrapper);
 }
 
 /* ---------- Panels ---------- */
@@ -1927,7 +2194,7 @@ function getApiUrl(){ return localStorage.getItem(LS_API) || DEFAULT_API_URL; }
 function getSession(){ try{ return JSON.parse(localStorage.getItem(LS_SESSION)||'null'); }catch(e){ return null; } }
 function setSession(s){ if(s) localStorage.setItem(LS_SESSION, JSON.stringify(s)); else localStorage.removeItem(LS_SESSION); updateSyncIndicator(); }
 
-async function apiCall(action, payload){
+async function apiCall(action, payload, retryCount = 0){
   const url = getApiUrl();
   if(!url) throw new Error('No backend URL configured yet');
   let res;
@@ -1949,10 +2216,19 @@ async function apiCall(action, payload){
   try{
     data = JSON.parse(raw);
   }catch(e){
-    // Apps Script returns an HTML page (not JSON) when the deployment isn't
-    // publicly accessible yet — almost always "Who has access" isn't set to
-    // "Anyone", or it's a stale /dev URL instead of a redeployed /exec one.
-    throw new Error('Backend returned a login/error page instead of data. In Apps Script: Deploy → Manage deployments → edit → "Who has access" must be "Anyone", then redeploy (new version) and make sure the URL ends in /exec.');
+    // Apps Script sometimes returns HTML transiently even with correct deployment
+    // Retry once to handle temporary glitches
+    if(retryCount < 1){
+      console.warn('Backend returned non-JSON response, retrying...', raw.substring(0, 200));
+      await new Promise(r => setTimeout(r, 500)); // Wait 500ms before retry
+      return apiCall(action, payload, retryCount + 1);
+    }
+    // If still failing after retry, it's likely a deployment configuration issue
+    const isHtml = raw.trim().toLowerCase().startsWith('<');
+    if(isHtml){
+      throw new Error('Backend returned an HTML page instead of JSON. This usually means the Apps Script deployment needs to be updated: Deploy → Manage deployments → edit → "Who has access" must be "Anyone", then redeploy as a new version and ensure the URL ends in /exec.');
+    }
+    throw new Error('Backend returned invalid data: ' + raw.substring(0, 100));
   }
   if(!data.ok) throw new Error(data.error || 'Request failed');
   return data;
@@ -2131,6 +2407,10 @@ async function pollForRemoteChanges(){
 function openAboutPanel(){
   showPanel('panel-about');
 }
+
+function openHelpPanel(){
+  showPanel('panel-help');
+}
 /* ---------- Account panel (post-login: log out / delete account) ---------- */
 function openSettingsPanel(){
   const s = getSession();
@@ -2218,6 +2498,9 @@ function updateSyncIndicator(status){
     setSession(null);
     document.getElementById('gate-step-auth').style.display = 'flex';
     document.getElementById('gate-auth-status').textContent = i18nText('gate.expired');
+    document.getElementById('gate-username').value = '';
+    document.getElementById('gate-password').value = '';
+    document.getElementById('gate-auth-status').style.display = 'block';
   }
 })();
 </script>
