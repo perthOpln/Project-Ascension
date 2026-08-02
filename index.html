@@ -384,8 +384,8 @@ button{ font-family:inherit; cursor:pointer; }
         <button class="gate-tab active" id="gate-tab-login" onclick="setGateMode('login')" data-i18n="gate.login">Log In</button>
         <button class="gate-tab" id="gate-tab-register" onclick="setGateMode('register')" data-i18n="gate.register">Register</button>
       </div>
-      <div class="field"><label data-i18n="gate.username">Username</label><input id="gate-username" autocomplete="username"></div>
-      <div class="field"><label data-i18n="gate.password">Password</label><input id="gate-password" type="password" autocomplete="current-password"></div>
+      <div class="field"><label data-i18n="gate.username">Username</label><input id="gate-username" autocomplete="username" inputmode="text" enterkeyhint="next"></div>
+      <div class="field"><label data-i18n="gate.password">Password</label><input id="gate-password" type="password" autocomplete="current-password" inputmode="text" enterkeyhint="done"></div>
       <button class="btn btn-primary" id="gate-submit-btn" onclick="gateLogin()">Log In</button>
       <div class="gate-status" id="gate-auth-status"></div>
     </div>
@@ -2860,7 +2860,10 @@ async function gateRegister(){
 }
 let sessionRefreshTimer = null;
 let sessionRefreshTriggered = false;
+let gateRefreshTimer = null;
+let gateRefreshTriggered = false;
 function clearSessionRefreshTimer(){ if(sessionRefreshTimer){ clearTimeout(sessionRefreshTimer); sessionRefreshTimer = null; } }
+function clearGateRefreshTimer(){ if(gateRefreshTimer){ clearInterval(gateRefreshTimer); gateRefreshTimer = null; } }
 function scheduleSessionRefreshCheck(){
   clearSessionRefreshTimer();
   const s = getSession();
@@ -2881,6 +2884,28 @@ function scheduleSessionRefreshCheck(){
     }
   }, 300000);
 }
+function startGateRefreshLoop(){
+  clearGateRefreshTimer();
+  if(document.getElementById('gate').classList.contains('hidden')) return;
+  gateRefreshTriggered = false;
+  gateRefreshTimer = setInterval(() => {
+    if(document.getElementById('gate').classList.contains('hidden')){
+      clearGateRefreshTimer();
+      return;
+    }
+    if(!gateRefreshTriggered){
+      gateRefreshTriggered = true;
+      window.location.reload();
+    }
+  }, 60000);
+}
+function handleGateFocus(){
+  if(document.getElementById('gate').classList.contains('hidden')) return;
+  if(!gateRefreshTriggered){
+    gateRefreshTriggered = true;
+    window.location.reload();
+  }
+}
 function lockApp(){
   clearSessionRefreshTimer();
   setSession(null);
@@ -2893,8 +2918,21 @@ function lockApp(){
   document.getElementById('gate-username').value = '';
   document.getElementById('gate-password').value = '';
   setGateMode('login');
+  focusGateInputs();
+  startGateRefreshLoop();
+}
+function focusGateInputs(){
+  const username = document.getElementById('gate-username');
+  const password = document.getElementById('gate-password');
+  if(username && document.getElementById('gate').classList.contains('hidden')) return;
+  setTimeout(() => {
+    if(username){ username.focus({ preventScroll: true }); }
+    if(password && document.activeElement !== username){ password.blur(); }
+  }, 120);
 }
 function unlockApp(){
+  clearGateRefreshTimer();
+  gateRefreshTriggered = false;
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('app').classList.add('unlocked');
   buildColorSwatches();
@@ -2907,6 +2945,13 @@ function unlockApp(){
   setTimeout(() => {
     buildColorSwatches();
   }, 100);
+}
+function attachGateRefreshListeners(){
+  window.addEventListener('focus', ()=>{
+    if(document.getElementById('gate') && !document.getElementById('gate').classList.contains('hidden')){
+      handleGateFocus();
+    }
+  });
 }
 function doLogout(){
   const s = getSession();
@@ -3116,6 +3161,9 @@ function updateSyncIndicator(status){
   WEEKDAY_LABELS = currentLang==='th' ? WEEKDAY_LABELS_TH : WEEKDAY_LABELS_EN;
   applyLanguage();
   setGateMode('login');
+  focusGateInputs();
+  startGateRefreshLoop();
+  attachGateRefreshListeners();
   const s = getSession();
   if(!s) return;
   
@@ -3139,3 +3187,4 @@ function updateSyncIndicator(status){
 })();
 </script>
 </body>
+</html>
