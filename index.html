@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+</style>
 <title>Project Ascension</title>
 <!-- Add to Home Screen: standalone app feel on iOS/Android -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1919,6 +1930,7 @@ function renderAnalytics(){
       cell.style.textAlign = 'center';
       cell.style.transition = 'transform 0.2s, border-color 0.2s';
       cell.style.cursor = 'default';
+      cell.style.position = 'relative';
       
       // Apply background color based on completion percentage (brighter green)
       if (monthPct === 100) {
@@ -1952,7 +1964,7 @@ function renderAnalytics(){
         <div style="font-size:12px; color:${textColor}; font-weight:600; margin-bottom:4px;">${monthName}</div>
         <div style="font-size:16px; font-weight:bold; color:${xpColor}; margin-bottom:2px;">${monthXP}</div>
         <div style="font-size:10px; color:${dimColor}; margin-bottom:6px;">XP</div>
-        <div style="font-size:14px; font-weight:bold; color:${dimColor};">${monthPct}%</div>
+        <div style="position:absolute; top:8px; right:8px; font-size:14px; font-weight:bold; color:${dimColor};">${monthPct}%</div>
       `;
       
       monthGrid.appendChild(cell);
