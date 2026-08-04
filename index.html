@@ -871,7 +871,7 @@ const I18N = {
     'mobilemenu':'Menu',
     'sync.local':'Local only', 'sync.syncing':'Syncing…', 'sync.error':'Sync failed', 'sync.as':'Synced as {u}',
     'insight.streak':'Your current streak is {c} day{s}, longest ever is {l}.',
-    'insight.bestday':'{d}s are your most productive day on average ({xp} XP).',
+    'insight.bestday':'Your most productive day was {d} ({xp} XP).',
     'insight.avg':'Average completion rate over 30 days: {p}%.',
     'insight.improving':'Your consistency is up {p}% compared to the previous 30 days.',
     'insight.declining':'Your consistency is down {p}% compared to the previous 30 days.',
@@ -923,7 +923,7 @@ const I18N = {
     'mobilemenu':'เมนู',
     'sync.local':'ออฟไลน์', 'sync.syncing':'กำลังซิงค์…', 'sync.error':'ซิงค์ล้มเหลว', 'sync.as':'ซิงค์แล้วในชื่อ {u}',
     'insight.streak':'สถิติต่อเนื่องปัจจุบันของคุณคือ {c} วัน สูงสุดที่เคยทำได้คือ {l} วัน',
-    'insight.bestday':'{d} คือวันที่คุณทำได้ดีที่สุดโดยเฉลี่ย ({xp} XP)',
+    'insight.bestday':'วันที่คุณทำได้ดีที่สุดคือ {d} ({xp} XP)',
     'insight.avg':'อัตราความสำเร็จเฉลี่ยใน 30 วันที่ผ่านมา: {p}%',
     'insight.improving':'ความสม่ำเสมอของคุณดีขึ้น {p}% เทียบกับ 30 วันก่อนหน้า',
     'insight.declining':'ความสม่ำเสมอของคุณลดลง {p}% เทียบกับ 30 วันก่อนหน้า',
@@ -2022,20 +2022,21 @@ function renderAnalytics(){
     document.getElementById('an-avgpct').textContent = '—';
   }
 
-  // Best day by completion rate for all-time
-  const byWeekday = [0,0,0,0,0,0,0], cnt=[0,0,0,0,0,0,0];
-  allDaysList.forEach((ds,idx)=>{ 
-    const dow = parseDate(ds).getDay(); 
-    byWeekday[dow]+=allDayData[idx].pct; 
-    cnt[dow]++; 
+  // Best day by XP for all-time (specific date)
+  let bestXPDate = null;
+  let bestXPValue = -1;
+  allDaysList.forEach((ds, idx) => {
+    if (allDayData[idx].xp > bestXPValue) {
+      bestXPValue = allDayData[idx].xp;
+      bestXPDate = ds;
+    }
   });
-  let bestDow=0, bestAvg=-1;
-  byWeekday.forEach((v,i)=>{
-    const avg = v/(cnt[i]||1);
-    if(avg>bestAvg){bestAvg=avg; bestDow=i;}
-  });
-  const bestDayLabels = currentLang === 'th' ? WEEKDAY_FULL_TH : WEEKDAY_FULL_EN;
-  document.getElementById('an-bestday').textContent = cnt[bestDow] > 0 ? bestDayLabels[bestDow] : '—';
+  if (bestXPDate && bestXPValue > 0) {
+    const date = parseDate(bestXPDate);
+    document.getElementById('an-bestday').textContent = date.toLocaleDateString(currentLang === 'th' ? 'th-TH' : undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  } else {
+    document.getElementById('an-bestday').textContent = '—';
+  }
 
   // Days tracked and perfect days for all-time
   document.getElementById('an-daystracked').textContent = allDaysList.length;
