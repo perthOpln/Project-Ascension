@@ -728,7 +728,7 @@ button{ font-family:inherit; cursor:pointer; }
     <div class="stat-card"><div class="sc-label" data-i18n="today.completion">Completion</div><div class="sc-val" id="day-pct">0%</div></div>
   </div>
   <div style="display:flex; gap:8px; margin-bottom:12px;">
-    <button class="btn btn-primary" style="flex:1;" id="day-panel-add-task" data-i18n="today.newtask">+ New Task</button>
+    <button class="btn btn-primary" style="flex:1;" id="day-panel-add-task" onclick="openTaskPanelForDay()" data-i18n="today.newtask">+ New Task</button>
     <button class="btn btn-secondary" style="flex:1;" onclick="openCategoryPanel()" data-i18n="today.categories">+ Categories</button>
   </div>
   <div id="day-tasklist"></div>
@@ -1667,15 +1667,6 @@ function openDayPanel(ds){
     });
   });
   document.getElementById('day-notes').value = normalizeNote(state.notes[ds]).text;
-  
-  // Add event listener to the "New Task" button
-  const addTaskBtn = document.getElementById('day-panel-add-task');
-  if(addTaskBtn){
-    addTaskBtn.onclick = function() {
-      openTaskPanelForDay();
-    };
-  }
-  
   showPanel('panel-day');
 }
 // Legacy notes were stored as a plain string; new ones carry updatedAt so two
@@ -1692,6 +1683,8 @@ function saveDayNotes(){
 }
 
 function openTaskPanelForDay(){
+  console.log('openTaskPanelForDay called, activeDayStr:', activeDayStr);
+  closeAllPanels();
   activeTaskId = null;
   document.getElementById('task-panel-title').textContent = i18nText('taskform.newtitle');
   document.getElementById('tf-delete').style.display = 'none';
